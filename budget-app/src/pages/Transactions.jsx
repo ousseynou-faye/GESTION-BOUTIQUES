@@ -7,6 +7,7 @@ import { Select } from '@/components/ui/Input'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { TransactionForm } from '@/components/transactions/TransactionForm'
 import { TransactionItem } from '@/components/transactions/TransactionItem'
+import CSVActions from '@/components/transactions/CSVActions'
 import { CATEGORIES } from '@/constants/categories'
 import { formatMontant, formatDate } from '@/utils/formatters'
 
@@ -34,6 +35,7 @@ export default function Transactions() {
   const [filtreType, setFiltreType]   = useState('tous')
   const [filtreCateg, setFiltreCateg] = useState('toutes')
   const [filtreMois, setFiltreMois]   = useState('')
+  const [recherche, setRecherche]     = useState('')
   const [page, setPage]               = useState(0)
 
   const filtered = useMemo(() => {
@@ -41,8 +43,9 @@ export default function Transactions() {
     if (filtreType !== 'tous')    list = list.filter(t => t.type === filtreType)
     if (filtreCateg !== 'toutes') list = list.filter(t => t.categorie === filtreCateg)
     if (filtreMois)               list = list.filter(t => t.date.startsWith(filtreMois))
+    if (recherche.trim())         list = list.filter(t => t.description.toLowerCase().includes(recherche.toLowerCase()))
     return list
-  }, [state.transactions, filtreType, filtreCateg, filtreMois])
+  }, [state.transactions, filtreType, filtreCateg, filtreMois, recherche])
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const paginated  = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
@@ -59,7 +62,7 @@ export default function Transactions() {
   const totalRevenus  = filtered.filter(t => t.type === 'revenu').reduce((s, t) => s + t.montant, 0)
   const totalDepenses = filtered.filter(t => t.type === 'depense').reduce((s, t) => s + t.montant, 0)
   const solde         = totalRevenus - totalDepenses
-  const hasFiltre     = filtreType !== 'tous' || filtreCateg !== 'toutes' || filtreMois
+  const hasFiltre     = filtreType !== 'tous' || filtreCateg !== 'toutes' || filtreMois || recherche.trim()
 
   const activeFilters = [
     filtreType !== 'tous' && {
@@ -76,6 +79,11 @@ export default function Transactions() {
       key:   'mois',
       label: filtreMois,
       clear: () => { setFiltreMois(''); setPage(0) },
+    },
+    recherche.trim() && {
+      key:   'recherche',
+      label: `"${recherche.trim()}"`,
+      clear: () => { setRecherche(''); setPage(0) },
     },
   ].filter(Boolean)
 
@@ -101,13 +109,16 @@ export default function Transactions() {
             )}
           </p>
         </div>
-        <Button onClick={() => setAddOpen(true)} className="hidden sm:flex flex-shrink-0">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-          </svg>
-          Nouvelle transaction
-        </Button>
+        <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+          <CSVActions transactionsFiltrees={filtered} />
+          <Button onClick={() => setAddOpen(true)}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Nouvelle transaction
+          </Button>
+        </div>
       </div>
 
       {/* ── KPI Cards ── */}
@@ -244,9 +255,34 @@ export default function Transactions() {
             onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
           />
 
+          {/* Search */}
+          <div className="relative flex-1 min-w-[180px] max-w-xs">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none"
+              style={{ color: 'rgba(100,116,139,0.5)' }}
+              fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={recherche}
+              onChange={e => { setRecherche(e.target.value); setPage(0) }}
+              placeholder="Rechercher une transaction…"
+              aria-label="Rechercher par description"
+              className="w-full pl-9 pr-3.5 py-2 rounded-xl text-xs font-medium focus:outline-none transition-all"
+              style={{
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                color: 'rgba(226,232,240,0.9)',
+              }}
+              onFocus={e => { e.currentTarget.style.borderColor = 'rgba(129,140,248,0.45)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(129,140,248,0.1)' }}
+              onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+            />
+          </div>
+
           {hasFiltre && (
             <button
-              onClick={() => { setFiltreType('tous'); setFiltreCateg('toutes'); setFiltreMois(''); setPage(0) }}
+              onClick={() => { setFiltreType('tous'); setFiltreCateg('toutes'); setFiltreMois(''); setRecherche(''); setPage(0) }}
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl transition-all ml-auto focus:outline-none"
               style={{ color: '#fb7185', border: '1px solid rgba(251,113,133,0.25)', background: 'rgba(251,113,133,0.06)' }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(251,113,133,0.12)' }}
