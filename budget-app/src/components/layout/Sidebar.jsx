@@ -88,31 +88,38 @@ export function Sidebar() {
   return (
     <aside
       className="hidden md:flex flex-col w-64 min-h-screen flex-shrink-0 relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #0d1424 0%, #0f172a 35%, #131a30 65%, #1c1840 100%)' }}
+      style={{ background: 'linear-gradient(160deg, #050819 0%, #07091f 50%, #0a0d28 100%)' }}
       role="complementary"
       aria-label="Navigation principale"
     >
-      {/* Top accent line */}
+      {/* ── Top prismatic accent ────────────────────────── */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.5) 50%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(129,140,248,0.7) 40%, rgba(167,139,250,0.9) 60%, rgba(129,140,248,0.7) 80%, transparent 100%)' }}
         aria-hidden="true"
       />
 
-      {/* Subtle radial glow in top-left */}
+      {/* ── Ambient glow top-left ───────────────────────── */}
       <div
-        className="absolute top-0 left-0 w-48 h-48 pointer-events-none"
-        style={{ background: 'radial-gradient(circle at 0% 0%, rgba(99,102,241,0.08) 0%, transparent 70%)' }}
+        className="absolute top-0 left-0 w-64 h-64 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at 10% 0%, rgba(99,102,241,0.12) 0%, transparent 65%)' }}
+        aria-hidden="true"
+      />
+
+      {/* ── Ambient glow bottom-right ───────────────────── */}
+      <div
+        className="absolute bottom-0 right-0 w-48 h-48 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at 90% 100%, rgba(139,92,246,0.08) 0%, transparent 65%)' }}
         aria-hidden="true"
       />
 
       {/* ── Brand ──────────────────────────────────────── */}
-      <div className="flex items-center gap-3 px-6 pt-7 pb-6">
+      <div className="flex items-center gap-3.5 px-5 pt-7 pb-6">
         <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
           style={{
-            background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-            boxShadow: '0 4px 16px rgba(99,102,241,0.45)',
+            background: 'linear-gradient(135deg, #7c6af7, #6366f1)',
+            boxShadow: '0 0 0 1px rgba(124,106,247,0.3), 0 6px 20px rgba(99,102,241,0.5)',
           }}
           aria-hidden="true"
         >
@@ -123,13 +130,13 @@ export function Sidebar() {
           </svg>
         </div>
         <div>
-          <p className="text-white font-bold text-[15px] tracking-wide leading-tight">Budget Pro</p>
-          <p className="text-slate-500 text-[10px] mt-0.5 leading-tight tracking-wide">Gestion financière</p>
+          <p className="font-display text-white font-bold text-[15px] leading-tight tracking-tight">Budget Pro</p>
+          <p className="text-indigo-400/50 text-[10px] mt-0.5 leading-tight tracking-[0.12em] uppercase font-medium">Gestion financière</p>
         </div>
       </div>
 
-      {/* ── Nav section label ──────────────────────────── */}
-      <p className="text-slate-600 text-[9px] font-bold uppercase tracking-[0.18em] px-6 mb-1.5">
+      {/* ── Nav label ──────────────────────────────────── */}
+      <p className="text-slate-600 text-[9px] font-bold uppercase tracking-[0.22em] px-5 mb-2">
         Navigation
       </p>
 
@@ -140,45 +147,43 @@ export function Sidebar() {
             key={item.to}
             to={item.to}
             end={item.to === '/'}
+            style={({ isActive }) => isActive ? {
+              background: 'linear-gradient(90deg, rgba(99,102,241,0.18) 0%, rgba(99,102,241,0.04) 100%)',
+              borderLeft: '2px solid rgba(129,140,248,0.85)',
+            } : {}}
             className={({ isActive }) =>
               [
                 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium',
                 'transition-all duration-200 group relative',
                 isActive
-                  ? 'bg-white/[0.09] text-white'
-                  : 'text-slate-500 hover:text-slate-200 hover:bg-white/[0.05]',
+                  ? 'text-white'
+                  : 'text-slate-500 hover:text-slate-200 hover:bg-white/[0.04]',
               ].join(' ')
             }
           >
             {({ isActive }) => (
               <>
-                {/* Active indicator bar */}
-                {isActive && (
-                  <span
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full"
-                    style={{ background: 'linear-gradient(180deg, #a5b4fc, #6366f1)' }}
-                    aria-hidden="true"
-                  />
-                )}
-
                 {/* Icon */}
                 <span
                   className={[
                     'flex-shrink-0 transition-colors duration-200',
-                    isActive ? 'text-indigo-400' : 'text-slate-600 group-hover:text-slate-400',
+                    isActive ? 'text-indigo-300' : 'text-slate-600 group-hover:text-slate-400',
                   ].join(' ')}
                 >
                   {item.icon}
                 </span>
 
                 {/* Label */}
-                <span className="leading-tight tracking-tight">{item.label}</span>
+                <span className="leading-tight tracking-tight flex-1">{item.label}</span>
 
-                {/* Active dot */}
+                {/* Active glow dot */}
                 {isActive && (
                   <span
-                    className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0"
-                    style={{ background: '#818cf8', boxShadow: '0 0 6px rgba(99,102,241,0.7)' }}
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{
+                      background: '#818cf8',
+                      boxShadow: '0 0 8px rgba(129,140,248,0.9)',
+                    }}
                     aria-hidden="true"
                   />
                 )}
@@ -189,34 +194,40 @@ export function Sidebar() {
       </nav>
 
       {/* ── Divider ────────────────────────────────────── */}
-      <div className="mx-5 border-t border-white/[0.06] my-2" aria-hidden="true" />
+      <div
+        className="mx-5 my-2"
+        style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)' }}
+        aria-hidden="true"
+      />
 
       {/* ── Theme toggle ───────────────────────────────── */}
       <div className="px-3 mb-2">
         <button
           onClick={() => dispatch({ type: 'SET_THEME', payload: { theme: isDark ? 'light' : 'dark' } })}
           aria-label={isDark ? 'Activer le mode clair' : 'Activer le mode sombre'}
-          className={[
-            'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px]',
-            'text-slate-500 hover:text-slate-200 hover:bg-white/[0.05]',
-            'transition-all duration-200',
-          ].join(' ')}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-all duration-200"
         >
           <span className="text-slate-600">
             {isDark ? <SunIcon /> : <MoonIcon />}
           </span>
-          <span>{isDark ? 'Mode clair' : 'Mode sombre'}</span>
+          <span className="font-medium">{isDark ? 'Mode clair' : 'Mode sombre'}</span>
         </button>
       </div>
 
       {/* ── User card ──────────────────────────────────── */}
       <div className="px-3 pb-5">
-        <div className="flex items-center gap-3 bg-white/[0.04] hover:bg-white/[0.07] rounded-xl px-3 py-2.5 border border-white/[0.05] transition-colors cursor-pointer group">
+        <div
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 cursor-pointer group transition-all duration-200"
+          style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.05)',
+          }}
+        >
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
             style={{
               background: 'linear-gradient(135deg, #f59e0b, #f43f5e)',
-              boxShadow: '0 2px 8px rgba(244,63,94,0.28)',
+              boxShadow: '0 2px 10px rgba(244,63,94,0.30)',
             }}
             aria-hidden="true"
           >
@@ -229,10 +240,7 @@ export function Sidebar() {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-3.5 h-3.5 text-slate-600 group-hover:text-slate-400 flex-shrink-0 transition-colors"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
             aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

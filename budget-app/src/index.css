@@ -87,18 +87,23 @@ html {
 }
 
 body {
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f1f5f9;
+  background-color: #f0f4f8;
   color: #0f172a;
   line-height: 1.5;
   font-size: 14px;
 }
 
 .dark body {
-  background-color: #060b18;
+  background-color: #030610;
   color: #f1f5f9;
+}
+
+.font-display {
+  font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 /* ─── Scrollbars ────────────────────────────────────────────────────── */

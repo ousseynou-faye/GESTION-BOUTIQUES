@@ -61,10 +61,10 @@ export function TopBar() {
           </svg>
         </div>
         <div className="min-w-0">
-          <p className="text-[10px] text-slate-500 leading-tight font-semibold tracking-widest uppercase">
+          <p className="text-[9px] text-indigo-500 dark:text-indigo-400/70 leading-tight font-bold tracking-[0.18em] uppercase">
             Budget Pro
           </p>
-          <p className="text-sm font-bold text-slate-900 dark:text-white truncate leading-tight">
+          <p className="font-display text-sm font-bold text-slate-900 dark:text-white truncate leading-tight">
             {pageTitle}
           </p>
         </div>

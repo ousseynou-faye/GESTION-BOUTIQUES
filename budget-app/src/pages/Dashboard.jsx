@@ -39,7 +39,7 @@ const IconEpargne = () => (
 // ─── Reusable card wrapper ────────────────────────────────────────────────────
 function Card({ children, className = '' }) {
   return (
-    <div className={`bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm ${className}`}>
+    <div className={`bg-white dark:bg-[#0b0e1c] rounded-2xl border border-slate-100 dark:border-white/[0.05] shadow-sm ${className}`}>
       {children}
     </div>
   )
@@ -47,8 +47,8 @@ function Card({ children, className = '' }) {
 
 function CardHeader({ titre, lien, href }) {
   return (
-    <div className="flex items-center justify-between px-5 pt-4 pb-3.5 border-b border-slate-50 dark:border-slate-800/60">
-      <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200 tracking-tight">{titre}</h2>
+    <div className="flex items-center justify-between px-5 pt-4 pb-3.5 border-b border-slate-100 dark:border-white/[0.05]">
+      <h2 className="font-display text-sm font-bold text-slate-800 dark:text-slate-200 tracking-tight">{titre}</h2>
       {href && (
         <Link
           to={href}
@@ -134,7 +134,7 @@ export default function Dashboard() {
       {/* ─── Header ─────────────────────────────────────── */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+          <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">
             Tableau de bord
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">

@@ -92,15 +92,21 @@ export function BottomNav() {
               <>
                 {isActive && (
                   <span
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full"
-                    style={{ background: 'linear-gradient(90deg, #818cf8, #6366f1)' }}
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-0.5 rounded-full"
+                    style={{ background: 'linear-gradient(90deg, transparent, #818cf8, #6366f1, #818cf8, transparent)' }}
                     aria-hidden="true"
                   />
                 )}
-                <span className={isActive ? 'text-indigo-400' : 'text-slate-600'}>
+                <span
+                  className={[
+                    'relative flex items-center justify-center w-9 h-7 rounded-lg transition-all duration-200',
+                    isActive ? 'text-indigo-300' : 'text-slate-600',
+                  ].join(' ')}
+                  style={isActive ? { background: 'rgba(99,102,241,0.15)' } : {}}
+                >
                   {item.icon}
                 </span>
-                <span className="leading-none">{item.label}</span>
+                <span className="leading-none font-medium">{item.label}</span>
               </>
             )}
           </NavLink>

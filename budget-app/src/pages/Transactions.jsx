@@ -89,7 +89,7 @@ export default function Transactions() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
             Transactions
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">

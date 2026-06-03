@@ -1,14 +1,3 @@
-/**
- * KPICard — gradient card with icon, value, trend indicator, and decorative depth.
- *
- * Props:
- *   titre      — label above the value (string)
- *   valeur     — main metric (formatted string)
- *   sousTitre  — small text below the value (string)
- *   gradient   — [fromHex, toHex] e.g. ['#059669','#10b981']
- *   icon       — SVG JSX element (white, 20×20)
- *   tendance   — number in % (positive = up, negative = down, undefined = hidden)
- */
 export function KPICard({
   titre,
   valeur,
@@ -24,46 +13,50 @@ export function KPICard({
     <div
       className="relative overflow-hidden rounded-2xl p-5 text-white flex flex-col gap-3"
       style={{
-        background: `linear-gradient(135deg, ${from} 0%, ${to} 100%)`,
-        boxShadow: `0 8px 24px -4px ${from}55, 0 2px 8px -2px ${from}30`,
+        background: `linear-gradient(145deg, ${from} 0%, ${to} 100%)`,
+        boxShadow: `0 12px 32px -6px ${from}60, 0 4px 12px -2px ${from}35`,
       }}
     >
-      {/* ── Decorative depth circles ─────────────────────── */}
+      {/* ── Large background circle top-right ────────────── */}
       <div
-        className="absolute -right-8 -top-8 w-36 h-36 rounded-full pointer-events-none"
-        style={{ background: 'rgba(255,255,255,0.10)' }}
+        className="absolute -right-10 -top-10 w-44 h-44 rounded-full pointer-events-none"
+        style={{ background: 'rgba(255,255,255,0.09)' }}
         aria-hidden="true"
       />
       <div
-        className="absolute right-6 bottom-[-30px] w-24 h-24 rounded-full pointer-events-none"
-        style={{ background: 'rgba(255,255,255,0.06)' }}
+        className="absolute right-4 bottom-[-36px] w-28 h-28 rounded-full pointer-events-none"
+        style={{ background: 'rgba(255,255,255,0.05)' }}
         aria-hidden="true"
       />
       <div
-        className="absolute left-[-20px] bottom-[-20px] w-28 h-28 rounded-full pointer-events-none"
-        style={{ background: 'rgba(0,0,0,0.07)' }}
+        className="absolute left-[-24px] bottom-[-24px] w-32 h-32 rounded-full pointer-events-none"
+        style={{ background: 'rgba(0,0,0,0.10)' }}
         aria-hidden="true"
       />
 
       {/* ── Top shine line ───────────────────────────────── */}
       <div
         className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%)' }}
         aria-hidden="true"
       />
 
-      {/* ── Light overlay ───────────────────────────────── */}
+      {/* ── Glass highlight overlay ───────────────────────── */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 60%)' }}
+        style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 55%)' }}
         aria-hidden="true"
       />
 
       {/* ── Icon + Trend badge ──────────────────────────── */}
       <div className="relative z-10 flex items-start justify-between">
         <div
-          className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(4px)' }}
+          className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{
+            background: 'rgba(255,255,255,0.20)',
+            backdropFilter: 'blur(8px)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25)',
+          }}
         >
           {icon}
         </div>
@@ -72,8 +65,9 @@ export function KPICard({
           <span
             className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full leading-none"
             style={{
-              background: trendUp ? 'rgba(255,255,255,0.20)' : 'rgba(0,0,0,0.20)',
-              backdropFilter: 'blur(4px)',
+              background: trendUp ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.22)',
+              backdropFilter: 'blur(6px)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
             }}
             aria-label={`Tendance : ${trendUp ? '+' : '-'}${Math.abs(tendance).toFixed(1)}%`}
           >
@@ -100,14 +94,17 @@ export function KPICard({
 
       {/* ── Content ─────────────────────────────────────── */}
       <div className="relative z-10">
-        <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.14em] mb-1 leading-none">
+        <p className="text-white/55 text-[9px] font-bold uppercase tracking-[0.18em] mb-1.5 leading-none">
           {titre}
         </p>
-        <p className="text-[1.65rem] font-black text-white leading-tight tracking-tight tabular-nums">
+        <p
+          className="font-display text-white leading-none tabular-nums"
+          style={{ fontSize: 'clamp(1.5rem, 2.5vw, 1.85rem)', fontWeight: 800 }}
+        >
           {valeur}
         </p>
         {sousTitre && (
-          <p className="text-white/50 text-xs mt-1.5 font-medium leading-tight">
+          <p className="text-white/45 text-[11px] mt-2 font-medium leading-tight">
             {sousTitre}
           </p>
         )}
