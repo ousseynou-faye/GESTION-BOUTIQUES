@@ -63,7 +63,8 @@ function StatMini({ label, value, color }) {
       }}
     >
       <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: `${color}aa` }}>{label}</p>
-      <p className="font-display text-[15px] font-extrabold text-slate-800 dark:text-slate-100 tabular-nums leading-tight">
+      <p className="font-display text-[15px] font-extrabold tabular-nums leading-tight"
+        style={{ color: 'rgba(226,232,240,0.92)' }}>
         {value}
       </p>
     </div>
@@ -109,25 +110,22 @@ function ChartCard({ title, subtitle, legend, children }) {
     <div
       className="rounded-2xl overflow-hidden"
       style={{
-        background: 'rgba(255,255,255,1)',
-        border: '1px solid rgba(0,0,0,0.07)',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+        background: '#0b0e1c',
+        border: '1px solid rgba(255,255,255,0.06)',
+        boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
       }}
     >
-      {/* Dark mode layer */}
-      <style>{`
-        @media (prefers-color-scheme: dark) {}
-      `}</style>
       <div
         className="px-5 py-4 flex items-center gap-4"
-        style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
       >
         <div className="flex-1 min-w-0">
-          <h2 className="font-display text-[13px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight">
+          <h2 className="font-display text-[13px] font-extrabold leading-tight"
+            style={{ color: 'rgba(226,232,240,0.92)' }}>
             {title}
           </h2>
           {subtitle && (
-            <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">{subtitle}</p>
+            <p className="text-[11px] mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>{subtitle}</p>
           )}
         </div>
         {legend && (
@@ -136,7 +134,7 @@ function ChartCard({ title, subtitle, legend, children }) {
           </div>
         )}
       </div>
-      <div className="p-5 dark:bg-[#0b0e1c]">
+      <div className="p-5">
         {children}
       </div>
     </div>
@@ -174,8 +172,8 @@ export default function Charts() {
 
       {/* ── Header ── */}
       <div>
-        <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Graphiques</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+        <h1 className="font-display text-2xl font-extrabold" style={{ color: 'rgba(226,232,240,0.95)' }}>Graphiques</h1>
+        <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
           Analysez vos données financières visuellement
         </p>
       </div>
@@ -198,9 +196,9 @@ export default function Charts() {
                 boxShadow: `0 8px 24px rgba(5,8,24,0.4), 0 2px 8px ${o.color}22`,
                 border: `1px solid ${o.color}30`,
               } : {
-                background: 'rgba(255,255,255,1)',
-                border: '1px solid rgba(0,0,0,0.07)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: 'none',
               }}
             >
               {/* Prismatic top line for active */}
@@ -220,8 +218,8 @@ export default function Charts() {
                   color: o.color,
                   boxShadow: `0 0 14px ${o.color}33`,
                 } : {
-                  color: '#94a3b8',
-                  background: 'rgba(0,0,0,0.03)',
+                  color: 'rgba(100,116,139,0.6)',
+                  background: 'rgba(255,255,255,0.05)',
                 }}
               >
                 {o.icon}
@@ -274,7 +272,7 @@ export default function Charts() {
             title="Répartition des dépenses"
             subtitle={`Mois de ${mois}`}
           >
-            <div className="dark:bg-[#0b0e1c]">
+            <div>
               {pieData.length === 0 ? (
                 <EmptyState
                   titre="Aucune dépense ce mois"
@@ -321,11 +319,11 @@ export default function Charts() {
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-center text-[11px] mb-1.5">
-                              <span className="font-semibold text-slate-700 dark:text-slate-300 truncate">
+                              <span className="font-semibold truncate" style={{ color: 'rgba(148,163,184,0.85)' }}>
                                 {d.name}
                               </span>
                               <div className="flex items-center gap-3 flex-shrink-0 ml-3">
-                                <span className="text-slate-400 dark:text-slate-500 tabular-nums">
+                                <span className="tabular-nums" style={{ color: 'rgba(100,116,139,0.7)' }}>
                                   {formatMontant(d.value)}
                                 </span>
                                 <span
@@ -381,11 +379,11 @@ export default function Charts() {
               <>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#34d399', boxShadow: '0 0 6px #34d39988' }} aria-hidden="true" />
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Revenus</span>
+                  <span className="text-[11px] font-medium" style={{ color: 'rgba(100,116,139,0.7)' }}>Revenus</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#fb7185', boxShadow: '0 0 6px #fb718588' }} aria-hidden="true" />
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Dépenses</span>
+                  <span className="text-[11px] font-medium" style={{ color: 'rgba(100,116,139,0.7)' }}>Dépenses</span>
                 </div>
               </>
             }
@@ -394,7 +392,7 @@ export default function Charts() {
               <BarChart data={barData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }} barGap={4}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
                 <XAxis dataKey="label" tick={axisStyle} axisLine={false} tickLine={false} />
-                <YAxis tick={axisStyle} tickFormatter={v => `${v}€`} axisLine={false} tickLine={false} />
+                <YAxis tick={axisStyle} tickFormatter={v => v.toLocaleString('fr-FR')} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: cursorFill, radius: 8 }} />
                 <Bar dataKey="revenus"  name="Revenus"  fill="#34d399" radius={[6, 6, 0, 0]} maxBarSize={26} />
                 <Bar dataKey="depenses" name="Dépenses" fill="#fb7185" radius={[6, 6, 0, 0]} maxBarSize={26} />
@@ -433,7 +431,7 @@ export default function Charts() {
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
                   <XAxis dataKey="date" tick={{ ...axisStyle, fontSize: 10 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={axisStyle} tickFormatter={v => `${v}€`} axisLine={false} tickLine={false} />
+                  <YAxis tick={axisStyle} tickFormatter={v => v.toLocaleString('fr-FR')} axisLine={false} tickLine={false} />
                   <Tooltip content={<CustomTooltip />} />
                   <ReferenceLine
                     y={0}

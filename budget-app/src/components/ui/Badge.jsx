@@ -2,7 +2,14 @@ import { CATEGORIES } from '@/constants/categories'
 
 export function Badge({ categorie, className = '' }) {
   const cat = CATEGORIES[categorie]
-  if (!cat) return <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">{categorie}</span>
+  if (!cat) return (
+    <span
+      className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold"
+      style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(148,163,184,0.7)', border: '1px solid rgba(255,255,255,0.08)' }}
+    >
+      {categorie}
+    </span>
+  )
 
   const hex = cat.couleur
   return (

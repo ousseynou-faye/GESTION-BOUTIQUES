@@ -40,8 +40,8 @@ const IconEpargne = () => (
 function Card({ children, className = '' }) {
   return (
     <div
-      className={`bg-white dark:bg-[#0b0e1c] rounded-2xl overflow-hidden ${className}`}
-      style={{ border: '1px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}
+      className={`rounded-2xl overflow-hidden ${className}`}
+      style={{ background: '#0b0e1c', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)' }}
     >
       {children}
     </div>
@@ -52,9 +52,10 @@ function CardHeader({ titre, lien, href }) {
   return (
     <div
       className="flex items-center justify-between px-5 pt-4 pb-3.5"
-      style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}
+      style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
     >
-      <h2 className="font-display text-[13px] font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
+      <h2 className="font-display text-[13px] font-extrabold tracking-tight"
+        style={{ color: 'rgba(226,232,240,0.92)' }}>
         {titre}
       </h2>
       {href && (
@@ -116,9 +117,9 @@ function TodayBadge() {
     <div
       className="hidden sm:flex items-center gap-2 rounded-xl px-3.5 py-2"
       style={{
-        background: 'rgba(255,255,255,0.9)',
-        border: '1px solid rgba(0,0,0,0.07)',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
       }}
     >
       <div
@@ -133,7 +134,7 @@ function TodayBadge() {
           <line x1="3" y1="10" x2="21" y2="10" />
         </svg>
       </div>
-      <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">{date}</span>
+      <span className="text-[11px] font-medium" style={{ color: 'rgba(100,116,139,0.8)' }}>{date}</span>
     </div>
   )
 }
@@ -174,10 +175,11 @@ export default function Dashboard() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">
+          <h1 className="font-display text-2xl font-extrabold leading-tight"
+            style={{ color: 'rgba(226,232,240,0.95)' }}>
             Tableau de bord
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
             {formatMois(mois)} — Vue d'ensemble de vos finances
           </p>
         </div>
@@ -227,15 +229,16 @@ export default function Dashboard() {
               <div className="h-[220px] flex flex-col items-center justify-center text-center gap-3">
                 <div
                   className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                  style={{ background: 'rgba(0,0,0,0.04)' }}
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-slate-300 dark:text-slate-600"
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6"
+                    style={{ color: 'rgba(99,102,241,0.4)' }}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 8v4M12 16h.01" />
                   </svg>
                 </div>
-                <p className="text-xs text-slate-400 dark:text-slate-500">Aucune dépense ce mois</p>
+                <p className="text-xs" style={{ color: 'rgba(100,116,139,0.6)' }}>Aucune dépense ce mois</p>
               </div>
             ) : (
               <>
@@ -263,7 +266,7 @@ export default function Dashboard() {
                 </ResponsiveContainer>
                 <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-2">
                   {pieData.slice(0, 6).map(d => (
-                    <div key={d.key} className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                    <div key={d.key} className="flex items-center gap-1.5 text-[11px]" style={{ color: 'rgba(100,116,139,0.7)' }}>
                       <span
                         className="w-2 h-2 rounded-full flex-shrink-0"
                         style={{ background: d.couleur, boxShadow: `0 0 5px ${d.couleur}88` }}
@@ -285,7 +288,7 @@ export default function Dashboard() {
               <BarChart data={barData} margin={{ top: 4, right: 4, left: -16, bottom: 0 }} barGap={4}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
                 <XAxis dataKey="label" tick={axisStyle} axisLine={false} tickLine={false} />
-                <YAxis tick={axisStyle} tickFormatter={v => `${v}€`} axisLine={false} tickLine={false} />
+                <YAxis tick={axisStyle} tickFormatter={v => v.toLocaleString('fr-FR')} axisLine={false} tickLine={false} />
                 <Tooltip content={<ChartTooltip />} cursor={{ fill: cursorFill, radius: 6 }} />
                 <Bar dataKey="revenus"  name="Revenus"  fill="#34d399" radius={[5, 5, 0, 0]} maxBarSize={26} />
                 <Bar dataKey="depenses" name="Dépenses" fill="#fb7185" radius={[5, 5, 0, 0]} maxBarSize={26} />
@@ -295,11 +298,11 @@ export default function Dashboard() {
             <div className="flex items-center gap-5 mt-1 justify-center">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#34d399', boxShadow: '0 0 6px rgba(52,211,153,0.7)' }} />
-                <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Revenus</span>
+                <span className="text-[11px] font-medium" style={{ color: 'rgba(100,116,139,0.7)' }}>Revenus</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#fb7185', boxShadow: '0 0 6px rgba(251,113,133,0.7)' }} />
-                <span className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Dépenses</span>
+                <span className="text-[11px] font-medium" style={{ color: 'rgba(100,116,139,0.7)' }}>Dépenses</span>
               </div>
             </div>
           </div>
@@ -315,7 +318,7 @@ export default function Dashboard() {
           <div className="p-5">
             {progressionBudgets.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center gap-2">
-                <p className="text-sm text-slate-400 dark:text-slate-500">
+                <p className="text-sm" style={{ color: 'rgba(100,116,139,0.7)' }}>
                   Aucun budget configuré pour {formatMois(mois)}.
                 </p>
                 <Link to="/budgets" className="text-[11px] font-bold transition-colors" style={{ color: '#818cf8' }}>
@@ -335,7 +338,8 @@ export default function Dashboard() {
                             style={{ background: b.couleur, boxShadow: `0 0 6px ${b.couleur}88` }}
                             aria-hidden="true"
                           />
-                          <span className="font-display text-[12px] font-semibold text-slate-700 dark:text-slate-300">
+                          <span className="font-display text-[12px] font-semibold"
+                            style={{ color: 'rgba(148,163,184,0.85)' }}>
                             {b.label}
                           </span>
                         </div>
@@ -348,8 +352,8 @@ export default function Dashboard() {
                               Dépassé
                             </span>
                           )}
-                          <span className="text-[11px] text-slate-400 dark:text-slate-500 tabular-nums">
-                            <span className="font-display font-bold" style={{ color: b.depasse ? '#fb7185' : 'inherit' }}>
+                          <span className="text-[11px] tabular-nums" style={{ color: 'rgba(100,116,139,0.7)' }}>
+                            <span className="font-display font-bold" style={{ color: b.depasse ? '#fb7185' : 'rgba(148,163,184,0.85)' }}>
                               {formatMontant(b.depense)}
                             </span>
                             {' / '}{formatMontant(b.montantMensuel)}
@@ -371,7 +375,7 @@ export default function Dashboard() {
           <div>
             {dernieresTxns.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-center gap-1.5">
-                <p className="text-sm text-slate-400 dark:text-slate-500">Aucune transaction</p>
+                <p className="text-sm" style={{ color: 'rgba(100,116,139,0.7)' }}>Aucune transaction</p>
                 <Link to="/transactions" className="text-[11px] font-bold" style={{ color: '#818cf8' }}>
                   Ajouter une transaction →
                 </Link>
@@ -412,12 +416,13 @@ export default function Dashboard() {
 
                       {/* Info */}
                       <div className="flex-1 min-w-0">
-                        <p className="font-display text-[12px] font-semibold text-slate-800 dark:text-slate-100 truncate leading-tight">
+                        <p className="font-display text-[12px] font-semibold truncate leading-tight"
+                          style={{ color: 'rgba(226,232,240,0.9)' }}>
                           {t.description}
                         </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <Badge categorie={t.categorie} />
-                          <span className="text-[10px] text-slate-400 dark:text-slate-500">
+                          <span className="text-[10px]" style={{ color: 'rgba(100,116,139,0.6)' }}>
                             {formatDate(t.date, 'd MMM')}
                           </span>
                         </div>
@@ -432,7 +437,7 @@ export default function Dashboard() {
                       </span>
                     </div>
                     {idx < dernieresTxns.length - 1 && (
-                      <div className="mx-5 h-px" style={{ background: 'rgba(0,0,0,0.04)' }} aria-hidden="true" />
+                      <div className="mx-5 h-px" style={{ background: 'rgba(255,255,255,0.04)' }} aria-hidden="true" />
                     )}
                   </div>
                 )

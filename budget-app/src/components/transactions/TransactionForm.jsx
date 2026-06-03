@@ -10,7 +10,7 @@ const defaultForm = {
   date:        format(new Date(), 'yyyy-MM-dd'),
 }
 
-const QUICK_AMOUNTS = [10, 20, 50, 100, 200, 500]
+const QUICK_AMOUNTS = [500, 1000, 2000, 5000, 10000, 25000]
 
 function FieldLabel({ children }) {
   return (
@@ -126,12 +126,12 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
             className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
             style={{ color: typeColor, fontSize: '2.25rem' }}
             aria-hidden="true"
-          >€</span>
+          >F</span>
           <input
             type="number"
-            step="0.01"
+            step="1"
             min="0"
-            placeholder="0,00"
+            placeholder="0"
             value={form.montant}
             onChange={e => set('montant', e.target.value)}
             aria-label="Montant"
@@ -179,7 +179,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
                 onMouseEnter={e => { if (String(form.montant) !== String(v)) e.currentTarget.style.background = `${typeColor}18` }}
                 onMouseLeave={e => { if (String(form.montant) !== String(v)) e.currentTarget.style.background = `${typeColor}0e` }}
               >
-                {v}€
+                {v.toLocaleString('fr-FR')}
               </button>
             ))}
           </div>

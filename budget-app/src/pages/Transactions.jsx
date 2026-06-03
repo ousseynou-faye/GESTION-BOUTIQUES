@@ -89,13 +89,13 @@ export default function Transactions() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="font-display text-2xl font-extrabold" style={{ color: 'rgba(226,232,240,0.95)' }}>
             Transactions
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
             {state.transactions.length} transaction{state.transactions.length > 1 ? 's' : ''} au total
             {hasFiltre && (
-              <span className="text-indigo-500 dark:text-indigo-400 font-semibold">
+              <span className="font-semibold" style={{ color: '#818cf8' }}>
                 {' · '}{filtered.length} après filtrage
               </span>
             )}

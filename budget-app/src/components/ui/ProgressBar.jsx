@@ -34,7 +34,8 @@ export function ProgressBar({ valeur = 0, couleur, taille = 'md', className = ''
 
   return (
     <div
-      className={`w-full ${heightClass} bg-slate-100 dark:bg-slate-800/80 rounded-full overflow-hidden ${className}`}
+      className={`w-full ${heightClass} rounded-full overflow-hidden ${className}`}
+      style={{ background: 'rgba(255,255,255,0.06)' }}
       role="progressbar"
       aria-valuenow={pct}
       aria-valuemin={0}

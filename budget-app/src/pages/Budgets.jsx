@@ -112,7 +112,7 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
           style={{ color: 'rgba(100,116,139,0.7)' }}>
           Budget mensuel
         </p>
-        {/* € + input in a flex row — no absolute positioning overlap */}
+        {/* F + input in a flex row */}
         <div
           className="flex items-center rounded-2xl transition-all duration-200"
           style={{
@@ -125,9 +125,9 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
             className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
             style={{ color: catColor, fontSize: '2.25rem' }}
             aria-hidden="true"
-          >€</span>
+          >F</span>
           <input
-            type="number" step="0.01" min="1" placeholder="0,00"
+            type="number" step="1" min="1" placeholder="0"
             value={montant}
             onChange={e => setMontant(e.target.value)}
             aria-label="Montant mensuel"
@@ -151,7 +151,7 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
           />
         </div>
         <div className="grid grid-cols-5 gap-1.5 mt-2.5">
-          {[100, 200, 300, 500, 1000].map(v => (
+          {[10000, 25000, 50000, 100000, 200000].map(v => (
             <button key={v} type="button" onClick={() => setMontant(String(v))}
               className="py-2.5 text-xs font-bold rounded-xl transition-all focus:outline-none"
               style={{
@@ -163,7 +163,7 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
               onMouseEnter={e => { if (String(montant) !== String(v)) e.currentTarget.style.background = `${catColor}18` }}
               onMouseLeave={e => { if (String(montant) !== String(v)) e.currentTarget.style.background = `${catColor}0e` }}
             >
-              {v}€
+              {v.toLocaleString('fr-FR')}
             </button>
           ))}
         </div>
@@ -436,8 +436,8 @@ export default function Budgets() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">Budgets</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <h1 className="font-display text-2xl font-extrabold" style={{ color: 'rgba(226,232,240,0.95)' }}>Budgets</h1>
+          <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
             Planifiez et contrôlez vos dépenses par catégorie
           </p>
         </div>
@@ -625,7 +625,7 @@ export default function Budgets() {
 
       {/* ── Budget grid ── */}
       {progression.length === 0 ? (
-        <div className="bg-white dark:bg-[#0b0e1c] rounded-3xl border border-slate-100 dark:border-white/[0.05] shadow-sm">
+        <div className="rounded-3xl" style={{ background: '#0b0e1c', border: '1px solid rgba(255,255,255,0.05)' }}>
           <EmptyState
             titre={`Aucun budget pour ${formatMois(mois)}`}
             message="Définissez des limites mensuelles par catégorie pour mieux contrôler vos dépenses."

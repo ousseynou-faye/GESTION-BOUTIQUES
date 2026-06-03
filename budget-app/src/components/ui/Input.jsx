@@ -21,22 +21,17 @@ const inputBase = [
 ].join(' ')
 
 const inputLight = [
-  'bg-white text-slate-800 placeholder-slate-300',
-  'border border-slate-200',
-  'hover:border-slate-300',
-  'focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20',
+  'text-slate-100 placeholder-slate-600',
+  'border border-white/[0.08]',
+  'hover:border-white/[0.14]',
+  'focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/15',
 ].join(' ')
 
-const inputDark = [
-  'dark:text-slate-100 dark:placeholder-slate-600',
-  'dark:border-white/[0.08] dark:hover:border-white/[0.14]',
-  'dark:focus:border-indigo-500/70 dark:focus:ring-indigo-500/15',
-].join(' ')
+const inputDark = [].join(' ')
 
 const inputError = [
-  'border-rose-400/70 dark:border-rose-500/50',
-  'focus:border-rose-400 focus:ring-2 focus:ring-rose-500/20',
-  'dark:focus:border-rose-500/70 dark:focus:ring-rose-500/15',
+  'border-rose-500/50',
+  'focus:border-rose-500/70 focus:ring-2 focus:ring-rose-500/15',
 ].join(' ')
 
 export function Input({ label, error, helper, className = '', id, ...props }) {
@@ -57,7 +52,7 @@ export function Input({ label, error, helper, className = '', id, ...props }) {
           inputLight,
           inputDark,
           error ? inputError : '',
-          'dark:bg-white/[0.04]',
+          'bg-white/[0.04]',
           className,
         ].join(' ')}
         style={error ? {} : {}}
@@ -90,7 +85,7 @@ export function Select({ label, error, helper, children, className = '', id, ...
             inputLight,
             inputDark,
             error ? inputError : '',
-            'dark:bg-white/[0.04]',
+            'bg-white/[0.04]',
             'appearance-none pr-9 cursor-pointer',
             className,
           ].join(' ')}

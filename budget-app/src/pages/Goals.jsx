@@ -196,9 +196,9 @@ function GoalForm({ initial, onSubmit, onCancel }) {
               className="pl-3.5 font-display font-black leading-none select-none flex-shrink-0"
               style={{ color: goalColor, fontSize: '1.25rem' }}
               aria-hidden="true"
-            >€</span>
+            >F</span>
             <input
-              type="number" step="0.01" min="1" placeholder="0,00"
+              type="number" step="1" min="1" placeholder="0"
               value={form.montantCible}
               onChange={e => set('montantCible', e.target.value)}
               aria-label="Montant cible"
@@ -241,9 +241,9 @@ function GoalForm({ initial, onSubmit, onCancel }) {
               className="pl-3.5 font-display font-black leading-none select-none flex-shrink-0"
               style={{ color: '#34d399', fontSize: '1.25rem' }}
               aria-hidden="true"
-            >€</span>
+            >F</span>
             <input
-              type="number" step="0.01" min="0" placeholder="0,00"
+              type="number" step="1" min="0" placeholder="0"
               value={form.montantActuel}
               onChange={e => set('montantActuel', e.target.value)}
               aria-label="Montant déjà épargné"
@@ -411,9 +411,9 @@ function DepositForm({ goal, onSubmit, onCancel }) {
             className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
             style={{ color: goal.couleur, fontSize: '2.25rem' }}
             aria-hidden="true"
-          >€</span>
+          >F</span>
           <input
-            type="number" step="0.01" min="0.01" placeholder="0,00"
+            type="number" step="1" min="1" placeholder="0"
             value={montant}
             onChange={e => { setMontant(e.target.value); if (error) setError('') }}
             aria-label="Montant à déposer"
@@ -791,10 +791,10 @@ export default function Goals() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="font-display text-2xl font-extrabold" style={{ color: 'rgba(226,232,240,0.95)' }}>
             Objectifs d'épargne
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
             Suivez la progression de vos projets financiers
           </p>
         </div>
@@ -899,7 +899,7 @@ export default function Goals() {
 
       {/* ── Goals grid ── */}
       {state.goals.length === 0 ? (
-        <div className="bg-white dark:bg-[#0b0e1c] rounded-3xl border border-slate-100 dark:border-white/[0.05] shadow-sm">
+        <div className="rounded-3xl" style={{ background: '#0b0e1c', border: '1px solid rgba(255,255,255,0.05)' }}>
           <EmptyState
             titre="Aucun objectif d'épargne"
             message="Définissez vos projets financiers — vacances, fond d'urgence, achat — et suivez votre progression."

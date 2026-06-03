@@ -61,10 +61,12 @@ export function TopBar() {
           </svg>
         </div>
         <div className="min-w-0">
-          <p className="text-[9px] text-indigo-500 dark:text-indigo-400/70 leading-tight font-bold tracking-[0.18em] uppercase">
+          <p className="leading-tight font-bold tracking-[0.18em] uppercase text-[9px]"
+            style={{ color: 'rgba(99,102,241,0.7)' }}>
             Budget Pro
           </p>
-          <p className="font-display text-sm font-bold text-slate-900 dark:text-white truncate leading-tight">
+          <p className="font-display text-sm font-bold truncate leading-tight"
+            style={{ color: 'rgba(226,232,240,0.95)' }}>
             {pageTitle}
           </p>
         </div>
@@ -74,7 +76,10 @@ export function TopBar() {
       <button
         onClick={() => dispatch({ type: 'SET_THEME', payload: { theme: isDark ? 'light' : 'dark' } })}
         aria-label={isDark ? 'Activer le mode clair' : 'Activer le mode sombre'}
-        className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-200/80 dark:hover:bg-slate-800 transition-colors flex-shrink-0"
+        className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors flex-shrink-0 focus:outline-none"
+        style={{ color: 'rgba(100,116,139,0.7)' }}
+        onMouseEnter={e => { e.currentTarget.style.color = 'rgba(226,232,240,0.9)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)' }}
+        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.7)'; e.currentTarget.style.background = 'transparent' }}
       >
         {isDark ? <SunIcon /> : <MoonIcon />}
       </button>

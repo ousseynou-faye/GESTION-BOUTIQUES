@@ -1,13 +1,11 @@
 import { format, parseISO, differenceInDays } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
-export function formatMontant(montant, devise = 'EUR') {
+export function formatMontant(montant) {
   return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: devise,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(montant)
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(Math.round(montant)) + ' FCFA'
 }
 
 export function formatDate(dateStr, pattern = 'd MMM yyyy') {
