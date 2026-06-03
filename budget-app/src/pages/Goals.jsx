@@ -194,9 +194,9 @@ function GoalForm({ initial, onSubmit, onCancel }) {
           >
             <span
               className="pl-3.5 font-display font-black leading-none select-none flex-shrink-0"
-              style={{ color: goalColor, fontSize: '1.25rem' }}
+              style={{ color: goalColor, fontSize: '0.85rem' }}
               aria-hidden="true"
-            >F</span>
+            >F CFA</span>
             <input
               type="number" step="1" min="1" placeholder="0"
               value={form.montantCible}
@@ -239,9 +239,9 @@ function GoalForm({ initial, onSubmit, onCancel }) {
           >
             <span
               className="pl-3.5 font-display font-black leading-none select-none flex-shrink-0"
-              style={{ color: '#34d399', fontSize: '1.25rem' }}
+              style={{ color: '#34d399', fontSize: '0.85rem' }}
               aria-hidden="true"
-            >F</span>
+            >F CFA</span>
             <input
               type="number" step="1" min="0" placeholder="0"
               value={form.montantActuel}
@@ -409,9 +409,9 @@ function DepositForm({ goal, onSubmit, onCancel }) {
         >
           <span
             className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
-            style={{ color: goal.couleur, fontSize: '2.25rem' }}
+            style={{ color: goal.couleur, fontSize: '1.1rem' }}
             aria-hidden="true"
-          >F</span>
+          >F CFA</span>
           <input
             type="number" step="1" min="1" placeholder="0"
             value={montant}

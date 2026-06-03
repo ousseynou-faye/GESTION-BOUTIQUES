@@ -123,9 +123,9 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
         >
           <span
             className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
-            style={{ color: catColor, fontSize: '2.25rem' }}
+            style={{ color: catColor, fontSize: '1.1rem' }}
             aria-hidden="true"
-          >F</span>
+          >F CFA</span>
           <input
             type="number" step="1" min="1" placeholder="0"
             value={montant}

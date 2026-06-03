@@ -124,9 +124,9 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
         >
           <span
             className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
-            style={{ color: typeColor, fontSize: '2.25rem' }}
+            style={{ color: typeColor, fontSize: '1.1rem' }}
             aria-hidden="true"
-          >F</span>
+          >F CFA</span>
           <input
             type="number"
             step="1"
