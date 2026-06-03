@@ -8,6 +8,8 @@ const defaultForm = {
   categorie:   '',
   description: '',
   date:        format(new Date(), 'yyyy-MM-dd'),
+  note:        '',
+  recurrente:  false,
 }
 
 const QUICK_AMOUNTS = [500, 1000, 2000, 5000, 10000, 25000]
@@ -27,7 +29,7 @@ function Divider() {
 
 export function TransactionForm({ initial, onSubmit, onCancel }) {
   const [form, setForm] = useState(initial
-    ? { ...initial, montant: String(initial.montant) }
+    ? { ...initial, montant: String(initial.montant), note: initial.note ?? '', recurrente: initial.recurrente ?? false }
     : defaultForm
   )
   const [errors, setErrors] = useState({})
@@ -61,6 +63,8 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
       categorie:   form.categorie,
       description: form.description.trim(),
       date:        form.date,
+      note:        form.note.trim() || null,
+      recurrente:  form.recurrente,
     })
   }
 
@@ -319,6 +323,68 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
           )}
         </div>
       </div>
+
+      <Divider />
+
+      {/* ── Note ── */}
+      <div>
+        <FieldLabel>Note <span style={{ color: 'rgba(100,116,139,0.5)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optionnel)</span></FieldLabel>
+        <div className="relative">
+          <textarea
+            placeholder="Ajouter un commentaire, référence, contexte…"
+            value={form.note}
+            onChange={e => set('note', e.target.value)}
+            maxLength={500}
+            rows={2}
+            className="w-full px-3.5 py-2.5 rounded-xl text-sm font-medium focus:outline-none transition-all duration-200 resize-none"
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              color: 'rgba(226,232,240,0.9)',
+            }}
+            onFocus={e => { e.currentTarget.style.borderColor = 'rgba(129,140,248,0.45)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(129,140,248,0.1)' }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+          />
+          <span
+            className="absolute bottom-2 right-3 text-[10px] select-none"
+            style={{ color: 'rgba(100,116,139,0.5)' }}
+          >
+            {form.note.length} / 500
+          </span>
+        </div>
+      </div>
+
+      {/* ── Récurrence ── */}
+      <label className="flex items-center gap-3 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={form.recurrente}
+          onChange={e => set('recurrente', e.target.checked)}
+          className="sr-only"
+        />
+        <span
+          className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-150"
+          style={form.recurrente ? {
+            background: 'linear-gradient(135deg, #6366f1, #818cf8)',
+            border: '1px solid #818cf8',
+            boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
+          } : {
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.12)',
+          }}
+          aria-hidden="true"
+        >
+          {form.recurrente && (
+            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+        <span className="text-sm" style={{ color: form.recurrente ? 'rgba(226,232,240,0.9)' : 'rgba(148,163,184,0.7)' }}>
+          Transaction récurrente
+          <span className="ml-1.5 text-xs" style={{ color: 'rgba(100,116,139,0.5)' }}>(loyer, salaire, abonnement…)</span>
+        </span>
+      </label>
 
       {/* ── Actions ── */}
       <div className="flex gap-3 pt-1">
