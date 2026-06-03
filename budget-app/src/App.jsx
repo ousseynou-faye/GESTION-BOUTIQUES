@@ -11,7 +11,7 @@ import Goals from '@/pages/Goals'
 
 function Layout({ children }) {
   return (
-    <div className="flex min-h-screen bg-slate-100 dark:bg-slate-950">
+    <div className="flex min-h-screen" style={{ background: '#050912' }}>
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <TopBar />
