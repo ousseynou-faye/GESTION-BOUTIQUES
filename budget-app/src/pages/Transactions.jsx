@@ -43,7 +43,13 @@ export default function Transactions() {
     if (filtreType !== 'tous')    list = list.filter(t => t.type === filtreType)
     if (filtreCateg !== 'toutes') list = list.filter(t => t.categorie === filtreCateg)
     if (filtreMois)               list = list.filter(t => t.date.startsWith(filtreMois))
-    if (recherche.trim())         list = list.filter(t => t.description.toLowerCase().includes(recherche.toLowerCase()))
+    if (recherche.trim()) {
+      const q = recherche.toLowerCase()
+      list = list.filter(t =>
+        t.description.toLowerCase().includes(q) ||
+        (t.note && t.note.toLowerCase().includes(q))
+      )
+    }
     return list
   }, [state.transactions, filtreType, filtreCateg, filtreMois, recherche])
 
