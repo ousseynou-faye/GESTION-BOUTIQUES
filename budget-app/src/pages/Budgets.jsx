@@ -203,33 +203,30 @@ function BudgetCard({ b, onEdit, onDelete }) {
 
   return (
     <div
-      className="relative flex overflow-hidden rounded-2xl transition-all duration-200 group"
+      className="relative flex overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-0.5"
       style={{
-        background: 'rgba(255,255,255,1)',
-        border: `1px solid ${b.depasse ? 'rgba(251,113,133,0.25)' : b.pourcentage >= 80 ? 'rgba(251,146,60,0.2)' : 'rgba(0,0,0,0.07)'}`,
+        background: '#0b0e1c',
+        border: `1px solid ${b.depasse ? 'rgba(251,113,133,0.2)' : b.pourcentage >= 80 ? 'rgba(251,146,60,0.16)' : 'rgba(255,255,255,0.06)'}`,
         boxShadow: b.depasse
-          ? '0 4px 20px rgba(251,113,133,0.12)'
+          ? '0 4px 24px rgba(251,113,133,0.1), 0 2px 8px rgba(0,0,0,0.3)'
           : b.pourcentage >= 80
-          ? '0 4px 20px rgba(251,146,60,0.09)'
-          : '0 2px 8px rgba(0,0,0,0.05)',
+          ? '0 4px 24px rgba(251,146,60,0.08), 0 2px 8px rgba(0,0,0,0.3)'
+          : '0 2px 12px rgba(0,0,0,0.25)',
       }}
     >
-      {/* Dark mode wrapper */}
+      {/* Prismatic top line */}
       <div
-        className="absolute inset-0 rounded-2xl transition-all duration-200 dark:opacity-100 opacity-0 pointer-events-none"
-        style={{
-          background: '#0b0e1c',
-          border: `1px solid ${b.depasse ? 'rgba(251,113,133,0.18)' : b.pourcentage >= 80 ? 'rgba(251,146,60,0.14)' : 'rgba(255,255,255,0.05)'}`,
-        }}
+        className="absolute top-0 left-0 right-0 h-px z-10"
+        style={{ background: `linear-gradient(90deg, transparent, ${statusColor}55, ${statusColor}cc, ${statusColor}55, transparent)` }}
         aria-hidden="true"
       />
 
-      {/* Left colored strip */}
+      {/* Left accent strip */}
       <div
-        className="w-1 flex-shrink-0 rounded-l-2xl"
+        className="w-1 flex-shrink-0"
         style={{
-          background: `linear-gradient(180deg, ${statusColor}cc 0%, ${statusColor}55 100%)`,
-          boxShadow: `2px 0 12px ${statusColor}30`,
+          background: `linear-gradient(180deg, ${statusColor}cc 0%, ${statusColor}44 100%)`,
+          boxShadow: `2px 0 10px ${statusColor}28`,
         }}
         aria-hidden="true"
       />
@@ -238,9 +235,9 @@ function BudgetCard({ b, onEdit, onDelete }) {
         {/* Header row */}
         <div className="flex items-start justify-between gap-3 mb-3.5">
           <div className="flex items-center gap-2.5 min-w-0">
-            {/* Icon */}
+            {/* Category icon */}
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-extrabold text-sm"
+              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-display font-extrabold text-sm"
               style={{
                 background: `linear-gradient(135deg, ${b.couleur}cc, ${b.couleur})`,
                 boxShadow: `0 4px 10px ${b.couleur}44`,
@@ -249,17 +246,13 @@ function BudgetCard({ b, onEdit, onDelete }) {
             >
               {b.label.charAt(0)}
             </div>
-
             <div className="min-w-0">
-              <p className="font-display text-[13px] font-bold text-slate-800 dark:text-slate-100 truncate leading-tight">
+              <p className="font-display text-[13px] font-bold text-slate-100 truncate leading-tight">
                 {b.label}
               </p>
               <span
                 className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full mt-0.5"
-                style={{
-                  background: `${statusColor}15`,
-                  color: statusColor,
-                }}
+                style={{ background: `${statusColor}15`, color: statusColor }}
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${b.depasse ? 'animate-pulse' : ''}`}
@@ -271,7 +264,7 @@ function BudgetCard({ b, onEdit, onDelete }) {
             </div>
           </div>
 
-          {/* Ring + actions */}
+          {/* Ring + action buttons */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <div className="relative flex items-center justify-center">
               <RingProgress pct={b.pourcentage} color={statusColor} size={48} />
@@ -287,7 +280,10 @@ function BudgetCard({ b, onEdit, onDelete }) {
               <button
                 onClick={() => onEdit(b)}
                 aria-label={`Modifier le budget ${b.label}`}
-                className="w-6 h-6 rounded-lg flex items-center justify-center text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"
+                className="w-6 h-6 rounded-lg flex items-center justify-center transition-all focus:outline-none"
+                style={{ color: 'rgba(100,116,139,0.6)', background: 'transparent' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#818cf8'; e.currentTarget.style.background = 'rgba(129,140,248,0.12)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.6)'; e.currentTarget.style.background = 'transparent' }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -298,7 +294,10 @@ function BudgetCard({ b, onEdit, onDelete }) {
               <button
                 onClick={() => onDelete(b)}
                 aria-label={`Supprimer le budget ${b.label}`}
-                className="w-6 h-6 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"
+                className="w-6 h-6 rounded-lg flex items-center justify-center transition-all focus:outline-none"
+                style={{ color: 'rgba(100,116,139,0.6)', background: 'transparent' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#fb7185'; e.currentTarget.style.background = 'rgba(251,113,133,0.12)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.6)'; e.currentTarget.style.background = 'transparent' }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -313,22 +312,19 @@ function BudgetCard({ b, onEdit, onDelete }) {
         {/* Progress bar */}
         <div className="mb-3">
           <div className="flex justify-between text-[11px] mb-1.5">
-            <span className="text-slate-400 dark:text-slate-500">
+            <span style={{ color: 'rgba(100,116,139,0.7)' }}>
               Dépensé :{' '}
-              <span
-                className="font-bold"
-                style={{ color: b.depasse ? '#fb7185' : 'inherit' }}
-              >
+              <span className="font-bold" style={{ color: b.depasse ? '#fb7185' : 'rgba(226,232,240,0.8)' }}>
                 {formatMontant(b.depense)}
               </span>
             </span>
-            <span className="font-bold text-slate-400 dark:text-slate-500 tabular-nums">
+            <span className="font-bold tabular-nums" style={{ color: 'rgba(100,116,139,0.6)' }}>
               {formatMontant(b.montantMensuel)}
             </span>
           </div>
           <div
             className="h-1.5 rounded-full overflow-hidden"
-            style={{ background: `${statusColor}18` }}
+            style={{ background: `${statusColor}14` }}
           >
             <div
               className="h-full rounded-full transition-all duration-1000"
@@ -347,23 +343,14 @@ function BudgetCard({ b, onEdit, onDelete }) {
 
         {/* Stats row */}
         <div className="grid grid-cols-2 gap-2">
-          <div
-            className="rounded-xl px-3 py-2"
-            style={{ background: 'rgba(0,0,0,0.03)' }}
-          >
-            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-0.5">Budget</p>
-            <p className="font-display text-[13px] font-extrabold text-slate-700 dark:text-slate-200 tabular-nums">
+          <div className="rounded-xl px-3 py-2" style={{ background: 'rgba(255,255,255,0.03)' }}>
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: 'rgba(100,116,139,0.55)' }}>Budget</p>
+            <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: 'rgba(226,232,240,0.85)' }}>
               {formatMontant(b.montantMensuel)}
             </p>
           </div>
-          <div
-            className="rounded-xl px-3 py-2"
-            style={{ background: `${statusColor}0d` }}
-          >
-            <p
-              className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
-              style={{ color: `${statusColor}99` }}
-            >
+          <div className="rounded-xl px-3 py-2" style={{ background: `${statusColor}0d` }}>
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: `${statusColor}99` }}>
               {b.depasse ? 'Dépassement' : 'Restant'}
             </p>
             <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: statusColor }}>
@@ -460,16 +447,17 @@ export default function Budgets() {
           <div
             className="flex items-center gap-0.5 rounded-xl px-1 py-1"
             style={{
-              background: 'rgba(255,255,255,0.9)',
-              border: '1px solid rgba(0,0,0,0.08)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
             }}
           >
             <button
               onClick={() => goMois(-1)}
               aria-label="Mois précédent"
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all text-lg font-bold leading-none"
-              style={{}}
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-lg font-bold leading-none transition-all focus:outline-none"
+              style={{ color: 'rgba(100,116,139,0.7)' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#818cf8'; e.currentTarget.style.background = 'rgba(129,140,248,0.1)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.7)'; e.currentTarget.style.background = 'transparent' }}
             >
               ‹
             </button>
@@ -478,12 +466,16 @@ export default function Budgets() {
               value={mois}
               onChange={e => setMois(e.target.value)}
               aria-label="Sélectionner le mois"
-              className="bg-transparent border-none outline-none text-[12px] font-bold text-slate-700 dark:text-slate-300 w-28 text-center cursor-pointer"
+              className="bg-transparent border-none outline-none text-[12px] font-bold w-28 text-center cursor-pointer focus:outline-none"
+              style={{ color: 'rgba(226,232,240,0.9)', colorScheme: 'dark' }}
             />
             <button
               onClick={() => goMois(1)}
               aria-label="Mois suivant"
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all text-lg font-bold leading-none"
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-lg font-bold leading-none transition-all focus:outline-none"
+              style={{ color: 'rgba(100,116,139,0.7)' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#818cf8'; e.currentTarget.style.background = 'rgba(129,140,248,0.1)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.7)'; e.currentTarget.style.background = 'transparent' }}
             >
               ›
             </button>
