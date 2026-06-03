@@ -184,10 +184,17 @@ function GoalForm({ initial, onSubmit, onCancel }) {
         {/* Target amount */}
         <div className="flex flex-col gap-1.5">
           <span className="font-display block leading-none" style={labelStyle}>Montant cible</span>
-          <div className="relative">
+          <div
+            className="flex items-center rounded-xl overflow-hidden transition-all duration-200"
+            style={{
+              background: errors.montantCible ? 'rgba(251,113,133,0.06)' : `${goalColor}0a`,
+              border: `2px solid ${errors.montantCible ? '#fb7185' : goalColor + '30'}`,
+            }}
+            onClick={e => e.currentTarget.querySelector('input')?.focus()}
+          >
             <span
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 font-display font-bold text-sm pointer-events-none"
-              style={{ color: goalColor, opacity: 0.8 }}
+              className="pl-3.5 font-display font-black leading-none select-none flex-shrink-0"
+              style={{ color: goalColor, fontSize: '1.25rem' }}
               aria-hidden="true"
             >€</span>
             <input
@@ -195,15 +202,18 @@ function GoalForm({ initial, onSubmit, onCancel }) {
               value={form.montantCible}
               onChange={e => set('montantCible', e.target.value)}
               aria-label="Montant cible"
-              className="w-full pl-8 pr-3 py-3 font-display text-xl font-bold rounded-xl focus:outline-none transition-all duration-200"
-              style={{
-                background: errors.montantCible ? 'rgba(251,113,133,0.06)' : `${goalColor}0a`,
-                border: `2px solid ${errors.montantCible ? '#fb7185' : goalColor + '30'}`,
-                color: goalColor,
-                caretColor: goalColor,
+              className="flex-1 bg-transparent pl-1.5 pr-3 py-3 font-display font-bold focus:outline-none min-w-0"
+              style={{ color: goalColor, caretColor: goalColor, fontSize: '1.25rem' }}
+              onFocus={e => {
+                const w = e.currentTarget.parentElement
+                if (!errors.montantCible) w.style.borderColor = goalColor + '60'
+                w.style.boxShadow = `0 0 0 3px ${goalColor}18`
               }}
-              onFocus={e => { if (!errors.montantCible) e.currentTarget.style.boxShadow = `0 0 0 3px ${goalColor}18` }}
-              onBlur={e => { e.currentTarget.style.boxShadow = 'none' }}
+              onBlur={e => {
+                const w = e.currentTarget.parentElement
+                w.style.borderColor = errors.montantCible ? '#fb7185' : goalColor + '30'
+                w.style.boxShadow = 'none'
+              }}
             />
           </div>
           {errors.montantCible && (
@@ -219,10 +229,17 @@ function GoalForm({ initial, onSubmit, onCancel }) {
         {/* Already saved */}
         <div className="flex flex-col gap-1.5">
           <span className="font-display block leading-none" style={labelStyle}>Déjà épargné</span>
-          <div className="relative">
+          <div
+            className="flex items-center rounded-xl overflow-hidden transition-all duration-200"
+            style={{
+              background: 'rgba(52,211,153,0.06)',
+              border: '2px solid rgba(52,211,153,0.2)',
+            }}
+            onClick={e => e.currentTarget.querySelector('input')?.focus()}
+          >
             <span
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 font-display font-bold text-sm pointer-events-none"
-              style={{ color: '#34d399', opacity: 0.8 }}
+              className="pl-3.5 font-display font-black leading-none select-none flex-shrink-0"
+              style={{ color: '#34d399', fontSize: '1.25rem' }}
               aria-hidden="true"
             >€</span>
             <input
@@ -230,15 +247,10 @@ function GoalForm({ initial, onSubmit, onCancel }) {
               value={form.montantActuel}
               onChange={e => set('montantActuel', e.target.value)}
               aria-label="Montant déjà épargné"
-              className="w-full pl-8 pr-3 py-3 font-display text-xl font-bold rounded-xl focus:outline-none transition-all duration-200"
-              style={{
-                background: 'rgba(52,211,153,0.06)',
-                border: '2px solid rgba(52,211,153,0.2)',
-                color: '#34d399',
-                caretColor: '#34d399',
-              }}
-              onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px rgba(52,211,153,0.12)' }}
-              onBlur={e => { e.currentTarget.style.boxShadow = 'none' }}
+              className="flex-1 bg-transparent pl-1.5 pr-3 py-3 font-display font-bold focus:outline-none min-w-0"
+              style={{ color: '#34d399', caretColor: '#34d399', fontSize: '1.25rem' }}
+              onFocus={e => { e.currentTarget.parentElement.style.boxShadow = '0 0 0 3px rgba(52,211,153,0.12)' }}
+              onBlur={e => { e.currentTarget.parentElement.style.boxShadow = 'none' }}
             />
           </div>
         </div>
@@ -386,10 +398,18 @@ function DepositForm({ goal, onSubmit, onCancel }) {
       {/* ── Amount input ── */}
       <div className="flex flex-col gap-2.5">
         <span className="font-display block leading-none" style={labelStyle}>Montant à déposer</span>
-        <div className="relative">
+        {/* € and input in a flex row — no absolute positioning overlap */}
+        <div
+          className="flex items-center rounded-2xl transition-all duration-200"
+          style={{
+            background: error ? 'rgba(251,113,133,0.06)' : `${goal.couleur}0a`,
+            border: `2px solid ${error ? '#fb7185' : goal.couleur + '30'}`,
+          }}
+          onClick={e => e.currentTarget.querySelector('input')?.focus()}
+        >
           <span
-            className="absolute left-4 top-1/2 -translate-y-1/2 font-display font-black pointer-events-none"
-            style={{ color: goal.couleur, fontSize: '1.6rem', lineHeight: 1, opacity: 0.9 }}
+            className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
+            style={{ color: goal.couleur, fontSize: '2.25rem' }}
             aria-hidden="true"
           >€</span>
           <input
@@ -397,17 +417,23 @@ function DepositForm({ goal, onSubmit, onCancel }) {
             value={montant}
             onChange={e => { setMontant(e.target.value); if (error) setError('') }}
             aria-label="Montant à déposer"
-            className="w-full pl-12 pr-4 py-4 font-display font-black rounded-2xl focus:outline-none transition-all duration-200"
+            className="flex-1 bg-transparent pl-2 pr-5 py-4 font-display font-black focus:outline-none min-w-0"
             style={{
-              background: error ? 'rgba(251,113,133,0.06)' : `${goal.couleur}0a`,
-              border: `2px solid ${error ? '#fb7185' : goal.couleur + '30'}`,
               color: goal.couleur,
               caretColor: goal.couleur,
               fontSize: '2.25rem',
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.01em',
             }}
-            onFocus={e => { if (!error) { e.currentTarget.style.borderColor = goal.couleur + '80'; e.currentTarget.style.boxShadow = `0 0 0 4px ${goal.couleur}18` } }}
-            onBlur={e => { e.currentTarget.style.borderColor = error ? '#fb7185' : goal.couleur + '30'; e.currentTarget.style.boxShadow = 'none' }}
+            onFocus={e => {
+              const w = e.currentTarget.parentElement
+              if (!error) w.style.borderColor = goal.couleur + '70'
+              w.style.boxShadow = `0 0 0 3px ${goal.couleur}18`
+            }}
+            onBlur={e => {
+              const w = e.currentTarget.parentElement
+              w.style.borderColor = error ? '#fb7185' : goal.couleur + '30'
+              w.style.boxShadow = 'none'
+            }}
           />
         </div>
         {error && (

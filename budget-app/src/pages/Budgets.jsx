@@ -108,36 +108,60 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
 
       {/* Montant */}
       <div>
-        <p className="font-display text-[10px] font-bold uppercase tracking-[0.15em] mb-2 leading-none"
+        <p className="font-display text-[10px] font-bold uppercase tracking-[0.15em] mb-2.5 leading-none"
           style={{ color: 'rgba(100,116,139,0.7)' }}>
           Budget mensuel
         </p>
-        <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 font-display text-2xl font-bold leading-none select-none"
-            style={{ color: catColor }} aria-hidden="true">€</span>
+        {/* € + input in a flex row — no absolute positioning overlap */}
+        <div
+          className="flex items-center rounded-2xl transition-all duration-200"
+          style={{
+            background: `${catColor}0a`,
+            border: `2px solid ${errors.montant ? '#fb7185' : catColor + '30'}`,
+          }}
+          onClick={e => e.currentTarget.querySelector('input')?.focus()}
+        >
+          <span
+            className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
+            style={{ color: catColor, fontSize: '2.25rem' }}
+            aria-hidden="true"
+          >€</span>
           <input
             type="number" step="0.01" min="1" placeholder="0,00"
             value={montant}
             onChange={e => setMontant(e.target.value)}
             aria-label="Montant mensuel"
-            className="w-full pl-11 pr-4 py-4 rounded-2xl font-display text-3xl font-bold focus:outline-none transition-all"
+            className="flex-1 bg-transparent pl-2 pr-5 py-4 font-display font-black focus:outline-none min-w-0"
             style={{
-              background: `${catColor}0a`,
-              border: `2px solid ${errors.montant ? '#fb7185' : catColor + '30'}`,
               color: catColor,
               caretColor: catColor,
+              fontSize: '2.25rem',
+              letterSpacing: '-0.01em',
             }}
-            onFocus={e => { e.currentTarget.style.boxShadow = `0 0 0 3px ${catColor}18` }}
-            onBlur={e => { e.currentTarget.style.boxShadow = 'none' }}
+            onFocus={e => {
+              const wrap = e.currentTarget.parentElement
+              wrap.style.borderColor = catColor + '70'
+              wrap.style.boxShadow = `0 0 0 3px ${catColor}18`
+            }}
+            onBlur={e => {
+              const wrap = e.currentTarget.parentElement
+              wrap.style.borderColor = errors.montant ? '#fb7185' : catColor + '30'
+              wrap.style.boxShadow = 'none'
+            }}
           />
         </div>
-        <div className="flex gap-1.5 flex-wrap mt-2">
+        <div className="grid grid-cols-5 gap-1.5 mt-2.5">
           {[100, 200, 300, 500, 1000].map(v => (
             <button key={v} type="button" onClick={() => setMontant(String(v))}
-              className="px-2.5 py-1 text-[11px] font-bold rounded-lg transition-all"
-              style={{ background: `${catColor}10`, color: catColor, border: `1px solid ${catColor}25` }}
-              onMouseEnter={e => { e.currentTarget.style.background = `${catColor}20` }}
-              onMouseLeave={e => { e.currentTarget.style.background = `${catColor}10` }}
+              className="py-2.5 text-xs font-bold rounded-xl transition-all focus:outline-none"
+              style={{
+                background: String(montant) === String(v) ? `${catColor}22` : `${catColor}0e`,
+                color: catColor,
+                border: `1px solid ${String(montant) === String(v) ? catColor + '55' : catColor + '22'}`,
+                boxShadow: String(montant) === String(v) ? `0 2px 8px ${catColor}22` : 'none',
+              }}
+              onMouseEnter={e => { if (String(montant) !== String(v)) e.currentTarget.style.background = `${catColor}18` }}
+              onMouseLeave={e => { if (String(montant) !== String(v)) e.currentTarget.style.background = `${catColor}0e` }}
             >
               {v}€
             </button>
