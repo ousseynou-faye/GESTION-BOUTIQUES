@@ -3,7 +3,6 @@ import { useBudget } from '@/context/BudgetContext'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/Modal'
-import { Input } from '@/components/ui/Input'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { getObjectifProgression } from '@/utils/calculations'
 import { formatMontant, formatDate } from '@/utils/formatters'
@@ -55,6 +54,8 @@ function GoalForm({ initial, onSubmit, onCancel }) {
   const [errors, setErrors] = useState({})
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
+  const goalColor = form.couleur || '#6366f1'
+
   function validate() {
     const e = {}
     if (!form.nom.trim()) e.nom = 'Le nom est requis'
@@ -77,92 +78,223 @@ function GoalForm({ initial, onSubmit, onCancel }) {
     })
   }
 
+  const labelStyle = { color: 'rgba(100,116,139,0.8)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' }
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div>
-        <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide block mb-2">
-          Couleur
-        </label>
-        <div className="flex gap-2 flex-wrap">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+      {/* ── Colour picker ── */}
+      <div className="flex flex-col gap-2.5">
+        <span className="font-display block leading-none" style={labelStyle}>Couleur de l'objectif</span>
+        <div className="flex gap-2.5 flex-wrap">
           {COULEURS.map(c => (
             <button
               key={c} type="button"
               onClick={() => set('couleur', c)}
               aria-label={`Couleur ${c}`}
               aria-pressed={form.couleur === c}
-              className={[
-                'w-8 h-8 rounded-full transition-all duration-150',
-                form.couleur === c
-                  ? 'scale-125 ring-2 ring-offset-2 ring-slate-400 dark:ring-slate-500 dark:ring-offset-slate-900'
-                  : 'hover:scale-110',
-              ].join(' ')}
-              style={{ backgroundColor: c }}
+              className="w-9 h-9 rounded-full transition-all duration-200 focus:outline-none"
+              style={{
+                backgroundColor: c,
+                transform: form.couleur === c ? 'scale(1.2)' : 'scale(1)',
+                boxShadow: form.couleur === c
+                  ? `0 0 0 3px rgba(10,12,28,1), 0 0 0 5px ${c}, 0 4px 14px ${c}66`
+                  : `0 2px 6px ${c}44`,
+              }}
             />
           ))}
         </div>
       </div>
 
-      <Input
-        label="Nom de l'objectif"
-        placeholder="ex : Vacances été 2027"
-        value={form.nom}
-        onChange={e => set('nom', e.target.value)}
-        error={errors.nom}
-      />
-      <Input
-        label="Description (optionnel)"
-        placeholder="Décrivez votre objectif"
-        value={form.description}
-        onChange={e => set('description', e.target.value)}
-      />
+      {/* ── Divider ── */}
+      <div className="h-px" style={{ background: 'rgba(255,255,255,0.05)' }} aria-hidden="true" />
 
+      {/* ── Name ── */}
+      <div className="flex flex-col gap-1.5">
+        <span className="font-display block leading-none" style={labelStyle}>Nom de l'objectif</span>
+        <div className="relative">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke={goalColor} strokeWidth={2} style={{ opacity: 0.7 }}>
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M3 7h18M3 12h18M3 17h12" />
+            </svg>
+          </span>
+          <input
+            type="text"
+            placeholder="ex : Vacances été 2027"
+            value={form.nom}
+            onChange={e => set('nom', e.target.value)}
+            aria-invalid={errors.nom ? 'true' : undefined}
+            className="w-full pl-10 pr-4 py-2.5 text-sm font-medium rounded-xl focus:outline-none transition-all duration-200"
+            style={{
+              background: errors.nom ? 'rgba(251,113,133,0.06)' : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${errors.nom ? 'rgba(251,113,133,0.5)' : 'rgba(255,255,255,0.08)'}`,
+              color: '#e2e8f0',
+              caretColor: goalColor,
+            }}
+            onFocus={e => { if (!errors.nom) e.currentTarget.style.borderColor = goalColor + '60'; e.currentTarget.style.boxShadow = `0 0 0 3px ${goalColor}14` }}
+            onBlur={e => { e.currentTarget.style.borderColor = errors.nom ? 'rgba(251,113,133,0.5)' : 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+          />
+        </div>
+        {errors.nom && (
+          <p className="text-xs font-medium flex items-center gap-1.5 mt-0.5" style={{ color: '#fb7185' }} role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
+            </svg>
+            {errors.nom}
+          </p>
+        )}
+      </div>
+
+      {/* ── Description ── */}
+      <div className="flex flex-col gap-1.5">
+        <span className="font-display block leading-none" style={labelStyle}>Description <span style={{ color: 'rgba(100,116,139,0.4)', textTransform: 'none', letterSpacing: 0, fontSize: '9px' }}>(optionnel)</span></span>
+        <div className="relative">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke="rgba(100,116,139,0.5)" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </span>
+          <input
+            type="text"
+            placeholder="Décrivez votre objectif"
+            value={form.description}
+            onChange={e => set('description', e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 text-sm font-medium rounded-xl focus:outline-none transition-all duration-200"
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              color: '#e2e8f0',
+              caretColor: goalColor,
+            }}
+            onFocus={e => { e.currentTarget.style.borderColor = goalColor + '60'; e.currentTarget.style.boxShadow = `0 0 0 3px ${goalColor}14` }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+          />
+        </div>
+      </div>
+
+      {/* ── Divider ── */}
+      <div className="h-px" style={{ background: 'rgba(255,255,255,0.05)' }} aria-hidden="true" />
+
+      {/* ── Amounts ── */}
       <div className="grid grid-cols-2 gap-3">
+        {/* Target amount */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide">Cible (€)</label>
+          <span className="font-display block leading-none" style={labelStyle}>Montant cible</span>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-indigo-400" aria-hidden="true">€</span>
+            <span
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 font-display font-bold text-sm pointer-events-none"
+              style={{ color: goalColor, opacity: 0.8 }}
+              aria-hidden="true"
+            >€</span>
             <input
               type="number" step="0.01" min="1" placeholder="0,00"
               value={form.montantCible}
               onChange={e => set('montantCible', e.target.value)}
               aria-label="Montant cible"
-              className={[
-                'w-full pl-8 pr-3 py-3 text-xl font-bold rounded-xl border-2',
-                'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none transition-all',
-                errors.montantCible
-                  ? 'border-rose-400 focus:border-rose-500'
-                  : 'border-slate-200 dark:border-slate-700 focus:border-indigo-400',
-              ].join(' ')}
+              className="w-full pl-8 pr-3 py-3 font-display text-xl font-bold rounded-xl focus:outline-none transition-all duration-200"
+              style={{
+                background: errors.montantCible ? 'rgba(251,113,133,0.06)' : `${goalColor}0a`,
+                border: `2px solid ${errors.montantCible ? '#fb7185' : goalColor + '30'}`,
+                color: goalColor,
+                caretColor: goalColor,
+              }}
+              onFocus={e => { if (!errors.montantCible) e.currentTarget.style.boxShadow = `0 0 0 3px ${goalColor}18` }}
+              onBlur={e => { e.currentTarget.style.boxShadow = 'none' }}
             />
           </div>
-          {errors.montantCible && <p className="text-xs text-rose-500 font-medium">{errors.montantCible}</p>}
+          {errors.montantCible && (
+            <p className="text-xs font-medium flex items-center gap-1 mt-0.5" style={{ color: '#fb7185' }} role="alert">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
+              </svg>
+              {errors.montantCible}
+            </p>
+          )}
         </div>
 
+        {/* Already saved */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide">Déjà épargné (€)</label>
+          <span className="font-display block leading-none" style={labelStyle}>Déjà épargné</span>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-emerald-400" aria-hidden="true">€</span>
+            <span
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 font-display font-bold text-sm pointer-events-none"
+              style={{ color: '#34d399', opacity: 0.8 }}
+              aria-hidden="true"
+            >€</span>
             <input
               type="number" step="0.01" min="0" placeholder="0,00"
               value={form.montantActuel}
               onChange={e => set('montantActuel', e.target.value)}
               aria-label="Montant déjà épargné"
-              className="w-full pl-8 pr-3 py-3 text-xl font-bold rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-emerald-400 transition-all"
+              className="w-full pl-8 pr-3 py-3 font-display text-xl font-bold rounded-xl focus:outline-none transition-all duration-200"
+              style={{
+                background: 'rgba(52,211,153,0.06)',
+                border: '2px solid rgba(52,211,153,0.2)',
+                color: '#34d399',
+                caretColor: '#34d399',
+              }}
+              onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 3px rgba(52,211,153,0.12)' }}
+              onBlur={e => { e.currentTarget.style.boxShadow = 'none' }}
             />
           </div>
         </div>
       </div>
 
-      <Input
-        label="Date d'échéance (optionnel)"
-        type="date"
-        value={form.dateEcheance}
-        onChange={e => set('dateEcheance', e.target.value)}
-      />
+      {/* ── Date ── */}
+      <div className="flex flex-col gap-1.5">
+        <span className="font-display block leading-none" style={labelStyle}>Date d'échéance <span style={{ color: 'rgba(100,116,139,0.4)', textTransform: 'none', letterSpacing: 0, fontSize: '9px' }}>(optionnel)</span></span>
+        <div className="relative">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke="rgba(100,116,139,0.5)" strokeWidth={2}>
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </span>
+          <input
+            type="date"
+            value={form.dateEcheance}
+            onChange={e => set('dateEcheance', e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 text-sm font-medium rounded-xl focus:outline-none transition-all duration-200"
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              color: '#e2e8f0',
+              colorScheme: 'dark',
+            }}
+            onFocus={e => { e.currentTarget.style.borderColor = goalColor + '60'; e.currentTarget.style.boxShadow = `0 0 0 3px ${goalColor}14` }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+          />
+        </div>
+      </div>
 
+      {/* ── Actions ── */}
       <div className="flex gap-3 pt-1">
-        <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">Annuler</Button>
-        <Button type="submit" className="flex-1">{initial ? 'Enregistrer' : "Créer l'objectif"}</Button>
+        <button
+          type="button" onClick={onCancel}
+          className="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none"
+          style={{ border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(148,163,184,0.8)', background: 'rgba(255,255,255,0.04)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          className="flex-1 py-2.5 text-sm font-semibold rounded-xl text-white transition-all focus:outline-none"
+          style={{
+            background: `linear-gradient(135deg, ${goalColor}dd, ${goalColor})`,
+            boxShadow: `0 6px 20px ${goalColor}44`,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = '0.9' }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+        >
+          {initial ? 'Enregistrer' : "Créer l'objectif"}
+        </button>
       </div>
     </form>
   )
@@ -173,6 +305,7 @@ function DepositForm({ goal, onSubmit, onCancel }) {
   const [montant, setMontant] = useState('')
   const [error, setError]     = useState('')
   const restant = Math.max(0, goal.montantCible - goal.montantActuel)
+  const pct = goal.montantCible > 0 ? Math.min(100, (goal.montantActuel / goal.montantCible) * 100) : 0
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -182,81 +315,166 @@ function DepositForm({ goal, onSubmit, onCancel }) {
   }
 
   const suggestions = [
-    Math.round(restant * 0.1),
-    Math.round(restant * 0.25),
-    Math.round(restant * 0.5),
-    Math.round(restant),
-  ].filter((v, i, a) => v > 0 && a.indexOf(v) === i)
+    { label: '10%', val: Math.round(restant * 0.1) },
+    { label: '25%', val: Math.round(restant * 0.25) },
+    { label: '50%', val: Math.round(restant * 0.5) },
+    { label: 'Tout', val: Math.round(restant) },
+  ].filter(s => s.val > 0).filter((s, i, a) => a.findIndex(x => x.val === s.val) === i)
+
+  const labelStyle = { color: 'rgba(100,116,139,0.8)', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.15em' }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+      {/* ── Goal summary card ── */}
       <div
-        className="flex items-center gap-3 rounded-2xl p-4"
-        style={{ background: goal.couleur + '10', border: `1px solid ${goal.couleur}22` }}
+        className="rounded-2xl p-4 overflow-hidden relative"
+        style={{ background: `${goal.couleur}0c`, border: `1px solid ${goal.couleur}28` }}
       >
+        {/* Top prismatic line */}
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-extrabold text-base flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${goal.couleur}cc, ${goal.couleur})`, boxShadow: `0 4px 12px ${goal.couleur}44` }}
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: `linear-gradient(90deg, transparent, ${goal.couleur}88, ${goal.couleur}, ${goal.couleur}88, transparent)` }}
           aria-hidden="true"
-        >
-          {goal.nom.charAt(0).toUpperCase()}
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-display text-sm font-bold text-slate-800 dark:text-slate-200 truncate">{goal.nom}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            {formatMontant(goal.montantActuel)} / {formatMontant(goal.montantCible)}
-            {' · '}
-            <span className="font-semibold" style={{ color: goal.couleur }}>
-              Restant : {formatMontant(restant)}
+        />
+        <div className="flex items-center gap-3">
+          <div
+            className="w-11 h-11 rounded-xl flex items-center justify-center text-white font-display font-extrabold text-base flex-shrink-0"
+            style={{
+              background: `linear-gradient(135deg, ${goal.couleur}bb, ${goal.couleur})`,
+              boxShadow: `0 4px 14px ${goal.couleur}44`,
+            }}
+            aria-hidden="true"
+          >
+            {goal.nom.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-display text-sm font-bold text-slate-100 truncate">{goal.nom}</p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="text-xs" style={{ color: 'rgba(100,116,139,0.7)' }}>
+                {formatMontant(goal.montantActuel)} / {formatMontant(goal.montantCible)}
+              </span>
+              <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
+              <span className="text-xs font-bold" style={{ color: goal.couleur }}>
+                {formatMontant(restant)} restant
+              </span>
+            </div>
+          </div>
+          <div className="flex-shrink-0">
+            <span className="font-display text-xs font-extrabold tabular-nums" style={{ color: goal.couleur }}>
+              {Math.round(pct)}%
             </span>
-          </p>
+          </div>
+        </div>
+        {/* Mini progress bar */}
+        <div className="mt-3 h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+          <div
+            className="h-full rounded-full transition-all duration-700"
+            style={{
+              width: `${pct}%`,
+              background: `linear-gradient(90deg, ${goal.couleur}88, ${goal.couleur})`,
+              boxShadow: `0 0 8px ${goal.couleur}66`,
+            }}
+            role="progressbar"
+            aria-valuenow={Math.round(pct)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          />
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide">
-          Montant à déposer (€)
-        </label>
+      {/* ── Amount input ── */}
+      <div className="flex flex-col gap-2.5">
+        <span className="font-display block leading-none" style={labelStyle}>Montant à déposer</span>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold" style={{ color: goal.couleur }} aria-hidden="true">€</span>
+          <span
+            className="absolute left-4 top-1/2 -translate-y-1/2 font-display font-black pointer-events-none"
+            style={{ color: goal.couleur, fontSize: '1.6rem', lineHeight: 1, opacity: 0.9 }}
+            aria-hidden="true"
+          >€</span>
           <input
             type="number" step="0.01" min="0.01" placeholder="0,00"
             value={montant}
-            onChange={e => setMontant(e.target.value)}
+            onChange={e => { setMontant(e.target.value); if (error) setError('') }}
             aria-label="Montant à déposer"
-            className={[
-              'w-full pl-10 pr-4 py-4 text-3xl font-bold rounded-2xl border-2',
-              'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none transition-all',
-              error ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 dark:border-slate-700',
-            ].join(' ')}
+            className="w-full pl-12 pr-4 py-4 font-display font-black rounded-2xl focus:outline-none transition-all duration-200"
+            style={{
+              background: error ? 'rgba(251,113,133,0.06)' : `${goal.couleur}0a`,
+              border: `2px solid ${error ? '#fb7185' : goal.couleur + '30'}`,
+              color: goal.couleur,
+              caretColor: goal.couleur,
+              fontSize: '2.25rem',
+              letterSpacing: '-0.02em',
+            }}
+            onFocus={e => { if (!error) { e.currentTarget.style.borderColor = goal.couleur + '80'; e.currentTarget.style.boxShadow = `0 0 0 4px ${goal.couleur}18` } }}
+            onBlur={e => { e.currentTarget.style.borderColor = error ? '#fb7185' : goal.couleur + '30'; e.currentTarget.style.boxShadow = 'none' }}
           />
         </div>
-        {error && <p className="text-xs text-rose-500 font-medium">{error}</p>}
-        {suggestions.length > 0 && (
-          <div className="flex gap-2 flex-wrap mt-1">
-            {suggestions.map((v, i) => (
-              <button
-                key={i} type="button"
-                onClick={() => setMontant(String(v))}
-                className="px-3 py-1.5 text-xs font-bold rounded-xl border transition-all hover:opacity-80"
-                style={{ borderColor: goal.couleur + '44', color: goal.couleur, background: goal.couleur + '0e' }}
-              >
-                {i === 0 ? '10%' : i === 1 ? '25%' : i === 2 ? '50%' : 'Tout'} — {formatMontant(v)}
-              </button>
-            ))}
-          </div>
+        {error && (
+          <p className="text-xs font-medium flex items-center gap-1.5" style={{ color: '#fb7185' }} role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
+            </svg>
+            {error}
+          </p>
         )}
       </div>
 
-      <div className="flex gap-3">
-        <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">Annuler</Button>
-        <Button type="submit" variant="success" className="flex-1">
+      {/* ── Suggestions ── */}
+      {suggestions.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <span className="font-display block leading-none" style={labelStyle}>Suggestions rapides</span>
+          <div className="grid grid-cols-4 gap-2">
+            {suggestions.map((s, i) => (
+              <button
+                key={i} type="button"
+                onClick={() => { setMontant(String(s.val)); setError('') }}
+                className="flex flex-col items-center py-2.5 px-2 rounded-xl transition-all duration-150 focus:outline-none"
+                style={{
+                  border: `1px solid ${String(montant) === String(s.val) ? goal.couleur + '60' : goal.couleur + '25'}`,
+                  background: String(montant) === String(s.val) ? `${goal.couleur}18` : `${goal.couleur}08`,
+                  boxShadow: String(montant) === String(s.val) ? `0 0 12px ${goal.couleur}22` : 'none',
+                }}
+                onMouseEnter={e => { if (String(montant) !== String(s.val)) { e.currentTarget.style.background = `${goal.couleur}12`; e.currentTarget.style.borderColor = goal.couleur + '40' } }}
+                onMouseLeave={e => { if (String(montant) !== String(s.val)) { e.currentTarget.style.background = `${goal.couleur}08`; e.currentTarget.style.borderColor = goal.couleur + '25' } }}
+              >
+                <span className="font-display text-[10px] font-bold uppercase tracking-wide" style={{ color: goal.couleur + 'cc' }}>{s.label}</span>
+                <span className="font-display text-xs font-extrabold tabular-nums mt-0.5" style={{ color: goal.couleur }}>
+                  {formatMontant(s.val)}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Actions ── */}
+      <div className="flex gap-3 pt-1">
+        <button
+          type="button" onClick={onCancel}
+          className="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none"
+          style={{ border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(148,163,184,0.8)', background: 'rgba(255,255,255,0.04)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          className="flex-1 py-2.5 text-sm font-semibold rounded-xl text-white flex items-center justify-center gap-2 transition-all focus:outline-none"
+          style={{
+            background: `linear-gradient(135deg, ${goal.couleur}dd, ${goal.couleur})`,
+            boxShadow: `0 6px 20px ${goal.couleur}44`,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = '0.9' }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = '1' }}
+        >
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
             stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M7 11l5-5m0 0l5 5m-5-5v12" />
           </svg>
           Déposer les fonds
-        </Button>
+        </button>
       </div>
     </form>
   )
