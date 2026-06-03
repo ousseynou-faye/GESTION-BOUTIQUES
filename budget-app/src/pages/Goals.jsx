@@ -516,26 +516,26 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
     <div
       className="rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1"
       style={{
-        background: 'rgba(255,255,255,1)',
-        border: `1px solid ${goal.couleur}22`,
-        boxShadow: `0 4px 24px ${goal.couleur}10, 0 2px 8px rgba(0,0,0,0.05)`,
+        background: '#0b0e1c',
+        border: `1px solid ${goal.couleur}28`,
+        boxShadow: `0 4px 24px ${goal.couleur}12, 0 2px 12px rgba(0,0,0,0.3)`,
       }}
     >
-      {/* ── Colored header zone ── */}
+      {/* ── Header zone ── */}
       <div
-        className="relative px-5 pt-5 pb-4 overflow-hidden dark:bg-[#0b0e1c]"
-        style={{ background: `linear-gradient(135deg, ${goal.couleur}14 0%, ${goal.couleur}05 100%)` }}
+        className="relative px-5 pt-5 pb-4 overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${goal.couleur}12 0%, ${goal.couleur}04 100%)` }}
       >
-        {/* Decorative circles */}
+        {/* Decorative ambient circles */}
         <div className="absolute right-[-28px] top-[-28px] w-32 h-32 rounded-full pointer-events-none"
-          style={{ background: goal.couleur + '14' }} aria-hidden="true" />
+          style={{ background: goal.couleur + '10' }} aria-hidden="true" />
         <div className="absolute left-[-20px] bottom-[-20px] w-24 h-24 rounded-full pointer-events-none"
-          style={{ background: goal.couleur + '08' }} aria-hidden="true" />
+          style={{ background: goal.couleur + '06' }} aria-hidden="true" />
 
-        {/* Prismatic strip at top */}
+        {/* Prismatic top line */}
         <div
           className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: `linear-gradient(90deg, transparent, ${goal.couleur}88, ${goal.couleur}, ${goal.couleur}88, transparent)` }}
+          style={{ background: `linear-gradient(90deg, transparent, ${goal.couleur}66, ${goal.couleur}cc, ${goal.couleur}66, transparent)` }}
           aria-hidden="true"
         />
 
@@ -546,7 +546,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
               <div
                 className="w-[80px] h-[80px] rounded-full flex items-center justify-center"
                 style={{
-                  background: `${goal.couleur}15`,
+                  background: `${goal.couleur}12`,
                   border: `5px solid ${goal.couleur}`,
                   boxShadow: `0 0 20px ${goal.couleur}44`,
                 }}
@@ -563,15 +563,17 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
             )}
           </div>
 
-          {/* Info + actions */}
+          {/* Info + action buttons */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <h3 className="font-display text-[13px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight truncate">
+                <h3 className="font-display text-[13px] font-extrabold leading-tight truncate"
+                  style={{ color: 'rgba(226,232,240,0.95)' }}>
                   {goal.nom}
                 </h3>
                 {goal.description && (
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-[11px] mt-1 line-clamp-2 leading-relaxed"
+                    style={{ color: 'rgba(100,116,139,0.75)' }}>
                     {goal.description}
                   </p>
                 )}
@@ -588,7 +590,10 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
                 <button
                   onClick={() => onEdit(goal)}
                   aria-label={`Modifier l'objectif ${goal.nom}`}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center transition-all focus:outline-none"
+                  style={{ color: 'rgba(100,116,139,0.6)', background: 'transparent' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = '#818cf8'; e.currentTarget.style.background = 'rgba(129,140,248,0.12)' }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.6)'; e.currentTarget.style.background = 'transparent' }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -599,7 +604,10 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
                 <button
                   onClick={() => onDelete(goal)}
                   aria-label={`Supprimer l'objectif ${goal.nom}`}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center transition-all focus:outline-none"
+                  style={{ color: 'rgba(100,116,139,0.6)', background: 'transparent' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = '#fb7185'; e.currentTarget.style.background = 'rgba(251,113,133,0.12)' }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.6)'; e.currentTarget.style.background = 'transparent' }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -614,10 +622,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
       </div>
 
       {/* ── Progress bar ── */}
-      <div
-        className="h-1.5 w-full dark:bg-[#0b0e1c]"
-        style={{ background: `${goal.couleur}12` }}
-      >
+      <div className="h-1.5 w-full" style={{ background: `${goal.couleur}10` }}>
         <div
           className="h-full transition-all duration-1000"
           style={{
@@ -633,18 +638,22 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
       </div>
 
       {/* ── Body ── */}
-      <div className="p-5 flex flex-col gap-3.5 flex-1 dark:bg-[#0b0e1c]">
+      <div className="p-5 flex flex-col gap-3.5 flex-1">
         {/* Amounts */}
         <div className="flex justify-between items-end">
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-0.5">Épargné</p>
-            <p className="font-display text-xl font-extrabold text-slate-800 dark:text-slate-100 tabular-nums leading-none">
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-0.5"
+              style={{ color: 'rgba(100,116,139,0.55)' }}>Épargné</p>
+            <p className="font-display text-xl font-extrabold tabular-nums leading-none"
+              style={{ color: 'rgba(226,232,240,0.95)' }}>
               {formatMontant(goal.montantActuel)}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-0.5">Objectif</p>
-            <p className="font-display text-xl font-extrabold text-slate-800 dark:text-slate-100 tabular-nums leading-none">
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] mb-0.5"
+              style={{ color: 'rgba(100,116,139,0.55)' }}>Objectif</p>
+            <p className="font-display text-xl font-extrabold tabular-nums leading-none"
+              style={{ color: 'rgba(226,232,240,0.95)' }}>
               {formatMontant(goal.montantCible)}
             </p>
           </div>
@@ -652,37 +661,31 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-2">
-          <div
-            className="rounded-xl px-3 py-2.5"
-            style={{ background: `${goal.couleur}0a` }}
-          >
-            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: `${goal.couleur}88` }}>Restant</p>
+          <div className="rounded-xl px-3 py-2.5" style={{ background: `${goal.couleur}0a` }}>
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
+              style={{ color: `${goal.couleur}88` }}>Restant</p>
             <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: goal.couleur }}>
               {formatMontant(restant)}
             </p>
           </div>
           {jours !== null ? (
-            <div
-              className="rounded-xl px-3 py-2.5"
-              style={{ background: urgence ? 'rgba(251,146,60,0.08)' : 'rgba(0,0,0,0.03)' }}
-            >
-              <p
-                className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
-                style={{ color: urgence ? '#fb923c' : '#94a3b8' }}
-              >
+            <div className="rounded-xl px-3 py-2.5"
+              style={{ background: urgence ? 'rgba(251,146,60,0.08)' : 'rgba(255,255,255,0.03)' }}>
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
+                style={{ color: urgence ? '#fb923c' : 'rgba(100,116,139,0.55)' }}>
                 {jours > 0 ? 'Jours restants' : 'Échéance'}
               </p>
-              <p
-                className="font-display text-[13px] font-extrabold tabular-nums"
-                style={{ color: urgence ? '#fb923c' : '#64748b' }}
-              >
+              <p className="font-display text-[13px] font-extrabold tabular-nums"
+                style={{ color: urgence ? '#fb923c' : 'rgba(100,116,139,0.8)' }}>
                 {jours > 0 ? `${jours} j` : jours === 0 ? "Aujourd'hui" : 'Dépassée'}
               </p>
             </div>
           ) : (
-            <div className="rounded-xl px-3 py-2.5" style={{ background: 'rgba(0,0,0,0.03)' }}>
-              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-0.5">Échéance</p>
-              <p className="font-display text-[13px] font-bold text-slate-400 dark:text-slate-500">Non définie</p>
+            <div className="rounded-xl px-3 py-2.5" style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
+                style={{ color: 'rgba(100,116,139,0.55)' }}>Échéance</p>
+              <p className="font-display text-[13px] font-bold"
+                style={{ color: 'rgba(100,116,139,0.5)' }}>Non définie</p>
             </div>
           )}
         </div>
@@ -691,7 +694,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
         {mensualiteRequise !== null && mensualiteRequise > 0 && !atteint && (
           <div
             className="flex items-center gap-3 rounded-2xl px-4 py-3"
-            style={{ background: `${goal.couleur}0a`, border: `1px solid ${goal.couleur}20` }}
+            style={{ background: `${goal.couleur}0a`, border: `1px solid ${goal.couleur}1e` }}
           >
             <div
               className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -703,9 +706,8 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
               </svg>
             </div>
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: `${goal.couleur}99` }}>
-                À épargner / mois
-              </p>
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
+                style={{ color: `${goal.couleur}88` }}>À épargner / mois</p>
               <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: goal.couleur }}>
                 {formatMontant(mensualiteRequise)}
               </p>
@@ -715,9 +717,11 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
 
         {/* Deadline */}
         {goal.dateEcheance && (
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center">
+          <p className="text-[11px] text-center" style={{ color: 'rgba(100,116,139,0.6)' }}>
             Échéance :{' '}
-            <span className="font-bold text-slate-600 dark:text-slate-400">{formatDate(goal.dateEcheance)}</span>
+            <span className="font-bold" style={{ color: 'rgba(148,163,184,0.8)' }}>
+              {formatDate(goal.dateEcheance)}
+            </span>
           </p>
         )}
 
