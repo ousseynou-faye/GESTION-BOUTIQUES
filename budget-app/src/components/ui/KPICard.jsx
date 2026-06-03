@@ -45,6 +45,20 @@ export function KPICard({
         aria-hidden="true"
       />
 
+      {/* ── Top shine line ───────────────────────────────── */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)' }}
+        aria-hidden="true"
+      />
+
+      {/* ── Light overlay ───────────────────────────────── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 60%)' }}
+        aria-hidden="true"
+      />
+
       {/* ── Icon + Trend badge ──────────────────────────── */}
       <div className="relative z-10 flex items-start justify-between">
         <div
