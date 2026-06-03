@@ -30,17 +30,17 @@ const IconSolde = () => (
 
 export default function Transactions() {
   const { state, dispatch } = useBudget()
-  const [addOpen, setAddOpen]           = useState(false)
-  const [filtreType, setFiltreType]     = useState('tous')
-  const [filtreCateg, setFiltreCateg]   = useState('toutes')
-  const [filtreMois, setFiltreMois]     = useState('')
-  const [page, setPage]                 = useState(0)
+  const [addOpen, setAddOpen]         = useState(false)
+  const [filtreType, setFiltreType]   = useState('tous')
+  const [filtreCateg, setFiltreCateg] = useState('toutes')
+  const [filtreMois, setFiltreMois]   = useState('')
+  const [page, setPage]               = useState(0)
 
   const filtered = useMemo(() => {
     let list = [...state.transactions].sort((a, b) => b.date.localeCompare(a.date))
-    if (filtreType !== 'tous')   list = list.filter(t => t.type === filtreType)
+    if (filtreType !== 'tous')    list = list.filter(t => t.type === filtreType)
     if (filtreCateg !== 'toutes') list = list.filter(t => t.categorie === filtreCateg)
-    if (filtreMois)              list = list.filter(t => t.date.startsWith(filtreMois))
+    if (filtreMois)               list = list.filter(t => t.date.startsWith(filtreMois))
     return list
   }, [state.transactions, filtreType, filtreCateg, filtreMois])
 
@@ -79,9 +79,9 @@ export default function Transactions() {
     },
   ].filter(Boolean)
 
-  function handleAdd(data)    { dispatch({ type: 'ADD_TRANSACTION',    payload: data }); setAddOpen(false) }
-  function handleEdit(data)   { dispatch({ type: 'UPDATE_TRANSACTION', payload: data }) }
-  function handleDelete(id)   { dispatch({ type: 'DELETE_TRANSACTION', payload: { id } }) }
+  function handleAdd(data)  { dispatch({ type: 'ADD_TRANSACTION',    payload: data }); setAddOpen(false) }
+  function handleEdit(data) { dispatch({ type: 'UPDATE_TRANSACTION', payload: data }) }
+  function handleDelete(id) { dispatch({ type: 'DELETE_TRANSACTION', payload: { id } }) }
 
   return (
     <div className="flex flex-col gap-6 animate-fade-slide-up">
@@ -136,28 +136,47 @@ export default function Transactions() {
       </div>
 
       {/* ── Filtres ── */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
-        {/* Filter bar header */}
-        <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 text-indigo-500 flex-shrink-0"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
-          </svg>
-          <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{
+          background: 'rgba(255,255,255,1)',
+          border: '1px solid rgba(0,0,0,0.07)',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+        }}
+      >
+        {/* Header */}
+        <div
+          className="px-5 py-3 flex items-center gap-2 dark:bg-[#0b0e1c]"
+          style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}
+        >
+          <div
+            className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: 'rgba(99,102,241,0.12)' }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" style={{ color: '#818cf8' }}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+            </svg>
+          </div>
+          <span className="font-display text-[11px] font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-[0.15em]">
             Filtres
           </span>
           {activeFilters.length > 0 && (
-            <span className="ml-0.5 text-[10px] bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 font-bold px-1.5 py-0.5 rounded-full">
+            <span
+              className="ml-0.5 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full"
+              style={{ background: 'rgba(129,140,248,0.15)', color: '#818cf8' }}
+            >
               {activeFilters.length}
             </span>
           )}
         </div>
 
-        {/* Filter controls */}
-        <div className="px-5 py-4 flex flex-wrap gap-3 items-center">
-          {/* Type toggle pills */}
+        {/* Controls */}
+        <div className="px-5 py-4 flex flex-wrap gap-3 items-center dark:bg-[#0b0e1c]">
+          {/* Type toggle */}
           <div
-            className="flex gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5"
+            className="flex gap-1 rounded-xl p-0.5"
+            style={{ background: 'rgba(0,0,0,0.05)' }}
             role="group"
             aria-label="Filtrer par type"
           >
@@ -170,14 +189,20 @@ export default function Transactions() {
                 key={v}
                 onClick={() => { setFiltreType(v); setPage(0) }}
                 aria-pressed={filtreType === v}
-                className={[
-                  'px-3 py-1.5 rounded-[10px] text-xs font-bold transition-all duration-200',
-                  filtreType === v
-                    ? v === 'revenu'  ? 'bg-emerald-500 text-white shadow'
-                      : v === 'depense' ? 'bg-rose-500 text-white shadow'
-                      : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 shadow-sm'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300',
-                ].join(' ')}
+                className="px-3 py-1.5 rounded-[10px] text-xs font-bold transition-all duration-200"
+                style={filtreType === v ? {
+                  background: v === 'revenu'
+                    ? 'linear-gradient(135deg, #059669, #10b981)'
+                    : v === 'depense'
+                    ? 'linear-gradient(135deg, #e11d48, #f43f5e)'
+                    : 'rgba(255,255,255,0.9)',
+                  color: v === 'tous' ? '#374151' : '#fff',
+                  boxShadow: v === 'revenu'
+                    ? '0 2px 8px rgba(16,185,129,0.35)'
+                    : v === 'depense'
+                    ? '0 2px 8px rgba(244,63,94,0.35)'
+                    : '0 1px 4px rgba(0,0,0,0.1)',
+                } : { color: '#94a3b8' }}
               >
                 {l}
               </button>
@@ -207,7 +232,8 @@ export default function Transactions() {
           {hasFiltre && (
             <button
               onClick={() => { setFiltreType('tous'); setFiltreCateg('toutes'); setFiltreMois(''); setPage(0) }}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/50 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors ml-auto"
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl transition-colors ml-auto"
+              style={{ color: '#fb7185', border: '1px solid rgba(251,113,133,0.25)', background: 'rgba(251,113,133,0.06)' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
@@ -220,17 +246,22 @@ export default function Transactions() {
 
         {/* Active filter chips */}
         {activeFilters.length > 0 && (
-          <div className="px-5 pb-4 flex gap-2 flex-wrap">
+          <div className="px-5 pb-4 flex gap-2 flex-wrap dark:bg-[#0b0e1c]">
             {activeFilters.map(f => (
               <span
                 key={f.key}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-800/50 text-indigo-700 dark:text-indigo-300 text-xs font-semibold rounded-full"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full"
+                style={{
+                  background: 'rgba(129,140,248,0.1)',
+                  border: '1px solid rgba(129,140,248,0.25)',
+                  color: '#a5b4fc',
+                }}
               >
                 {f.label}
                 <button
                   onClick={f.clear}
                   aria-label={`Supprimer le filtre ${f.label}`}
-                  className="ml-0.5 text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-100 transition-colors"
+                  className="ml-0.5 transition-opacity hover:opacity-70"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" strokeWidth={3} aria-hidden="true">
@@ -244,28 +275,52 @@ export default function Transactions() {
       </div>
 
       {/* ── Liste groupée par date ── */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden">
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{
+          background: 'rgba(255,255,255,1)',
+          border: '1px solid rgba(0,0,0,0.07)',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+        }}
+      >
         {grouped.length === 0 ? (
-          <EmptyState
-            titre="Aucune transaction trouvée"
-            message="Modifiez vos filtres ou ajoutez votre première transaction."
-            action={<Button onClick={() => setAddOpen(true)}>Ajouter une transaction</Button>}
-          />
+          <div className="dark:bg-[#0b0e1c]">
+            <EmptyState
+              titre="Aucune transaction trouvée"
+              message="Modifiez vos filtres ou ajoutez votre première transaction."
+              action={<Button onClick={() => setAddOpen(true)}>Ajouter une transaction</Button>}
+            />
+          </div>
         ) : (
           <div>
-            {grouped.map(([date, transactions]) => (
+            {grouped.map(([date, transactions], groupIdx) => (
               <div key={date}>
                 {/* Date separator */}
-                <div className="flex items-center gap-3 px-5 py-2.5 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-                  <span className="text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                <div
+                  className="flex items-center gap-3 px-5 py-2.5 dark:bg-[#080b1a]"
+                  style={{
+                    background: 'rgba(248,250,252,1)',
+                    borderBottom: '1px solid rgba(0,0,0,0.05)',
+                    borderTop: groupIdx > 0 ? '1px solid rgba(0,0,0,0.04)' : undefined,
+                  }}
+                >
+                  <span
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ background: '#818cf8', boxShadow: '0 0 6px rgba(129,140,248,0.8)' }}
+                    aria-hidden="true"
+                  />
+                  <span className="font-display text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-[0.12em]">
                     {formatDate(date)}
                   </span>
-                  <div className="flex-1 h-px bg-slate-200 dark:bg-slate-700/60" aria-hidden="true" />
-                  <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 tabular-nums">
+                  <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg, rgba(129,140,248,0.2), transparent)' }} aria-hidden="true" />
+                  <span
+                    className="text-[10px] font-bold px-2 py-0.5 rounded-full tabular-nums"
+                    style={{ background: 'rgba(129,140,248,0.1)', color: '#818cf8' }}
+                  >
                     {transactions.length} op.
                   </span>
                 </div>
-                <div className="divide-y divide-slate-50 dark:divide-slate-800/40">
+                <div>
                   {transactions.map(t => (
                     <TransactionItem
                       key={t.id}
@@ -282,17 +337,28 @@ export default function Transactions() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-5 py-3.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <div
+            className="flex items-center justify-between px-5 py-3.5 dark:bg-[#080b1a]"
+            style={{
+              borderTop: '1px solid rgba(0,0,0,0.05)',
+              background: 'rgba(248,250,252,0.7)',
+            }}
+          >
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
               Page{' '}
-              <span className="font-bold text-slate-700 dark:text-slate-300">{page + 1}</span>
+              <span className="font-display font-bold text-slate-700 dark:text-slate-300">{page + 1}</span>
               {' '}sur {totalPages} · {filtered.length} transactions
             </span>
             <div className="flex gap-2">
               <button
                 disabled={page === 0}
                 onClick={() => setPage(p => p - 1)}
-                className="px-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1.5"
+                className="px-3 py-1.5 text-xs rounded-xl font-semibold flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  border: '1px solid rgba(0,0,0,0.08)',
+                  background: 'rgba(255,255,255,0.8)',
+                  color: '#64748b',
+                }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
@@ -303,7 +369,12 @@ export default function Transactions() {
               <button
                 disabled={page >= totalPages - 1}
                 onClick={() => setPage(p => p + 1)}
-                className="px-3 py-1.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-1.5"
+                className="px-3 py-1.5 text-xs rounded-xl font-semibold flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  border: '1px solid rgba(0,0,0,0.08)',
+                  background: 'rgba(255,255,255,0.8)',
+                  color: '#64748b',
+                }}
               >
                 Suivant
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
@@ -316,15 +387,15 @@ export default function Transactions() {
         )}
       </div>
 
-      {/* FAB mobile — au-dessus de la BottomNav */}
+      {/* ── FAB mobile ── */}
       <button
         onClick={() => setAddOpen(true)}
-        className="sm:hidden fixed bottom-20 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center text-white"
-        style={{
-          background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-          boxShadow: '0 4px 20px rgba(99,102,241,0.50), 0 2px 8px rgba(0,0,0,0.25)',
-        }}
         aria-label="Nouvelle transaction"
+        className="sm:hidden fixed bottom-20 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-2xl transition-all duration-200 active:scale-95"
+        style={{
+          background: 'linear-gradient(135deg, #7c6af7 0%, #5b52e8 100%)',
+          boxShadow: '0 8px 24px rgba(99,102,241,0.55)',
+        }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24"
           stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
