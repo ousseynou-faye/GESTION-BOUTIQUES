@@ -101,7 +101,7 @@ export default function Transactions() {
             )}
           </p>
         </div>
-        <Button onClick={() => setAddOpen(true)} className="flex-shrink-0">
+        <Button onClick={() => setAddOpen(true)} className="hidden sm:flex flex-shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
             stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -315,6 +315,22 @@ export default function Transactions() {
           </div>
         )}
       </div>
+
+      {/* FAB mobile — au-dessus de la BottomNav */}
+      <button
+        onClick={() => setAddOpen(true)}
+        className="sm:hidden fixed bottom-20 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center text-white"
+        style={{
+          background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
+          boxShadow: '0 4px 20px rgba(99,102,241,0.50), 0 2px 8px rgba(0,0,0,0.25)',
+        }}
+        aria-label="Nouvelle transaction"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </button>
 
       <Modal isOpen={addOpen} onClose={() => setAddOpen(false)} titre="Nouvelle transaction">
         <TransactionForm onSubmit={handleAdd} onCancel={() => setAddOpen(false)} />
