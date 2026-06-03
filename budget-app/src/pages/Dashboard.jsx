@@ -177,7 +177,7 @@ export default function Dashboard() {
       </div>
 
       {/* ─── Charts row ─────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
 
         {/* Pie chart — 2 cols */}
         <Card className="lg:col-span-2">
@@ -243,7 +243,7 @@ export default function Dashboard() {
       </div>
 
       {/* ─── Budgets + Dernières transactions ────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
         {/* Budgets */}
         <Card>
