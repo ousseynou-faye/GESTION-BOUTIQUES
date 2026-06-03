@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useBudget } from '@/context/BudgetContext'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
@@ -12,34 +12,33 @@ const COULEURS = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6', '#06b6d
 
 // ─── SVG ring progress ────────────────────────────────────────────────────────
 function RingProgress({ pct, color, size = 88 }) {
-  const sw   = 6
+  const sw   = 5.5
   const r    = (size - sw) / 2
   const circ = 2 * Math.PI * r
   const dash = circ - (Math.min(pct, 100) / 100) * circ
 
   return (
-    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+    <div className="relative flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }}>
       <svg
-        width={size}
-        height={size}
+        width={size} height={size}
         viewBox={`0 0 ${size} ${size}`}
         style={{ transform: 'rotate(-90deg)', position: 'absolute' }}
         aria-hidden="true"
       >
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={sw} stroke={color + '1e'} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={sw} stroke={color + '18'} />
         <circle
           cx={size / 2} cy={size / 2} r={r}
-          fill="none"
-          strokeWidth={sw}
-          stroke={color}
-          strokeDasharray={circ}
-          strokeDashoffset={dash}
+          fill="none" strokeWidth={sw} stroke={color}
+          strokeDasharray={circ} strokeDashoffset={dash}
           strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)' }}
+          style={{
+            transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)',
+            filter: `drop-shadow(0 0 5px ${color}88)`,
+          }}
         />
       </svg>
       <div className="flex flex-col items-center justify-center z-10">
-        <span className="text-xl font-black tabular-nums leading-none" style={{ color }}>
+        <span className="font-display text-[18px] font-black tabular-nums leading-none" style={{ color }}>
           {Math.round(Math.min(pct, 100))}%
         </span>
       </div>
@@ -80,7 +79,6 @@ function GoalForm({ initial, onSubmit, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* Color picker */}
       <div>
         <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide block mb-2">
           Couleur
@@ -88,8 +86,7 @@ function GoalForm({ initial, onSubmit, onCancel }) {
         <div className="flex gap-2 flex-wrap">
           {COULEURS.map(c => (
             <button
-              key={c}
-              type="button"
+              key={c} type="button"
               onClick={() => set('couleur', c)}
               aria-label={`Couleur ${c}`}
               aria-pressed={form.couleur === c}
@@ -121,49 +118,32 @@ function GoalForm({ initial, onSubmit, onCancel }) {
 
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide">
-            Cible (€)
-          </label>
+          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide">Cible (€)</label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-indigo-400" aria-hidden="true">
-              €
-            </span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-indigo-400" aria-hidden="true">€</span>
             <input
-              type="number"
-              step="0.01"
-              min="1"
-              placeholder="0,00"
+              type="number" step="0.01" min="1" placeholder="0,00"
               value={form.montantCible}
               onChange={e => set('montantCible', e.target.value)}
               aria-label="Montant cible"
               className={[
                 'w-full pl-8 pr-3 py-3 text-xl font-bold rounded-xl border-2',
-                'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200',
-                'focus:outline-none transition-all',
+                'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none transition-all',
                 errors.montantCible
                   ? 'border-rose-400 focus:border-rose-500'
                   : 'border-slate-200 dark:border-slate-700 focus:border-indigo-400',
               ].join(' ')}
             />
           </div>
-          {errors.montantCible && (
-            <p className="text-xs text-rose-500 font-medium">{errors.montantCible}</p>
-          )}
+          {errors.montantCible && <p className="text-xs text-rose-500 font-medium">{errors.montantCible}</p>}
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide">
-            Déjà épargné (€)
-          </label>
+          <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide">Déjà épargné (€)</label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-emerald-400" aria-hidden="true">
-              €
-            </span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-emerald-400" aria-hidden="true">€</span>
             <input
-              type="number"
-              step="0.01"
-              min="0"
-              placeholder="0,00"
+              type="number" step="0.01" min="0" placeholder="0,00"
               value={form.montantActuel}
               onChange={e => set('montantActuel', e.target.value)}
               aria-label="Montant déjà épargné"
@@ -182,9 +162,7 @@ function GoalForm({ initial, onSubmit, onCancel }) {
 
       <div className="flex gap-3 pt-1">
         <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">Annuler</Button>
-        <Button type="submit" className="flex-1">
-          {initial ? 'Enregistrer' : "Créer l'objectif"}
-        </Button>
+        <Button type="submit" className="flex-1">{initial ? 'Enregistrer' : "Créer l'objectif"}</Button>
       </div>
     </form>
   )
@@ -212,20 +190,19 @@ function DepositForm({ goal, onSubmit, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-      {/* Goal preview */}
       <div
         className="flex items-center gap-3 rounded-2xl p-4"
         style={{ background: goal.couleur + '10', border: `1px solid ${goal.couleur}22` }}
       >
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-extrabold text-base flex-shrink-0"
-          style={{ background: `linear-gradient(135deg, ${goal.couleur}cc, ${goal.couleur})` }}
+          style={{ background: `linear-gradient(135deg, ${goal.couleur}cc, ${goal.couleur})`, boxShadow: `0 4px 12px ${goal.couleur}44` }}
           aria-hidden="true"
         >
           {goal.nom.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-extrabold text-slate-800 dark:text-slate-200 truncate">{goal.nom}</p>
+          <p className="font-display text-sm font-bold text-slate-800 dark:text-slate-200 truncate">{goal.nom}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             {formatMontant(goal.montantActuel)} / {formatMontant(goal.montantCible)}
             {' · '}
@@ -236,32 +213,22 @@ function DepositForm({ goal, onSubmit, onCancel }) {
         </div>
       </div>
 
-      {/* Amount input */}
       <div className="flex flex-col gap-2">
         <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide">
           Montant à déposer (€)
         </label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold" style={{ color: goal.couleur }} aria-hidden="true">
-            €
-          </span>
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold" style={{ color: goal.couleur }} aria-hidden="true">€</span>
           <input
-            type="number"
-            step="0.01"
-            min="0.01"
-            placeholder="0,00"
+            type="number" step="0.01" min="0.01" placeholder="0,00"
             value={montant}
             onChange={e => setMontant(e.target.value)}
             aria-label="Montant à déposer"
             className={[
               'w-full pl-10 pr-4 py-4 text-3xl font-bold rounded-2xl border-2',
-              'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200',
-              'focus:outline-none transition-all',
-              error
-                ? 'border-rose-400 focus:border-rose-500'
-                : 'border-slate-200 dark:border-slate-700',
+              'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none transition-all',
+              error ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 dark:border-slate-700',
             ].join(' ')}
-            style={!error ? { '--tw-ring-color': goal.couleur } : {}}
           />
         </div>
         {error && <p className="text-xs text-rose-500 font-medium">{error}</p>}
@@ -269,8 +236,7 @@ function DepositForm({ goal, onSubmit, onCancel }) {
           <div className="flex gap-2 flex-wrap mt-1">
             {suggestions.map((v, i) => (
               <button
-                key={i}
-                type="button"
+                key={i} type="button"
                 onClick={() => setMontant(String(v))}
                 className="px-3 py-1.5 text-xs font-bold rounded-xl border transition-all hover:opacity-80"
                 style={{ borderColor: goal.couleur + '44', color: goal.couleur, background: goal.couleur + '0e' }}
@@ -303,22 +269,29 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
   const urgence = jours !== null && jours <= 30 && !atteint
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 flex flex-col">
-
-      {/* ── Header with ring ── */}
+    <div
+      className="rounded-3xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1"
+      style={{
+        background: 'rgba(255,255,255,1)',
+        border: `1px solid ${goal.couleur}22`,
+        boxShadow: `0 4px 24px ${goal.couleur}10, 0 2px 8px rgba(0,0,0,0.05)`,
+      }}
+    >
+      {/* ── Colored header zone ── */}
       <div
-        className="relative px-5 pt-5 pb-4 overflow-hidden"
-        style={{ background: `linear-gradient(135deg, ${goal.couleur}12 0%, ${goal.couleur}04 100%)` }}
+        className="relative px-5 pt-5 pb-4 overflow-hidden dark:bg-[#0b0e1c]"
+        style={{ background: `linear-gradient(135deg, ${goal.couleur}14 0%, ${goal.couleur}05 100%)` }}
       >
-        {/* Decorative blobs */}
+        {/* Decorative circles */}
+        <div className="absolute right-[-28px] top-[-28px] w-32 h-32 rounded-full pointer-events-none"
+          style={{ background: goal.couleur + '14' }} aria-hidden="true" />
+        <div className="absolute left-[-20px] bottom-[-20px] w-24 h-24 rounded-full pointer-events-none"
+          style={{ background: goal.couleur + '08' }} aria-hidden="true" />
+
+        {/* Prismatic strip at top */}
         <div
-          className="absolute right-[-24px] top-[-24px] w-28 h-28 rounded-full pointer-events-none"
-          style={{ background: goal.couleur + '18' }}
-          aria-hidden="true"
-        />
-        <div
-          className="absolute left-[-16px] bottom-[-16px] w-20 h-20 rounded-full pointer-events-none"
-          style={{ background: goal.couleur + '08' }}
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: `linear-gradient(90deg, transparent, ${goal.couleur}88, ${goal.couleur}, ${goal.couleur}88, transparent)` }}
           aria-hidden="true"
         />
 
@@ -327,8 +300,12 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
           <div className="flex-shrink-0">
             {atteint ? (
               <div
-                className="w-[88px] h-[88px] rounded-full flex items-center justify-center"
-                style={{ background: `${goal.couleur}18`, border: `6px solid ${goal.couleur}` }}
+                className="w-[80px] h-[80px] rounded-full flex items-center justify-center"
+                style={{
+                  background: `${goal.couleur}15`,
+                  border: `5px solid ${goal.couleur}`,
+                  boxShadow: `0 0 20px ${goal.couleur}44`,
+                }}
                 aria-label="Objectif atteint"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24"
@@ -338,37 +315,36 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
                 </svg>
               </div>
             ) : (
-              <RingProgress pct={pct} color={goal.couleur} size={88} />
+              <RingProgress pct={pct} color={goal.couleur} size={80} />
             )}
           </div>
 
-          {/* Goal info */}
+          {/* Info + actions */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-200 leading-tight truncate">
+                <h3 className="font-display text-[13px] font-extrabold text-slate-800 dark:text-slate-100 leading-tight truncate">
                   {goal.nom}
                 </h3>
                 {goal.description && (
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
                     {goal.description}
                   </p>
                 )}
                 {atteint && (
                   <span
                     className="inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
-                    style={{ background: goal.couleur }}
+                    style={{ background: goal.couleur, boxShadow: `0 2px 8px ${goal.couleur}55` }}
                   >
-                    Objectif atteint !
+                    ✓ Objectif atteint !
                   </span>
                 )}
               </div>
-              {/* Action buttons */}
               <div className="flex gap-0.5 flex-shrink-0">
                 <button
                   onClick={() => onEdit(goal)}
                   aria-label={`Modifier l'objectif ${goal.nom}`}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -379,7 +355,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
                 <button
                   onClick={() => onDelete(goal)}
                   aria-label={`Supprimer l'objectif ${goal.nom}`}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-all"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -393,37 +369,38 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
         </div>
       </div>
 
-      {/* ── Thin progress bar ── */}
-      <div className="px-5 py-0.5">
-        <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all duration-1000"
-            style={{
-              width: `${Math.min(pct, 100)}%`,
-              background: `linear-gradient(90deg, ${goal.couleur}88, ${goal.couleur})`,
-              boxShadow: `0 0 8px ${goal.couleur}44`,
-            }}
-            role="progressbar"
-            aria-valuenow={Math.round(pct)}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          />
-        </div>
+      {/* ── Progress bar ── */}
+      <div
+        className="h-1.5 w-full dark:bg-[#0b0e1c]"
+        style={{ background: `${goal.couleur}12` }}
+      >
+        <div
+          className="h-full transition-all duration-1000"
+          style={{
+            width: `${Math.min(pct, 100)}%`,
+            background: `linear-gradient(90deg, ${goal.couleur}88, ${goal.couleur})`,
+            boxShadow: `0 0 8px ${goal.couleur}66`,
+          }}
+          role="progressbar"
+          aria-valuenow={Math.round(pct)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        />
       </div>
 
       {/* ── Body ── */}
-      <div className="p-5 flex flex-col gap-4 flex-1">
-        {/* Amounts row */}
+      <div className="p-5 flex flex-col gap-3.5 flex-1 dark:bg-[#0b0e1c]">
+        {/* Amounts */}
         <div className="flex justify-between items-end">
           <div>
-            <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-0.5">Épargné</p>
-            <p className="text-xl font-extrabold text-slate-800 dark:text-slate-200 tabular-nums">
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-0.5">Épargné</p>
+            <p className="font-display text-xl font-extrabold text-slate-800 dark:text-slate-100 tabular-nums leading-none">
               {formatMontant(goal.montantActuel)}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-0.5">Objectif</p>
-            <p className="text-xl font-extrabold text-slate-800 dark:text-slate-200 tabular-nums">
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-0.5">Objectif</p>
+            <p className="font-display text-xl font-extrabold text-slate-800 dark:text-slate-100 tabular-nums leading-none">
               {formatMontant(goal.montantCible)}
             </p>
           </div>
@@ -431,41 +408,50 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl px-3 py-2.5">
-            <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-0.5">Restant</p>
-            <p className="text-sm font-extrabold text-slate-700 dark:text-slate-300 tabular-nums">
+          <div
+            className="rounded-xl px-3 py-2.5"
+            style={{ background: `${goal.couleur}0a` }}
+          >
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: `${goal.couleur}88` }}>Restant</p>
+            <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: goal.couleur }}>
               {formatMontant(restant)}
             </p>
           </div>
           {jours !== null ? (
-            <div className={`rounded-xl px-3 py-2.5 ${urgence ? 'bg-orange-50 dark:bg-orange-900/20' : 'bg-slate-50 dark:bg-slate-800/60'}`}>
+            <div
+              className="rounded-xl px-3 py-2.5"
+              style={{ background: urgence ? 'rgba(251,146,60,0.08)' : 'rgba(0,0,0,0.03)' }}
+            >
               <p
-                className="text-[10px] font-semibold uppercase tracking-wide mb-0.5"
-                style={{ color: urgence ? '#f97316' : '#94a3b8' }}
+                className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
+                style={{ color: urgence ? '#fb923c' : '#94a3b8' }}
               >
                 {jours > 0 ? 'Jours restants' : 'Échéance'}
               </p>
-              <p className={`text-sm font-extrabold tabular-nums ${urgence ? 'text-orange-600 dark:text-orange-400' : 'text-slate-700 dark:text-slate-300'}`}>
+              <p
+                className="font-display text-[13px] font-extrabold tabular-nums"
+                style={{ color: urgence ? '#fb923c' : '#64748b' }}
+              >
                 {jours > 0 ? `${jours} j` : jours === 0 ? "Aujourd'hui" : 'Dépassée'}
               </p>
             </div>
           ) : (
-            <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl px-3 py-2.5">
-              <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide mb-0.5">Échéance</p>
-              <p className="text-sm font-bold text-slate-400 dark:text-slate-500">Non définie</p>
+            <div className="rounded-xl px-3 py-2.5" style={{ background: 'rgba(0,0,0,0.03)' }}>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-0.5">Échéance</p>
+              <p className="font-display text-[13px] font-bold text-slate-400 dark:text-slate-500">Non définie</p>
             </div>
           )}
         </div>
 
-        {/* Monthly savings requirement */}
+        {/* Monthly savings tip */}
         {mensualiteRequise !== null && mensualiteRequise > 0 && !atteint && (
           <div
-            className="flex items-center gap-3 rounded-2xl px-4 py-3 border"
-            style={{ background: goal.couleur + '08', borderColor: goal.couleur + '22' }}
+            className="flex items-center gap-3 rounded-2xl px-4 py-3"
+            style={{ background: `${goal.couleur}0a`, border: `1px solid ${goal.couleur}20` }}
           >
             <div
               className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: goal.couleur + '15' }}
+              style={{ background: `${goal.couleur}18` }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
                 stroke={goal.couleur} strokeWidth={2} aria-hidden="true">
@@ -473,10 +459,10 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
               </svg>
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wide mb-0.5" style={{ color: goal.couleur }}>
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: `${goal.couleur}99` }}>
                 À épargner / mois
               </p>
-              <p className="text-sm font-extrabold tabular-nums" style={{ color: goal.couleur }}>
+              <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: goal.couleur }}>
                 {formatMontant(mensualiteRequise)}
               </p>
             </div>
@@ -485,11 +471,9 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
 
         {/* Deadline */}
         {goal.dateEcheance && (
-          <p className="text-xs text-slate-400 dark:text-slate-500 text-center">
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center">
             Échéance :{' '}
-            <span className="font-bold text-slate-600 dark:text-slate-400">
-              {formatDate(goal.dateEcheance)}
-            </span>
+            <span className="font-bold text-slate-600 dark:text-slate-400">{formatDate(goal.dateEcheance)}</span>
           </p>
         )}
 
@@ -497,8 +481,8 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
         <div className="mt-auto pt-1">
           {atteint ? (
             <div
-              className="flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm"
-              style={{ background: goal.couleur + '12', color: goal.couleur, border: `1px solid ${goal.couleur}28` }}
+              className="flex items-center justify-center gap-2 py-3 rounded-2xl font-display font-bold text-sm"
+              style={{ background: `${goal.couleur}12`, color: goal.couleur, border: `1px solid ${goal.couleur}28` }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
@@ -510,10 +494,10 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
           ) : (
             <button
               onClick={() => onDeposit(goal)}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-bold text-white transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-100"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-display text-sm font-bold text-white transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-100"
               style={{
-                background: `linear-gradient(135deg, ${goal.couleur}cc, ${goal.couleur})`,
-                boxShadow: `0 4px 16px ${goal.couleur}30`,
+                background: `linear-gradient(135deg, ${goal.couleur}dd, ${goal.couleur})`,
+                boxShadow: `0 6px 20px ${goal.couleur}44`,
               }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
@@ -548,10 +532,10 @@ export default function Goals() {
   }
   function handleDelete(id) { dispatch({ type: 'DELETE_GOAL', payload: { id } }); setDeleteTarget(null) }
 
-  const totalCible  = state.goals.reduce((s, g) => s + g.montantCible, 0)
+  const totalCible   = state.goals.reduce((s, g) => s + g.montantCible, 0)
   const totalEpargne = state.goals.reduce((s, g) => s + g.montantActuel, 0)
-  const nbAtteints  = state.goals.filter(g => g.montantActuel >= g.montantCible).length
-  const pctGlobal   = totalCible > 0 ? (totalEpargne / totalCible) * 100 : 0
+  const nbAtteints   = state.goals.filter(g => g.montantActuel >= g.montantCible).length
+  const pctGlobal    = totalCible > 0 ? Math.min(100, (totalEpargne / totalCible) * 100) : 0
 
   return (
     <div className="flex flex-col gap-6 animate-fade-slide-up">
@@ -559,14 +543,14 @@ export default function Goals() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
             Objectifs d'épargne
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
             Suivez la progression de vos projets financiers
           </p>
         </div>
-        <Button onClick={() => setAddOpen(true)} className="flex-shrink-0">
+        <Button onClick={() => setAddOpen(true)} className="hidden sm:flex flex-shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
             stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -578,58 +562,86 @@ export default function Goals() {
       {/* ── Global banner ── */}
       {state.goals.length > 0 && (
         <div
-          className="rounded-3xl overflow-hidden shadow-lg"
-          style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0c1a2e 100%)' }}
+          className="rounded-3xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(145deg, #050818 0%, #0a0d24 45%, #0d0a2e 100%)',
+            boxShadow: '0 20px 60px rgba(5,8,24,0.5), 0 4px 16px rgba(99,102,241,0.08)',
+          }}
         >
-          <div className="relative p-6 overflow-hidden">
-            {/* Decorative blobs */}
-            <div className="absolute right-[-40px] top-[-40px] w-56 h-56 rounded-full opacity-[0.03] bg-white pointer-events-none" aria-hidden="true" />
-            <div className="absolute left-[30%] bottom-[-30px] w-40 h-40 rounded-full opacity-[0.04] bg-indigo-400 pointer-events-none" aria-hidden="true" />
+          {/* Prismatic top line */}
+          <div
+            className="h-px w-full"
+            style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(129,140,248,0.6) 30%, rgba(196,181,253,0.9) 50%, rgba(129,140,248,0.6) 70%, transparent 100%)' }}
+            aria-hidden="true"
+          />
 
-            <div className="relative flex flex-wrap gap-6 items-center justify-between">
-              {/* Progress summary */}
+          <div className="relative p-6 overflow-hidden">
+            {/* Ambient glows */}
+            <div className="absolute right-0 top-0 w-72 h-72 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse at 90% 10%, rgba(99,102,241,0.1) 0%, transparent 60%)' }}
+              aria-hidden="true" />
+            <div className="absolute left-0 bottom-0 w-48 h-48 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(ellipse at 10% 90%, rgba(139,92,246,0.07) 0%, transparent 60%)' }}
+              aria-hidden="true" />
+
+            <div className="relative flex flex-wrap gap-4 items-center justify-between">
+              {/* Left: main amount + progress */}
               <div>
-                <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">
+                <p className="text-[9px] font-bold uppercase tracking-[0.22em] mb-2"
+                  style={{ color: 'rgba(129,140,248,0.6)' }}>
                   Vue d'ensemble — {state.goals.length} objectif{state.goals.length > 1 ? 's' : ''}
                 </p>
-                <p className="text-white text-3xl font-extrabold tracking-tight tabular-nums">
+                <p
+                  className="font-display font-extrabold leading-none tabular-nums text-white"
+                  style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}
+                >
                   {formatMontant(totalEpargne)}
-                  <span className="text-slate-500 text-lg font-normal ml-2">/ {formatMontant(totalCible)}</span>
+                  <span className="text-slate-500 font-normal ml-2" style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
+                    / {formatMontant(totalCible)}
+                  </span>
                 </p>
-                <div className="mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden w-48">
+
+                {/* Progress bar */}
+                <div className="mt-3 h-2 rounded-full overflow-hidden w-52" style={{ background: 'rgba(255,255,255,0.06)' }}>
                   <div
-                    className="h-full rounded-full bg-indigo-500 transition-all duration-1000"
-                    style={{ width: `${Math.min(pctGlobal, 100)}%`, boxShadow: '0 0 10px rgba(99,102,241,0.5)' }}
+                    className="h-full rounded-full transition-all duration-1000"
+                    style={{
+                      width: `${pctGlobal}%`,
+                      background: 'linear-gradient(90deg, rgba(129,140,248,0.7), #818cf8)',
+                      boxShadow: '0 0 16px rgba(129,140,248,0.6)',
+                    }}
                     role="progressbar"
                     aria-valuenow={Math.round(pctGlobal)}
                     aria-valuemin={0}
                     aria-valuemax={100}
                   />
                 </div>
-                <p className="text-slate-500 text-xs mt-1.5">
+                <p className="text-[10px] mt-1.5" style={{ color: 'rgba(100,116,139,0.7)' }}>
                   {Math.round(pctGlobal)}% de l'objectif total atteint
                 </p>
               </div>
 
-              {/* Quick stats */}
-              <div className="flex gap-5">
+              {/* Right: stats trio */}
+              <div className="flex gap-4 sm:gap-6 items-center">
                 <div className="text-center">
-                  <p className="text-2xl font-extrabold text-white tabular-nums">{state.goals.length}</p>
-                  <p className="text-slate-500 text-[10px] mt-0.5 uppercase tracking-wide">Objectifs</p>
+                  <p className="font-display text-xl font-extrabold text-white tabular-nums">{state.goals.length}</p>
+                  <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>
+                    Objectif{state.goals.length > 1 ? 's' : ''}
+                  </p>
                 </div>
-                <div className="w-px bg-white/10" aria-hidden="true" />
+                <div className="w-px h-8" style={{ background: 'rgba(255,255,255,0.08)' }} aria-hidden="true" />
                 <div className="text-center">
-                  <p className="text-2xl font-extrabold text-indigo-400 tabular-nums">
+                  <p className="font-display text-xl font-extrabold tabular-nums" style={{ color: '#a5b4fc' }}>
                     {formatMontant(totalEpargne)}
                   </p>
-                  <p className="text-slate-500 text-[10px] mt-0.5 uppercase tracking-wide">Épargné</p>
+                  <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>Épargné</p>
                 </div>
-                <div className="w-px bg-white/10" aria-hidden="true" />
+                <div className="w-px h-8" style={{ background: 'rgba(255,255,255,0.08)' }} aria-hidden="true" />
                 <div className="text-center">
-                  <p className="text-2xl font-extrabold text-emerald-400 tabular-nums">
+                  <p className="font-display text-xl font-extrabold text-emerald-400 tabular-nums">
                     {nbAtteints} / {state.goals.length}
                   </p>
-                  <p className="text-slate-500 text-[10px] mt-0.5 uppercase tracking-wide">Atteints</p>
+                  <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>Atteints</p>
                 </div>
               </div>
             </div>
@@ -639,7 +651,7 @@ export default function Goals() {
 
       {/* ── Goals grid ── */}
       {state.goals.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
+        <div className="bg-white dark:bg-[#0b0e1c] rounded-3xl border border-slate-100 dark:border-white/[0.05] shadow-sm">
           <EmptyState
             titre="Aucun objectif d'épargne"
             message="Définissez vos projets financiers — vacances, fond d'urgence, achat — et suivez votre progression."
@@ -655,7 +667,7 @@ export default function Goals() {
           />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {state.goals.map(goal => (
             <GoalCard
               key={goal.id}
@@ -667,6 +679,22 @@ export default function Goals() {
           ))}
         </div>
       )}
+
+      {/* ── FAB mobile ── */}
+      <button
+        onClick={() => setAddOpen(true)}
+        aria-label="Nouvel objectif"
+        className="sm:hidden fixed bottom-20 right-4 z-30 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-2xl transition-all duration-200 active:scale-95"
+        style={{
+          background: 'linear-gradient(135deg, #7c6af7 0%, #5b52e8 100%)',
+          boxShadow: '0 8px 24px rgba(99,102,241,0.55)',
+        }}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </button>
 
       {/* ── Modals ── */}
       <Modal isOpen={addOpen} onClose={() => setAddOpen(false)} titre="Nouvel objectif d'épargne">
