@@ -8,17 +8,16 @@ import { formatMontant, formatDate } from '@/utils/formatters'
 export function TransactionItem({ transaction, onEdit, onDelete }) {
   const [editOpen,   setEditOpen]   = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
-  const isRevenu = transaction.type === 'revenu'
-
+  const isRevenu    = transaction.type === 'revenu'
   const amountColor = isRevenu ? '#34d399' : '#fb7185'
 
   return (
     <>
       <div
-        className="flex items-center gap-3 px-5 py-3.5 group cursor-default dark:bg-[#0b0e1c] transition-colors"
-        style={{}}
+        className="flex items-center gap-3 px-5 py-3.5 group cursor-default transition-colors duration-150"
+        style={{ background: 'transparent' }}
         onMouseEnter={e => { e.currentTarget.style.background = isRevenu ? 'rgba(52,211,153,0.04)' : 'rgba(251,113,133,0.04)' }}
-        onMouseLeave={e => { e.currentTarget.style.background = '' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
       >
         {/* ── Type icon ── */}
         <div
@@ -46,12 +45,13 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
 
         {/* ── Info ── */}
         <div className="flex-1 min-w-0">
-          <p className="font-display text-[13px] font-semibold text-slate-800 dark:text-slate-100 truncate leading-snug">
+          <p className="font-display text-[13px] font-semibold truncate leading-snug"
+            style={{ color: 'rgba(226,232,240,0.92)' }}>
             {transaction.description}
           </p>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
             <Badge categorie={transaction.categorie} />
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+            <span className="text-[10px] font-medium" style={{ color: 'rgba(100,116,139,0.65)' }}>
               {formatDate(transaction.date, 'd MMM yyyy')}
             </span>
           </div>
@@ -65,12 +65,15 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
           {isRevenu ? '+' : '−'}{formatMontant(transaction.montant)}
         </span>
 
-        {/* ── Actions ── */}
+        {/* ── Actions (visible on hover) ── */}
         <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-all duration-150 flex-shrink-0 ml-1">
           <button
             onClick={() => setEditOpen(true)}
             aria-label={`Modifier "${transaction.description}"`}
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 focus:outline-none transition-all"
+            className="w-7 h-7 rounded-lg flex items-center justify-center focus:outline-none transition-all"
+            style={{ color: 'rgba(100,116,139,0.6)', background: 'transparent' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#818cf8'; e.currentTarget.style.background = 'rgba(129,140,248,0.12)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.6)'; e.currentTarget.style.background = 'transparent' }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -81,7 +84,10 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
           <button
             onClick={() => setDeleteOpen(true)}
             aria-label={`Supprimer "${transaction.description}"`}
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 focus:outline-none transition-all"
+            className="w-7 h-7 rounded-lg flex items-center justify-center focus:outline-none transition-all"
+            style={{ color: 'rgba(100,116,139,0.6)', background: 'transparent' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#fb7185'; e.currentTarget.style.background = 'rgba(251,113,133,0.12)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.6)'; e.currentTarget.style.background = 'transparent' }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -93,12 +99,12 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
       </div>
 
       {/* Divider */}
-      <div className="mx-5 h-px dark:bg-[#0b0e1c]" style={{ background: 'rgba(0,0,0,0.04)' }} aria-hidden="true" />
+      <div className="mx-5 h-px" style={{ background: 'rgba(255,255,255,0.04)' }} aria-hidden="true" />
 
       <Modal isOpen={editOpen} onClose={() => setEditOpen(false)} titre="Modifier la transaction">
         <TransactionForm
           initial={transaction}
-          onSubmit={(data) => { onEdit(data); setEditOpen(false) }}
+          onSubmit={data => { onEdit(data); setEditOpen(false) }}
           onCancel={() => setEditOpen(false)}
         />
       </Modal>
