@@ -86,7 +86,7 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
         </span>
 
         {/* ── Actions (visible on hover) ── */}
-        <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-all duration-150 flex-shrink-0 ml-1">
+        <div className="flex gap-0.5 opacity-50 group-hover:opacity-100 transition-all duration-150 flex-shrink-0 ml-1">
           <button
             onClick={() => setEditOpen(true)}
             aria-label={`Modifier "${transaction.description}"`}
