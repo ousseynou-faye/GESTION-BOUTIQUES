@@ -1,4 +1,4 @@
-function Sparkline({ data, color }) {
+function Sparkline({ data }) {
   if (!data || data.length < 2) return null
   const max = Math.max(...data)
   const min = Math.min(...data)
@@ -142,7 +142,7 @@ export function KPICard({
       </div>
 
       {/* ── Sparkline ───────────────────────────────────── */}
-      {sparkData && (
+      {sparkData?.length >= 2 && (
         <div className="relative z-10 -mx-1 -mb-1">
           <Sparkline data={sparkData} />
         </div>
