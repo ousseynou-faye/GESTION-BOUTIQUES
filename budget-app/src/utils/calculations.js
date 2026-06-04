@@ -206,11 +206,9 @@ export function getKpiTendance(transactions, moisCourant) {
     solde:    { tendance: pct(curr.solde,    prev.solde),    spark: data6Mois.map(d => d.revenus - d.depenses) },
     epargne:  {
       tendance: pct(curr.epargne, prev.epargne),
-      spark: data6Mois.map(d => {
-        const r = getTotalRevenus(transactions, d.mois)
-        const e = getTotalDepenses(transactions, d.mois)
-        return r === 0 ? 0 : Math.max(0, ((r - e) / r) * 100)
-      }),
+      spark: data6Mois.map(d =>
+        d.revenus === 0 ? 0 : Math.max(0, ((d.revenus - d.depenses) / d.revenus) * 100)
+      ),
     },
   }
 }
