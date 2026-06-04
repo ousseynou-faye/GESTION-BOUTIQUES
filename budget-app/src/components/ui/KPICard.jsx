@@ -1,3 +1,33 @@
+function Sparkline({ data, color }) {
+  if (!data || data.length < 2) return null
+  const max = Math.max(...data)
+  const min = Math.min(...data)
+  const range = max - min || 1
+  const W = 100
+  const H = 28
+  const pts = data
+    .map((v, i) => `${(i / (data.length - 1)) * W},${H - ((v - min) / range) * (H - 4) - 2}`)
+    .join(' ')
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="w-full"
+      style={{ height: H, display: 'block' }}
+      aria-hidden="true"
+      preserveAspectRatio="none"
+    >
+      <polyline
+        points={pts}
+        fill="none"
+        stroke="rgba(255,255,255,0.5)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 export function KPICard({
   titre,
   valeur,
@@ -5,9 +35,10 @@ export function KPICard({
   gradient = ['#4f46e5', '#6366f1'],
   icon,
   tendance,
+  sparkData,
 }) {
   const [from, to] = gradient
-  const trendUp = tendance !== undefined && tendance >= 0
+  const trendUp = tendance !== undefined && tendance !== null && tendance >= 0
 
   return (
     <div
@@ -61,7 +92,7 @@ export function KPICard({
           {icon}
         </div>
 
-        {tendance !== undefined && (
+        {tendance !== undefined && tendance !== null && (
           <span
             className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full leading-none"
             style={{
@@ -69,7 +100,7 @@ export function KPICard({
               backdropFilter: 'blur(6px)',
               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)',
             }}
-            aria-label={`Tendance : ${trendUp ? '+' : '-'}${Math.abs(tendance).toFixed(1)}%`}
+            aria-label={`Tendance : ${trendUp ? '+' : ''}${tendance.toFixed(1)}%`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -109,6 +140,13 @@ export function KPICard({
           </p>
         )}
       </div>
+
+      {/* ── Sparkline ───────────────────────────────────── */}
+      {sparkData && (
+        <div className="relative z-10 -mx-1 -mb-1">
+          <Sparkline data={sparkData} />
+        </div>
+      )}
     </div>
   )
 }
