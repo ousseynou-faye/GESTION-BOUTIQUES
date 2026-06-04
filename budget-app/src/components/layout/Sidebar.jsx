@@ -133,8 +133,8 @@ export function Sidebar() {
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="w-[18px] h-[18px] text-white" viewBox="0 0 24 24"
             fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M12 8v4l3 3" />
+            <path d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5" />
+            <path d="M21 12h-5a2 2 0 000 4h5" />
           </svg>
         </div>
         <div className="min-w-0">
