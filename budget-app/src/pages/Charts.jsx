@@ -178,6 +178,31 @@ export default function Charts() {
         </p>
       </div>
 
+      {/* ── Snapshot global ── */}
+      <div
+        className="grid grid-cols-2 sm:grid-cols-4 gap-px overflow-hidden rounded-2xl"
+        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.06)' }}
+      >
+        {[
+          { label: 'Dépenses ce mois', value: formatMontant(totalDepensesMois), color: '#fb7185' },
+          { label: 'Revenus 12 mois',  value: formatMontant(totalRevenus12),    color: '#34d399' },
+          { label: 'Solde actuel',     value: formatMontant(soldeActuel),       color: soldeActuel >= 0 ? '#818cf8' : '#fb7185' },
+          { label: 'Épargne nette',    value: formatMontant(totalRevenus12 - totalDepenses12), color: (totalRevenus12 - totalDepenses12) >= 0 ? '#fb923c' : '#fb7185' },
+        ].map(({ label, value, color }) => (
+          <div
+            key={label}
+            className="flex flex-col gap-1 px-4 py-3"
+            style={{ background: '#0b0e1c' }}
+          >
+            <p className="text-[8px] font-bold uppercase tracking-[0.18em]" style={{ color: `${color}99` }}>{label}</p>
+            <p className="font-display text-[14px] font-extrabold tabular-nums leading-tight"
+              style={{ color: 'rgba(226,232,240,0.92)' }}>
+              {value}
+            </p>
+          </div>
+        ))}
+      </div>
+
       {/* ── Tabs ── */}
       <div className="grid grid-cols-3 gap-3" role="tablist" aria-label="Sélectionner un graphique">
         {ONGLETS.map(o => {
