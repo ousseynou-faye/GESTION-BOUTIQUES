@@ -21,14 +21,11 @@ export function budgetReducer(state, action) {
       }
 
     // ─── Transactions ──────────────────────────────────────────────────
-    case 'ADD_TRANSACTION':
-      return {
-        ...state,
-        transactions: [
-          { ...action.payload, id: makeId('txn'), createdAt: Date.now() },
-          ...state.transactions,
-        ],
-      }
+    case 'ADD_TRANSACTION': {
+      const t = { ...action.payload, id: makeId('txn'), createdAt: Date.now() }
+      if (t.recurrente) t.derniereGeneration = t.date.slice(0, 7)
+      return { ...state, transactions: [t, ...state.transactions] }
+    }
     case 'UPDATE_TRANSACTION':
       return {
         ...state,
@@ -41,6 +38,19 @@ export function budgetReducer(state, action) {
         ...state,
         transactions: state.transactions.filter(t => t.id !== action.payload.id),
       }
+    case 'GENERATE_RECURRENTES': {
+      const { nouvelles, majOriginales } = action.payload
+      const mises = new Map(majOriginales.map(m => [m.id, m.derniereGeneration]))
+      return {
+        ...state,
+        transactions: [
+          ...nouvelles,
+          ...state.transactions.map(t =>
+            mises.has(t.id) ? { ...t, derniereGeneration: mises.get(t.id) } : t
+          ),
+        ],
+      }
+    }
 
     // ─── Budgets ───────────────────────────────────────────────────────
     case 'SET_BUDGET': {
