@@ -9,6 +9,21 @@ import { formatMontant, formatDate } from '@/utils/formatters'
 
 const COULEURS = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16']
 
+function getEtatObjectif(pct) {
+  if (pct >= 100) return { label: 'Atteint !',  emoji: '✓', color: '#34d399', bg: 'rgba(52,211,153,0.15)',  border: 'rgba(52,211,153,0.3)' }
+  if (pct >= 75)  return { label: 'Presque !',  emoji: '🔥', color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',  border: 'rgba(251,191,36,0.25)' }
+  if (pct >= 21)  return { label: 'En cours',   emoji: '💪', color: '#a5b4fc', bg: 'rgba(165,180,252,0.12)', border: 'rgba(129,140,248,0.3)' }
+  return              { label: 'Démarrage',  emoji: '🌱', color: '#fb923c', bg: 'rgba(251,146,60,0.12)',  border: 'rgba(251,146,60,0.25)' }
+}
+
+function getProchainPalier(pct, montantCible) {
+  const paliers = [25, 50, 75, 100]
+  const prochain = paliers.find(p => p > Math.min(pct, 99))
+  if (!prochain) return null
+  const restant = Math.max(0, Math.round((prochain / 100) * montantCible - (pct / 100) * montantCible))
+  return { palier: prochain, restant }
+}
+
 // ─── SVG ring progress ────────────────────────────────────────────────────────
 function RingProgress({ pct, color, size = 88 }) {
   const sw   = 5.5
@@ -511,6 +526,8 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
   const { pct, restant, jours, mensualiteRequise } = getObjectifProgression(goal)
   const atteint = goal.montantActuel >= goal.montantCible
   const urgence = jours !== null && jours <= 30 && !atteint
+  const etat          = getEtatObjectif(pct)
+  const prochainPalier = !atteint ? getProchainPalier(pct, goal.montantCible) : null
 
   return (
     <div
@@ -567,14 +584,31 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <h3 className="font-display text-[13px] font-extrabold leading-tight truncate"
-                  style={{ color: 'rgba(226,232,240,0.95)' }}>
-                  {goal.nom}
-                </h3>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-display text-[13px] font-extrabold leading-tight truncate"
+                    style={{ color: 'rgba(226,232,240,0.95)' }}>
+                    {goal.nom}
+                  </h3>
+                  {/* Badge d'état */}
+                  <span
+                    className="text-[9px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                    style={{ background: etat.bg, color: etat.color, border: `1px solid ${etat.border}` }}
+                  >
+                    {etat.emoji} {etat.label}
+                  </span>
+                </div>
                 {goal.description && (
                   <p className="text-[11px] mt-1 line-clamp-2 leading-relaxed"
                     style={{ color: 'rgba(100,116,139,0.75)' }}>
                     {goal.description}
+                  </p>
+                )}
+                {/* Message motivationnel */}
+                {prochainPalier && (
+                  <p className="text-[10px] font-semibold mt-1.5 flex items-center gap-1"
+                    style={{ color: `${goal.couleur}99` }}>
+                    <span aria-hidden="true">🎯</span>
+                    Palier {prochainPalier.palier}% — encore {new Intl.NumberFormat('fr-FR').format(prochainPalier.restant)} FCFA
                   </p>
                 )}
                 {atteint && (
@@ -621,8 +655,8 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
         </div>
       </div>
 
-      {/* ── Progress bar ── */}
-      <div className="h-1.5 w-full" style={{ background: `${goal.couleur}10` }}>
+      {/* ── Progress bar avec milestones ── */}
+      <div className="relative h-1.5 w-full" style={{ background: `${goal.couleur}10` }}>
         <div
           className="h-full transition-all duration-1000"
           style={{
@@ -635,6 +669,18 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
           aria-valuemin={0}
           aria-valuemax={100}
         />
+        {[25, 50, 75].map(mark => (
+          <div
+            key={mark}
+            className="absolute top-0 bottom-0"
+            style={{
+              left: `${mark}%`,
+              width: '1px',
+              background: pct >= mark ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.18)',
+            }}
+            aria-hidden="true"
+          />
+        ))}
       </div>
 
       {/* ── Body ── */}
