@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getTop5Categories } from './calculations.js'
+import { getTop5Categories, getBudgetAlerts } from './calculations.js'
 
 const txns = [
   { id: '1', type: 'depense', montant: 50000, categorie: 'loyer',        date: '2026-06-01' },
@@ -66,5 +66,61 @@ describe('getTop5Categories', () => {
     ]
     const result = getTop5Categories(fewTxns, '2026-06', '2026-05')
     expect(result).toHaveLength(2)
+  })
+})
+
+// ── getBudgetAlerts ──────────────────────────────────────────────────────────
+
+const txnsAlerts = [
+  { id: 'a1', type: 'depense', montant: 58000, categorie: 'alimentation', date: '2026-06-01' },
+  { id: 'a2', type: 'depense', montant: 42500, categorie: 'transport',    date: '2026-06-05' },
+  { id: 'a3', type: 'depense', montant:  8000, categorie: 'loisirs',      date: '2026-06-10' },
+  { id: 'a4', type: 'depense', montant:  5000, categorie: 'restaurant',   date: '2026-06-15' },
+]
+
+const budgetsAlerts = [
+  { id: 'b1', categorie: 'alimentation', montantMensuel: 50000, mois: '2026-06' },
+  { id: 'b2', categorie: 'transport',    montantMensuel: 50000, mois: '2026-06' },
+  { id: 'b3', categorie: 'loisirs',      montantMensuel: 50000, mois: '2026-06' },
+  { id: 'b4', categorie: 'restaurant',   montantMensuel: 50000, mois: '2026-06' },
+]
+
+describe('getBudgetAlerts', () => {
+  it('inclut les budgets dépassés avec statut "depasse"', () => {
+    const result = getBudgetAlerts(txnsAlerts, budgetsAlerts, '2026-06')
+    const alim = result.find(r => r.categorie === 'alimentation')
+    expect(alim).toBeDefined()
+    expect(alim.statut).toBe('depasse')
+  })
+
+  it('inclut les budgets en danger (≥ 80%) avec statut "danger"', () => {
+    const result = getBudgetAlerts(txnsAlerts, budgetsAlerts, '2026-06')
+    const transport = result.find(r => r.categorie === 'transport')
+    expect(transport).toBeDefined()
+    expect(transport.statut).toBe('danger')
+  })
+
+  it('exclut les budgets sous contrôle (< 80%)', () => {
+    const result = getBudgetAlerts(txnsAlerts, budgetsAlerts, '2026-06')
+    expect(result.every(r => r.categorie !== 'loisirs')).toBe(true)
+    expect(result.every(r => r.categorie !== 'restaurant')).toBe(true)
+  })
+
+  it('trie les dépassés avant les en-danger', () => {
+    const result = getBudgetAlerts(txnsAlerts, budgetsAlerts, '2026-06')
+    expect(result[0].statut).toBe('depasse')
+    expect(result[1].statut).toBe('danger')
+  })
+
+  it('retourne [] si aucun budget en alerte', () => {
+    const result = getBudgetAlerts([], budgetsAlerts, '2026-06')
+    expect(result).toHaveLength(0)
+  })
+
+  it('expose pourcentageReel non plafonné et depassement', () => {
+    const result = getBudgetAlerts(txnsAlerts, budgetsAlerts, '2026-06')
+    const alim = result.find(r => r.categorie === 'alimentation')
+    expect(alim.pourcentageReel).toBeCloseTo(116)
+    expect(alim.depassement).toBe(8000)
   })
 })

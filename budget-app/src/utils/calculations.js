@@ -165,3 +165,18 @@ export function getTop5Categories(transactions, moisCourant, moisPrecedent) {
     .sort((a, b) => b.montantCourant - a.montantCourant)
     .slice(0, 5)
 }
+
+export function getBudgetAlerts(transactions, budgets, moisCourant) {
+  return getProgressionBudgets(transactions, budgets, moisCourant)
+    .map(b => ({
+      ...b,
+      pourcentageReel: b.montantMensuel > 0 ? (b.depense / b.montantMensuel) * 100 : 0,
+      depassement: Math.max(0, b.depense - b.montantMensuel),
+      statut: b.depasse ? 'depasse' : 'danger',
+    }))
+    .filter(b => b.depasse || b.pourcentage >= 80)
+    .sort((a, b) => {
+      if (a.depasse !== b.depasse) return a.depasse ? -1 : 1
+      return b.pourcentageReel - a.pourcentageReel
+    })
+}
