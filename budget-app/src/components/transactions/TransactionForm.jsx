@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { CATEGORIES, CATEGORIES_REVENUS, CATEGORIES_DEPENSES } from '@/constants/categories'
 import { format } from 'date-fns'
 import { formatMontant } from '@/utils/formatters'
@@ -75,6 +75,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
     : defaultForm
   )
   const [errors, setErrors] = useState({})
+  const montantInputRef = useRef(null)
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }))
   const isRevenu  = form.type === 'revenu'
@@ -87,8 +88,11 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
 
   function validateStep1() {
     const e = {}
-    if (!form.montant || isNaN(parseFloat(form.montant)) || parseFloat(form.montant) <= 0)
+    const montantNum = parseFloat(form.montant)
+    if (!form.montant || isNaN(montantNum) || montantNum <= 0)
       e.montant = 'Le montant doit être supérieur à 0'
+    else if (!Number.isInteger(montantNum))
+      e.montant = 'Le montant doit être un nombre entier (sans centimes)'
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -171,6 +175,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
               F CFA
             </span>
             <input
+              ref={montantInputRef}
               type="number"
               step="1"
               min="1"
@@ -236,7 +241,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
             {/* Autre */}
             <button
               type="button"
-              onClick={() => { set('montant', ''); setErrors({}); setTimeout(() => document.querySelector('input[type="number"]')?.focus(), 50) }}
+              onClick={() => { set('montant', ''); setErrors({}); setTimeout(() => montantInputRef.current?.focus(), 50) }}
               className="py-2.5 rounded-xl text-center transition-all duration-150 focus:outline-none"
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)' }}
@@ -363,6 +368,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
           <FieldLabel>Description</FieldLabel>
           <input
             type="text"
+            aria-label="Description de la transaction"
             placeholder="ex : Courses marché"
             value={form.description}
             onChange={e => { set('description', e.target.value); if (errors.description) setErrors(er => ({ ...er, description: undefined })) }}
@@ -386,6 +392,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
           <FieldLabel>Date</FieldLabel>
           <input
             type="date"
+            aria-label="Date de la transaction"
             value={form.date}
             onChange={e => { set('date', e.target.value); if (errors.date) setErrors(er => ({ ...er, date: undefined })) }}
             aria-invalid={errors.date ? 'true' : undefined}
@@ -409,6 +416,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
       <div className="flex flex-col gap-1.5">
         <FieldLabel>Note <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, fontSize: '9px', color: 'rgba(100,116,139,0.4)' }}>(optionnel)</span></FieldLabel>
         <textarea
+          maxLength={500}
           placeholder="Détails supplémentaires…"
           value={form.note}
           onChange={e => set('note', e.target.value)}
