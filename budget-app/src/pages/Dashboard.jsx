@@ -1,12 +1,15 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { format, subMonths } from 'date-fns'
 import { useBudget } from '@/context/BudgetContext'
 import { KPICard } from '@/components/ui/KPICard'
 import { Badge } from '@/components/ui/Badge'
 import { ProgressBar } from '@/components/ui/ProgressBar'
+import { EmptyState } from '@/components/ui/EmptyState'
 import {
   getTotalRevenus, getTotalDepenses, getSoldeNet, getTauxEpargne,
   getDepensesParCategoriePieData, getDonnees6Mois, getProgressionBudgets,
+  getTop5Categories,
 } from '@/utils/calculations'
 import { formatMontant, formatPourcentage, formatMoisCourt, formatDate, formatMois } from '@/utils/formatters'
 import {
@@ -35,6 +38,103 @@ const IconEpargne = () => (
     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
   </svg>
 )
+
+// ─── Evolution badge ──────────────────────────────────────────────────────────
+function EvolutionBadge({ evolution }) {
+  if (evolution === null) {
+    return (
+      <span className="text-xs w-16 text-right flex-shrink-0 tabular-nums"
+        style={{ color: 'rgba(100,116,139,0.5)' }}>—</span>
+    )
+  }
+  const isPos  = evolution > 0
+  const isZero = evolution === 0
+  const color  = isZero ? 'rgba(148,163,184,0.7)' : isPos ? '#34d399' : '#fb7185'
+  const arrow  = isZero ? '→' : isPos ? '↑' : '↓'
+  const text   = isZero ? '=' : `${isPos ? '+' : ''}${evolution.toFixed(1)}%`
+  return (
+    <span className="text-xs font-bold w-16 text-right flex-shrink-0 tabular-nums"
+      style={{ color }}>
+      {arrow} {text}
+    </span>
+  )
+}
+
+// ─── Top 5 categories ─────────────────────────────────────────────────────────
+function TopCategories({ top5, moisLabel }) {
+  if (top5.length === 0) {
+    return (
+      <EmptyState
+        titre="Aucune dépense ce mois-ci"
+        message="Ajoutez des transactions pour voir le top des catégories."
+      />
+    )
+  }
+  return (
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{
+        background: '#0b0e1c',
+        border: '1px solid rgba(255,255,255,0.06)',
+        boxShadow: '0 2px 16px rgba(0,0,0,0.25)',
+      }}
+    >
+      {/* Header */}
+      <div className="px-5 py-3 flex items-center gap-2"
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+          style={{ background: 'rgba(99,102,241,0.14)' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" style={{ color: '#818cf8' }}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+          </svg>
+        </div>
+        <span className="font-display text-[11px] font-extrabold uppercase tracking-[0.15em]"
+          style={{ color: 'rgba(165,180,252,0.9)' }}>
+          Top 5 dépenses — {moisLabel}
+        </span>
+      </div>
+      {/* Rows */}
+      <div>
+        {top5.map((item, i) => (
+          <div
+            key={item.categorie}
+            className="px-5 py-3.5 flex items-center gap-3"
+            style={{ borderBottom: i < top5.length - 1 ? '1px solid rgba(255,255,255,0.04)' : undefined }}
+          >
+            <span className="text-[11px] font-bold w-4 text-center flex-shrink-0"
+              style={{ color: 'rgba(100,116,139,0.5)' }}>{i + 1}</span>
+            <span
+              className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+              style={{ background: item.couleur, boxShadow: `0 0 6px ${item.couleur}88` }}
+              aria-hidden="true"
+            />
+            <span className="flex-1 text-sm font-semibold truncate"
+              style={{ color: 'rgba(226,232,240,0.9)' }}>{item.label}</span>
+            <EvolutionBadge evolution={item.evolution} />
+            <span className="font-display text-sm font-bold tabular-nums flex-shrink-0"
+              style={{ color: 'rgba(226,232,240,0.95)' }}>
+              {formatMontant(item.montantCourant)}
+            </span>
+            <div className="w-24 flex-shrink-0 flex items-center gap-1.5">
+              <div className="flex-1 h-1.5 rounded-full overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.06)' }}>
+                <div
+                  className="h-full rounded-full"
+                  style={{ width: `${Math.min(item.pourcentage, 100)}%`, background: item.couleur }}
+                />
+              </div>
+              <span className="text-[10px] font-bold tabular-nums w-7 text-right"
+                style={{ color: 'rgba(100,116,139,0.7)' }}>
+                {item.pourcentage.toFixed(0)}%
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 // ─── Card wrapper ─────────────────────────────────────────────────────────────
 function Card({ children, className = '' }) {
@@ -163,6 +263,12 @@ export default function Dashboard() {
     () => [...transactions].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 7),
     [transactions]
   )
+  const moisPrecedent = format(subMonths(new Date(), 1), 'yyyy-MM')
+  const top5 = useMemo(
+    () => getTop5Categories(state.transactions, state.settings.moisCourant, moisPrecedent),
+    [state.transactions, state.settings.moisCourant]
+  )
+  const moisLabel = formatMois(state.settings.moisCourant + '-01')
 
   const gridColor  = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
   const axisColor  = isDark ? 'rgba(100,116,139,0.7)'  : '#94a3b8'
@@ -217,6 +323,9 @@ export default function Dashboard() {
           icon={<IconEpargne />}
         />
       </div>
+
+      {/* ── Top 5 catégories ── */}
+      <TopCategories top5={top5} moisLabel={moisLabel} />
 
       {/* ── Charts row ── */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
