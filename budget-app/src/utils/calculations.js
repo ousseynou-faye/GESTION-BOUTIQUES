@@ -134,3 +134,34 @@ export function getObjectifProgression(goal) {
   const mensualiteRequise = moisRestants && moisRestants > 0 ? restant / moisRestants : null
   return { pct: Math.min(100, pct), restant, jours, mensualiteRequise }
 }
+
+export function getTop5Categories(transactions, moisCourant, moisPrecedent) {
+  const depCourantes  = transactions.filter(t => t.type === 'depense' && t.date?.startsWith(moisCourant))
+  const depPrecedentes = transactions.filter(t => t.type === 'depense' && t.date?.startsWith(moisPrecedent))
+
+  const mapCourant = {}
+  for (const t of depCourantes)   mapCourant[t.categorie]  = (mapCourant[t.categorie]  || 0) + t.montant
+
+  const mapPrecedent = {}
+  for (const t of depPrecedentes) mapPrecedent[t.categorie] = (mapPrecedent[t.categorie] || 0) + t.montant
+
+  const total = Object.values(mapCourant).reduce((s, v) => s + v, 0)
+
+  return Object.entries(mapCourant)
+    .map(([categorie, montantCourant]) => {
+      const montantPrecedent = mapPrecedent[categorie] || 0
+      return {
+        categorie,
+        label:      CATEGORIES[categorie]?.label   ?? categorie,
+        couleur:    CATEGORIES[categorie]?.couleur  ?? '#6b7280',
+        montantCourant,
+        montantPrecedent,
+        evolution:  montantPrecedent > 0
+          ? ((montantCourant - montantPrecedent) / montantPrecedent) * 100
+          : null,
+        pourcentage: total > 0 ? (montantCourant / total) * 100 : 0,
+      }
+    })
+    .sort((a, b) => b.montantCourant - a.montantCourant)
+    .slice(0, 5)
+}
