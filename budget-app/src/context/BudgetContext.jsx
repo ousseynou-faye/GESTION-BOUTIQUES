@@ -2,6 +2,8 @@ import { createContext, useContext, useReducer, useEffect } from 'react'
 import { budgetReducer } from '@/reducers/budgetReducer'
 import { initialState } from '@/constants/initialState'
 import { loadAll, saveAll } from '@/utils/storage'
+import { format } from 'date-fns'
+import { calculerTransactionsAGenerer } from '@/utils/recurrence'
 
 const BudgetContext = createContext(null)
 
@@ -28,6 +30,19 @@ export function BudgetProvider({ children }) {
       root.classList.remove('dark')
     }
   }, [state.settings.theme])
+
+  // Génération automatique des transactions récurrentes au lancement
+  useEffect(() => {
+    if (!state.seeded) return
+    const moisCourant = format(new Date(), 'yyyy-MM')
+    const { nouvelles, majOriginales } = calculerTransactionsAGenerer(
+      state.transactions,
+      moisCourant
+    )
+    if (nouvelles.length > 0 || majOriginales.length > 0) {
+      dispatch({ type: 'GENERATE_RECURRENTES', payload: { nouvelles, majOriginales } })
+    }
+  }, [state.seeded])
 
   // Sauvegarde automatique à chaque changement
   useEffect(() => {
