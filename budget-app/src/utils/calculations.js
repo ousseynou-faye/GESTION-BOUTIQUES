@@ -180,3 +180,37 @@ export function getBudgetAlerts(transactions, budgets, moisCourant) {
       return b.pourcentageReel - a.pourcentageReel
     })
 }
+
+export function getKpiTendance(transactions, moisCourant) {
+  const moisPrecedent = format(subMonths(parseISO(moisCourant + '-01'), 1), 'yyyy-MM')
+  const data6Mois = getDonnees6Mois(transactions)
+
+  const curr = {
+    revenus:  getTotalRevenus(transactions, moisCourant),
+    depenses: getTotalDepenses(transactions, moisCourant),
+    solde:    getSoldeNet(transactions, moisCourant),
+    epargne:  getTauxEpargne(transactions, moisCourant),
+  }
+  const prev = {
+    revenus:  getTotalRevenus(transactions, moisPrecedent),
+    depenses: getTotalDepenses(transactions, moisPrecedent),
+    solde:    getSoldeNet(transactions, moisPrecedent),
+    epargne:  getTauxEpargne(transactions, moisPrecedent),
+  }
+
+  const pct = (c, p) => p === 0 ? null : ((c - p) / Math.abs(p)) * 100
+
+  return {
+    revenus:  { tendance: pct(curr.revenus,  prev.revenus),  spark: data6Mois.map(d => d.revenus) },
+    depenses: { tendance: pct(curr.depenses, prev.depenses), spark: data6Mois.map(d => d.depenses) },
+    solde:    { tendance: pct(curr.solde,    prev.solde),    spark: data6Mois.map(d => d.revenus - d.depenses) },
+    epargne:  {
+      tendance: pct(curr.epargne, prev.epargne),
+      spark: data6Mois.map(d => {
+        const r = getTotalRevenus(transactions, d.mois)
+        const e = getTotalDepenses(transactions, d.mois)
+        return r === 0 ? 0 : Math.max(0, ((r - e) / r) * 100)
+      }),
+    },
+  }
+}

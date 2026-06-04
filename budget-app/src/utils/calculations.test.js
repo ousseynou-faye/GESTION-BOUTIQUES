@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getTop5Categories, getBudgetAlerts } from './calculations.js'
+import { getTop5Categories, getBudgetAlerts, getKpiTendance } from './calculations.js'
 
 const txns = [
   { id: '1', type: 'depense', montant: 50000, categorie: 'loyer',        date: '2026-06-01' },
@@ -122,5 +122,56 @@ describe('getBudgetAlerts', () => {
     const alim = result.find(r => r.categorie === 'alimentation')
     expect(alim.pourcentageReel).toBeCloseTo(116)
     expect(alim.depassement).toBe(8000)
+  })
+})
+
+// ── getKpiTendance ──────────────────────────────────────────────────────────
+
+const txnsKpi = [
+  // Mois courant : 2026-06
+  { id: 'k1', type: 'revenu',  montant: 200000, categorie: 'salaire',        date: '2026-06-01' },
+  { id: 'k2', type: 'depense', montant:  80000, categorie: 'alimentation',   date: '2026-06-05' },
+  // Mois précédent : 2026-05
+  { id: 'k3', type: 'revenu',  montant: 160000, categorie: 'salaire',        date: '2026-05-01' },
+  { id: 'k4', type: 'depense', montant: 100000, categorie: 'alimentation',   date: '2026-05-05' },
+]
+
+describe('getKpiTendance', () => {
+  it('retourne les 4 clés attendues', () => {
+    const r = getKpiTendance(txnsKpi, '2026-06')
+    expect(r).toHaveProperty('revenus')
+    expect(r).toHaveProperty('depenses')
+    expect(r).toHaveProperty('solde')
+    expect(r).toHaveProperty('epargne')
+  })
+
+  it('calcule la tendance revenus correctement (+25%)', () => {
+    const r = getKpiTendance(txnsKpi, '2026-06')
+    // (200000 - 160000) / 160000 * 100 = 25
+    expect(r.revenus.tendance).toBeCloseTo(25)
+  })
+
+  it('calcule la tendance dépenses correctement (-20%)', () => {
+    const r = getKpiTendance(txnsKpi, '2026-06')
+    // (80000 - 100000) / 100000 * 100 = -20
+    expect(r.depenses.tendance).toBeCloseTo(-20)
+  })
+
+  it('retourne tendance null si mois précédent = 0', () => {
+    const r = getKpiTendance([txnsKpi[0]], '2026-06')  // seul revenu juin, rien en mai
+    expect(r.depenses.tendance).toBeNull()
+  })
+
+  it('fournit 6 valeurs spark pour chaque KPI', () => {
+    const r = getKpiTendance(txnsKpi, '2026-06')
+    expect(r.revenus.spark).toHaveLength(6)
+    expect(r.depenses.spark).toHaveLength(6)
+    expect(r.solde.spark).toHaveLength(6)
+    expect(r.epargne.spark).toHaveLength(6)
+  })
+
+  it('spark revenus contient des nombres', () => {
+    const r = getKpiTendance(txnsKpi, '2026-06')
+    expect(r.revenus.spark.every(v => typeof v === 'number')).toBe(true)
   })
 })
