@@ -7,6 +7,7 @@ import {
   getTop5Categories, getProgressionBudgets, getObjectifProgression,
 } from '@/utils/calculations'
 import { formatMontant, formatMois, formatDate } from '@/utils/formatters'
+import { CATEGORIES } from '@/constants/categories'
 
 // ─── Styles ──────────────────────────────────────────────────────────────────
 const S = StyleSheet.create({
@@ -60,16 +61,6 @@ const S = StyleSheet.create({
   },
   kpiRow: { flexDirection: 'row' },
   kpiCard: {
-    flex: 1,
-    padding: 10,
-    marginRight: 8,
-    borderRadius: 4,
-    backgroundColor: '#f8fafc',
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    borderStyle: 'solid',
-  },
-  kpiCardLast: {
     flex: 1,
     padding: 10,
     borderRadius: 4,
@@ -194,21 +185,21 @@ export function RapportMensuel({ mois, transactions, budgets, goals }) {
         <View style={S.section}>
           <Text style={S.sectionTitle}>Résumé financier</Text>
           <View style={S.kpiRow}>
-            <View style={S.kpiCard}>
+            <View style={[S.kpiCard, { marginRight: 8 }]}>
               <Text style={S.kpiLabel}>Revenus</Text>
               <Text style={[S.kpiValue, S.green]}>{formatMontant(revenus)}</Text>
             </View>
-            <View style={S.kpiCard}>
+            <View style={[S.kpiCard, { marginRight: 8 }]}>
               <Text style={S.kpiLabel}>Dépenses</Text>
               <Text style={[S.kpiValue, S.red]}>{formatMontant(depenses)}</Text>
             </View>
-            <View style={S.kpiCard}>
+            <View style={[S.kpiCard, { marginRight: 8 }]}>
               <Text style={S.kpiLabel}>Solde net</Text>
               <Text style={[S.kpiValue, solde >= 0 ? S.blue : S.orange]}>{formatMontant(solde)}</Text>
             </View>
-            <View style={S.kpiCardLast}>
+            <View style={S.kpiCard}>
               <Text style={S.kpiLabel}>Taux d'épargne</Text>
-              <Text style={[S.kpiValue, S.orange]}>{epargne.toFixed(1)}%</Text>
+              <Text style={[S.kpiValue, epargne > 0 ? S.ok : S.over]}>{epargne.toFixed(1)}%</Text>
             </View>
           </View>
         </View>
@@ -306,7 +297,7 @@ export function RapportMensuel({ mois, transactions, budgets, goals }) {
                 <View key={t.id} style={S.tableRow} wrap={false}>
                   <Text style={[S.td, { width: 55 }]}>{formatDate(t.date, 'd MMM')}</Text>
                   <Text style={[S.tdBold, { flex: 1 }]}>{t.description}</Text>
-                  <Text style={[S.td, { width: 70 }]}>{t.categorie}</Text>
+                  <Text style={[S.td, { width: 70 }]}>{CATEGORIES[t.categorie]?.label ?? t.categorie}</Text>
                   <Text style={[S.td, t.type === 'revenu' ? S.green : S.red, { width: 100, textAlign: 'right' }]}>
                     {t.type === 'revenu' ? '+' : '−'}{formatMontant(t.montant)}
                   </Text>
