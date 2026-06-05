@@ -362,19 +362,6 @@ export default function Dashboard() {
     }
   }
 
-  const activeGoals = state.goals.filter(g => g.montantActuel < g.montantCible)
-
-  function handleQuickDeposit(goalId, montant) {
-    const goal = state.goals.find(g => g.id === goalId)
-    dispatch({
-      type: 'UPDATE_GOAL',
-      payload: {
-        ...goal,
-        montantActuel: Math.min(goal.montantCible, goal.montantActuel + montant),
-      },
-    })
-  }
-
   const totalRevenus       = useMemo(() => getTotalRevenus(transactions, mois),    [transactions, mois])
   const totalDepenses      = useMemo(() => getTotalDepenses(transactions, mois),   [transactions, mois])
   const soldeNet           = useMemo(() => getSoldeNet(transactions, mois),        [transactions, mois])
@@ -406,6 +393,23 @@ export default function Dashboard() {
     () => getKpiTendance(transactions, mois),
     [transactions, mois]
   )
+
+  const activeGoals = useMemo(
+    () => state.goals.filter(g => g.montantActuel < g.montantCible),
+    [state.goals]
+  )
+
+  function handleQuickDeposit(goalId, montant) {
+    const goal = state.goals.find(g => g.id === goalId)
+    if (!goal) return
+    dispatch({
+      type: 'UPDATE_GOAL',
+      payload: {
+        ...goal,
+        montantActuel: Math.min(goal.montantCible, goal.montantActuel + montant),
+      },
+    })
+  }
 
   const gridColor  = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
   const axisColor  = isDark ? 'rgba(100,116,139,0.7)'  : '#94a3b8'
