@@ -133,9 +133,9 @@ const S = StyleSheet.create({
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function statutBudget(b) {
-  if (b.depasse)            return { label: '✗ Dépassé', style: S.over }
-  if (b.pourcentage >= 80)  return { label: '⚠ Proche',  style: S.warn }
-  return                           { label: '✓ OK',      style: S.ok   }
+  if (b.depasse)            return { label: 'X Dépassé', style: S.over }
+  if (b.pourcentage >= 80)  return { label: '! Proche',  style: S.warn }
+  return                           { label: 'OK',        style: S.ok   }
 }
 
 function statutObjectif(pct) {
@@ -299,7 +299,7 @@ export function RapportMensuel({ mois, transactions, budgets, goals }) {
                   <Text style={[S.tdBold, { flex: 1 }]}>{t.description}</Text>
                   <Text style={[S.td, { width: 70 }]}>{CATEGORIES[t.categorie]?.label ?? t.categorie}</Text>
                   <Text style={[S.td, t.type === 'revenu' ? S.green : S.red, { width: 100, textAlign: 'right' }]}>
-                    {t.type === 'revenu' ? '+' : '−'}{formatMontant(t.montant)}
+                    {t.type === 'revenu' ? '+' : '-'}{formatMontant(t.montant)}
                   </Text>
                 </View>
               ))}
