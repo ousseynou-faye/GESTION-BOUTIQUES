@@ -8,7 +8,11 @@ export function budgetReducer(state, action) {
   switch (action.type) {
     // ─── Chargement depuis localStorage ───────────────────────────────
     case 'LOAD_FROM_STORAGE':
-      return { ...state, ...action.payload }
+      return {
+        ...state,
+        ...action.payload,
+        settings: { ...state.settings, ...action.payload.settings },
+      }
 
     // ─── Seed data (premier lancement) ────────────────────────────────
     case 'SEED_DATA':
@@ -100,6 +104,10 @@ export function budgetReducer(state, action) {
       return { ...state, settings: { ...state.settings, theme: action.payload.theme } }
     case 'SET_MOIS_COURANT':
       return { ...state, settings: { ...state.settings, moisCourant: action.payload.mois } }
+    case 'SET_NOM':
+      return { ...state, settings: { ...state.settings, nom: action.payload.nom } }
+    case 'SET_DEVISE':
+      return { ...state, settings: { ...state.settings, devise: action.payload.devise } }
 
     default:
       return state

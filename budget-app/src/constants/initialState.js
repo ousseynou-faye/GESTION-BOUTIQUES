@@ -86,7 +86,8 @@ export const initialState = {
   goals: [],
   settings: {
     theme: 'light',
-    devise: 'EUR',
+    devise: 'fcfa',
+    nom: '',
     moisCourant,
   },
   seeded: false,
