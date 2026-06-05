@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { CATEGORIES, CATEGORIES_REVENUS, CATEGORIES_DEPENSES } from '@/constants/categories'
 import { format } from 'date-fns'
-import { formatMontant } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 
 const defaultForm = {
   type:        'depense',
@@ -69,6 +69,7 @@ function StepIndicator({ etape }) {
 }
 
 export function TransactionForm({ initial, onSubmit, onCancel }) {
+  const fmt = useFormatMontant()
   const [etape, setEtape]   = useState(1)
   const [form, setForm]     = useState(initial
     ? { ...initial, montant: String(initial.montant), note: initial.note ?? '', recurrente: initial.recurrente ?? false }
@@ -288,7 +289,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
   }
 
   // ── Étape 2 : Détails ────────────────────────────────────────────────────────
-  const montantFormate = form.montant ? formatMontant(parseFloat(form.montant)) : ''
+  const montantFormate = form.montant ? fmt(parseFloat(form.montant)) : ''
   const typeLabel      = isRevenu ? 'Revenu' : 'Dépense'
 
   return (

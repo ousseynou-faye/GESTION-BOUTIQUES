@@ -2,7 +2,8 @@ import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useBudget } from '@/context/BudgetContext'
 import { getSoldeNet, getTauxEpargne } from '@/utils/calculations'
-import { formatMontant, formatPourcentage } from '@/utils/formatters'
+import { formatPourcentage } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 
 const pageTitles = {
   '/':             'Tableau de bord',
@@ -32,6 +33,7 @@ function MoonIcon() {
 }
 
 export function TopBar() {
+  const fmt = useFormatMontant()
   const { state, dispatch } = useBudget()
   const location = useLocation()
   const isDark    = state.settings.theme === 'dark'
@@ -110,7 +112,7 @@ export function TopBar() {
               style={{ color: 'rgba(100,116,139,0.6)' }}>Solde</span>
             <span className="font-display text-[13px] font-bold tabular-nums"
               style={{ color: solde >= 0 ? '#34d399' : '#fb7185' }}>
-              {formatMontant(solde)}
+              {fmt(solde)}
             </span>
           </div>
           <div className="w-px h-6" style={{ background: 'rgba(255,255,255,0.08)' }} aria-hidden="true" />

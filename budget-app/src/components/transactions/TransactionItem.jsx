@@ -3,9 +3,11 @@ import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/Modal'
 import { TransactionForm } from './TransactionForm'
-import { formatMontant, formatDate } from '@/utils/formatters'
+import { formatDate } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 
 export function TransactionItem({ transaction, onEdit, onDelete }) {
+  const fmt = useFormatMontant()
   const [editOpen,   setEditOpen]   = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const isRevenu    = transaction.type === 'revenu'
@@ -82,7 +84,7 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
           className="font-display text-[14px] font-extrabold flex-shrink-0 tabular-nums"
           style={{ color: amountColor, textShadow: `0 0 12px ${amountColor}44` }}
         >
-          {isRevenu ? '+' : '−'}{formatMontant(transaction.montant)}
+          {isRevenu ? '+' : '−'}{fmt(transaction.montant)}
         </span>
 
         {/* ── Actions (visible on hover) ── */}
@@ -134,7 +136,7 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
         onClose={() => setDeleteOpen(false)}
         onConfirm={() => onDelete(transaction.id)}
         titre="Supprimer la transaction"
-        message={`Supprimer "${transaction.description}" de ${formatMontant(transaction.montant)} ?`}
+        message={`Supprimer "${transaction.description}" de ${fmt(transaction.montant)} ?`}
       />
     </>
   )

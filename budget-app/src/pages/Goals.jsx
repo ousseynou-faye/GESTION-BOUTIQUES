@@ -611,7 +611,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
                   <p className="text-[10px] font-semibold mt-1.5 flex items-center gap-1"
                     style={{ color: `${goal.couleur}99` }}>
                     <span aria-hidden="true">🎯</span>
-                    Palier {prochainPalier.palier}% — encore {new Intl.NumberFormat('fr-FR').format(prochainPalier.restant)} FCFA
+                    Palier {prochainPalier.palier}% — encore {fmt(prochainPalier.restant)}
                   </p>
                 )}
                 {atteint && (
