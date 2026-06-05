@@ -17,6 +17,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
 } from 'recharts'
 import { downloadPdf } from '@/components/pdf/pdfUtils'
+import { QuickDepositCard } from '@/components/goals/QuickDepositCard'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const IconRevenu = () => (
@@ -342,7 +343,7 @@ function MonthSelector() {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const { state } = useBudget()
+  const { state, dispatch } = useBudget()
   const mois = state.settings.moisCourant
   const isDark = state.settings.theme === 'dark'
   const { transactions, budgets } = state
@@ -359,6 +360,19 @@ export default function Dashboard() {
     } finally {
       setPdfLoading(false)
     }
+  }
+
+  const activeGoals = state.goals.filter(g => g.montantActuel < g.montantCible)
+
+  function handleQuickDeposit(goalId, montant) {
+    const goal = state.goals.find(g => g.id === goalId)
+    dispatch({
+      type: 'UPDATE_GOAL',
+      payload: {
+        ...goal,
+        montantActuel: Math.min(goal.montantCible, goal.montantActuel + montant),
+      },
+    })
   }
 
   const totalRevenus       = useMemo(() => getTotalRevenus(transactions, mois),    [transactions, mois])
@@ -715,6 +729,38 @@ export default function Dashboard() {
           </div>
         </Card>
       </div>
+
+      {/* ── Dépôts rapides ── */}
+      {activeGoals.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2
+              className="font-display text-[13px] font-extrabold tracking-tight"
+              style={{ color: 'rgba(226,232,240,0.92)' }}
+            >
+              Dépôts rapides
+            </h2>
+            <Link
+              to="/goals"
+              className="text-[11px] font-bold transition-colors"
+              style={{ color: '#818cf8' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#a5b4fc' }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#818cf8' }}
+            >
+              Voir tous les objectifs →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {activeGoals.map(goal => (
+              <QuickDepositCard
+                key={goal.id}
+                goal={goal}
+                onDeposit={handleQuickDeposit}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
