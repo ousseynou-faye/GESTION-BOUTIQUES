@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { format, subMonths, addMonths, parseISO } from 'date-fns'
 import { useBudget } from '@/context/BudgetContext'
@@ -16,6 +16,7 @@ import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
 } from 'recharts'
+import { downloadPdf } from '@/components/pdf/pdfUtils'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const IconRevenu = () => (
@@ -346,6 +347,20 @@ export default function Dashboard() {
   const isDark = state.settings.theme === 'dark'
   const { transactions, budgets } = state
 
+  const [pdfLoading, setPdfLoading] = useState(false)
+
+  async function handleExportPdf() {
+    setPdfLoading(true)
+    try {
+      await downloadPdf({ mois, transactions, budgets, goals: state.goals })
+    } catch (err) {
+      console.error(err)
+      alert('Erreur lors de la génération du PDF.')
+    } finally {
+      setPdfLoading(false)
+    }
+  }
+
   const totalRevenus       = useMemo(() => getTotalRevenus(transactions, mois),    [transactions, mois])
   const totalDepenses      = useMemo(() => getTotalDepenses(transactions, mois),   [transactions, mois])
   const soldeNet           = useMemo(() => getSoldeNet(transactions, mois),        [transactions, mois])
@@ -397,7 +412,33 @@ export default function Dashboard() {
             {formatMois(mois)} — Vue d'ensemble de vos finances
           </p>
         </div>
-        <MonthSelector />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportPdf}
+            disabled={pdfLoading}
+            className="btn-secondary flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl disabled:opacity-50"
+          >
+            {pdfLoading ? (
+              <>
+                <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                Génération...
+              </>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Exporter PDF
+              </>
+            )}
+          </button>
+          <MonthSelector />
+        </div>
       </div>
 
       {/* ── KPI Cards ── */}
