@@ -4,7 +4,9 @@ import { ProgressBar } from '@/components/ui/ProgressBar'
 const AMOUNTS = [1000, 5000, 10000]
 
 export function QuickDepositCard({ goal, onDeposit }) {
-  const pct = Math.round((goal.montantActuel / goal.montantCible) * 100)
+  const pct = goal.montantCible > 0
+    ? Math.round((goal.montantActuel / goal.montantCible) * 100)
+    : 0
 
   return (
     <div
