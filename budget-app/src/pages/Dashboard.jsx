@@ -11,7 +11,8 @@ import {
   getDepensesParCategoriePieData, getDonnees6Mois, getProgressionBudgets,
   getTop5Categories, getBudgetAlerts, getKpiTendance,
 } from '@/utils/calculations'
-import { formatMontant, formatPourcentage, formatMoisCourt, formatDate, formatMois } from '@/utils/formatters'
+import { formatPourcentage, formatMoisCourt, formatDate, formatMois } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -43,6 +44,7 @@ const IconEpargne = () => (
 
 // ─── Budget alerts ────────────────────────────────────────────────────────────
 function BudgetAlerts({ alerts, moisLabel }) {
+  const fmt = useFormatMontant()
   const hasDepasse  = alerts.some(a => a.statut === 'depasse')
   const accentColor = hasDepasse ? '#fb7185' : '#fb923c'
 
@@ -110,8 +112,8 @@ function BudgetAlerts({ alerts, moisLabel }) {
               <span className="font-display text-sm font-bold tabular-nums flex-shrink-0 w-28 text-right"
                 style={{ color }}>
                 {item.statut === 'depasse'
-                  ? `+${formatMontant(item.depassement)}`
-                  : `${formatMontant(item.restant)} rest.`}
+                  ? `+${fmt(item.depassement)}`
+                  : `${fmt(item.restant)} rest.`}
               </span>
             </div>
           )
@@ -144,6 +146,7 @@ function EvolutionBadge({ evolution }) {
 
 // ─── Top 5 categories ─────────────────────────────────────────────────────────
 function TopCategories({ top5, moisLabel }) {
+  const fmt = useFormatMontant()
   if (top5.length === 0) {
     return (
       <EmptyState
@@ -196,7 +199,7 @@ function TopCategories({ top5, moisLabel }) {
             <EvolutionBadge evolution={item.evolution} />
             <span className="font-display text-sm font-bold tabular-nums flex-shrink-0"
               style={{ color: 'rgba(226,232,240,0.95)' }}>
-              {formatMontant(item.montantCourant)}
+              {fmt(item.montantCourant)}
             </span>
             <div className="w-24 flex-shrink-0 flex items-center gap-1.5">
               <div className="flex-1 h-1.5 rounded-full overflow-hidden"
@@ -257,6 +260,7 @@ function CardHeader({ titre, lien, href }) {
 
 // ─── Dark glass tooltip ───────────────────────────────────────────────────────
 function ChartTooltip({ active, payload, label }) {
+  const fmt = useFormatMontant()
   if (!active || !payload?.length) return null
   return (
     <div
@@ -281,7 +285,7 @@ function ChartTooltip({ active, payload, label }) {
             <span className="text-slate-400">{p.name}</span>
           </div>
           <span className="font-display font-extrabold text-white tabular-nums">
-            {formatMontant(p.value)}
+            {fmt(p.value)}
           </span>
         </div>
       ))}
@@ -344,6 +348,7 @@ function MonthSelector() {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Dashboard() {
   const { state, dispatch } = useBudget()
+  const fmt = useFormatMontant()
   const mois = state.settings.moisCourant
   const isDark = state.settings.theme === 'dark'
   const { transactions, budgets } = state
@@ -463,7 +468,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         <KPICard
           titre="Revenus du mois"
-          valeur={formatMontant(totalRevenus)}
+          valeur={fmt(totalRevenus)}
           sousTitre={formatMois(mois)}
           gradient={['#059669', '#10b981']}
           icon={<IconRevenu />}
@@ -472,7 +477,7 @@ export default function Dashboard() {
         />
         <KPICard
           titre="Dépenses du mois"
-          valeur={formatMontant(totalDepenses)}
+          valeur={fmt(totalDepenses)}
           sousTitre={formatMois(mois)}
           gradient={['#e11d48', '#f43f5e']}
           icon={<IconDepense />}
@@ -481,7 +486,7 @@ export default function Dashboard() {
         />
         <KPICard
           titre="Solde net"
-          valeur={formatMontant(soldeNet)}
+          valeur={fmt(soldeNet)}
           sousTitre={soldeNet >= 0 ? 'Solde positif' : 'Solde négatif'}
           gradient={soldeNet >= 0 ? ['#4338ca', '#6366f1'] : ['#ea580c', '#f97316']}
           icon={<IconSolde />}
@@ -641,9 +646,9 @@ export default function Dashboard() {
                           )}
                           <span className="text-[11px] tabular-nums" style={{ color: 'rgba(100,116,139,0.7)' }}>
                             <span className="font-display font-bold" style={{ color: b.depasse ? '#fb7185' : 'rgba(148,163,184,0.85)' }}>
-                              {formatMontant(b.depense)}
+                              {fmt(b.depense)}
                             </span>
-                            {' / '}{formatMontant(b.montantMensuel)}
+                            {' / '}{fmt(b.montantMensuel)}
                           </span>
                         </div>
                       </div>
@@ -720,7 +725,7 @@ export default function Dashboard() {
                         className="font-display text-[13px] font-extrabold flex-shrink-0 tabular-nums"
                         style={{ color: amtColor }}
                       >
-                        {isRevenu ? '+' : '−'}{formatMontant(t.montant)}
+                        {isRevenu ? '+' : '−'}{fmt(t.montant)}
                       </span>
                     </div>
                     {idx < dernieresTxns.length - 1 && (

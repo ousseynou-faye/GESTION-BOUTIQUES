@@ -5,7 +5,8 @@ import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/Modal'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { getProgressionBudgets } from '@/utils/calculations'
-import { formatMontant, formatMois } from '@/utils/formatters'
+import { formatMois } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 import { CATEGORIES, CATEGORIES_DEPENSES } from '@/constants/categories'
 
 // ─── SVG Ring progress ────────────────────────────────────────────────────────
@@ -198,6 +199,7 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
 
 // ─── Budget card ──────────────────────────────────────────────────────────────
 function BudgetCard({ b, onEdit, onDelete }) {
+  const fmt = useFormatMontant()
   const statusColor = b.depasse ? '#fb7185' : b.pourcentage >= 80 ? '#fb923c' : '#34d399'
   const statusLabel = b.depasse ? 'Dépassé' : b.pourcentage >= 80 ? 'Attention' : 'OK'
 
@@ -315,11 +317,11 @@ function BudgetCard({ b, onEdit, onDelete }) {
             <span style={{ color: 'rgba(100,116,139,0.7)' }}>
               Dépensé :{' '}
               <span className="font-bold" style={{ color: b.depasse ? '#fb7185' : 'rgba(226,232,240,0.8)' }}>
-                {formatMontant(b.depense)}
+                {fmt(b.depense)}
               </span>
             </span>
             <span className="font-bold tabular-nums" style={{ color: 'rgba(100,116,139,0.6)' }}>
-              {formatMontant(b.montantMensuel)}
+              {fmt(b.montantMensuel)}
             </span>
           </div>
           <div
@@ -346,7 +348,7 @@ function BudgetCard({ b, onEdit, onDelete }) {
           <div className="rounded-xl px-3 py-2" style={{ background: 'rgba(255,255,255,0.03)' }}>
             <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: 'rgba(100,116,139,0.55)' }}>Budget</p>
             <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: 'rgba(226,232,240,0.85)' }}>
-              {formatMontant(b.montantMensuel)}
+              {fmt(b.montantMensuel)}
             </p>
           </div>
           <div className="rounded-xl px-3 py-2" style={{ background: `${statusColor}0d` }}>
@@ -355,8 +357,8 @@ function BudgetCard({ b, onEdit, onDelete }) {
             </p>
             <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: statusColor }}>
               {b.depasse
-                ? `+${formatMontant(b.depense - b.montantMensuel)}`
-                : formatMontant(b.restant)}
+                ? `+${fmt(b.depense - b.montantMensuel)}`
+                : fmt(b.restant)}
             </p>
           </div>
         </div>
@@ -392,6 +394,7 @@ function SectionLabel({ label, count, color, pulse }) {
 // ─── Page principale ──────────────────────────────────────────────────────────
 export default function Budgets() {
   const { state, dispatch } = useBudget()
+  const fmt = useFormatMontant()
   const [mois, setMois]               = useState(state.settings.moisCourant)
   const [addOpen, setAddOpen]         = useState(false)
   const [editTarget, setEditTarget]   = useState(null)
@@ -530,9 +533,9 @@ export default function Budgets() {
                     className="font-display font-extrabold leading-none tabular-nums text-white"
                     style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}
                   >
-                    {formatMontant(totalDepense)}
+                    {fmt(totalDepense)}
                     <span className="text-slate-500 font-normal ml-2" style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
-                      / {formatMontant(totalBudgete)}
+                      / {fmt(totalBudgete)}
                     </span>
                   </p>
                 </div>
@@ -555,7 +558,7 @@ export default function Budgets() {
                   <div className="w-px h-8" style={{ background: 'rgba(255,255,255,0.08)' }} aria-hidden="true" />
                   <div className="text-center">
                     <p className="font-display text-xl font-extrabold tabular-nums text-emerald-400">
-                      {formatMontant(totalRestant)}
+                      {fmt(totalRestant)}
                     </p>
                     <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>Restant</p>
                   </div>

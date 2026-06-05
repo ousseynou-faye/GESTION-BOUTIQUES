@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useBudget } from '@/context/BudgetContext'
 import { getDonnees12Mois, getDepensesParCategoriePieData, getSoldesCumulatifs } from '@/utils/calculations'
-import { formatMoisCourt, formatMontant } from '@/utils/formatters'
+import { formatMoisCourt } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -73,6 +74,7 @@ function StatMini({ label, value, color }) {
 
 // ─── Custom tooltip ───────────────────────────────────────────────────────────
 function CustomTooltip({ active, payload, label }) {
+  const fmt = useFormatMontant()
   if (!active || !payload?.length) return null
   return (
     <div
@@ -96,7 +98,7 @@ function CustomTooltip({ active, payload, label }) {
             <span className="text-slate-400">{p.name || p.dataKey}</span>
           </div>
           <span className="font-display font-extrabold text-white tabular-nums">
-            {formatMontant(p.value)}
+            {fmt(p.value)}
           </span>
         </div>
       ))}
@@ -143,6 +145,7 @@ function ChartCard({ title, subtitle, legend, children }) {
 
 export default function Charts() {
   const { state } = useBudget()
+  const fmt = useFormatMontant()
   const [onglet, setOnglet] = useState('depenses')
   const mois = state.settings.moisCourant
   const isDark = state.settings.theme === 'dark'
@@ -184,10 +187,10 @@ export default function Charts() {
         style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.06)' }}
       >
         {[
-          { label: 'Dépenses ce mois', value: formatMontant(totalDepensesMois), color: '#fb7185' },
-          { label: 'Revenus 12 mois',  value: formatMontant(totalRevenus12),    color: '#34d399' },
-          { label: 'Solde actuel',     value: formatMontant(soldeActuel),       color: soldeActuel >= 0 ? '#818cf8' : '#fb7185' },
-          { label: 'Épargne nette',    value: formatMontant(totalRevenus12 - totalDepenses12), color: (totalRevenus12 - totalDepenses12) >= 0 ? '#fb923c' : '#fb7185' },
+          { label: 'Dépenses ce mois', value: fmt(totalDepensesMois), color: '#fb7185' },
+          { label: 'Revenus 12 mois',  value: fmt(totalRevenus12),    color: '#34d399' },
+          { label: 'Solde actuel',     value: fmt(soldeActuel),       color: soldeActuel >= 0 ? '#818cf8' : '#fb7185' },
+          { label: 'Épargne nette',    value: fmt(totalRevenus12 - totalDepenses12), color: (totalRevenus12 - totalDepenses12) >= 0 ? '#fb923c' : '#fb7185' },
         ].map(({ label, value, color }) => (
           <div
             key={label}
@@ -282,7 +285,7 @@ export default function Charts() {
       {onglet === 'depenses' && (
         <div id="panel-depenses" role="tabpanel" aria-labelledby="tab-depenses" className="flex flex-col gap-4 animate-fade-in">
           <div className="flex flex-wrap gap-3">
-            <StatMini label="Total dépenses ce mois" value={formatMontant(totalDepensesMois)} color="#fb7185" />
+            <StatMini label="Total dépenses ce mois" value={fmt(totalDepensesMois)} color="#fb7185" />
             <StatMini label="Catégories actives" value={`${pieData.length}`} color="#818cf8" />
             {pieData.length > 0 && (
               <StatMini
@@ -349,7 +352,7 @@ export default function Charts() {
                               </span>
                               <div className="flex items-center gap-3 flex-shrink-0 ml-3">
                                 <span className="tabular-nums" style={{ color: 'rgba(100,116,139,0.7)' }}>
-                                  {formatMontant(d.value)}
+                                  {fmt(d.value)}
                                 </span>
                                 <span
                                   className="font-display text-[11px] font-extrabold w-9 text-right tabular-nums"
@@ -388,11 +391,11 @@ export default function Charts() {
       {onglet === 'mensuel' && (
         <div id="panel-mensuel" role="tabpanel" aria-labelledby="tab-mensuel" className="flex flex-col gap-4 animate-fade-in">
           <div className="flex flex-wrap gap-3">
-            <StatMini label="Revenus 12 mois"  value={formatMontant(totalRevenus12)}  color="#34d399" />
-            <StatMini label="Dépenses 12 mois" value={formatMontant(totalDepenses12)} color="#fb7185" />
+            <StatMini label="Revenus 12 mois"  value={fmt(totalRevenus12)}  color="#34d399" />
+            <StatMini label="Dépenses 12 mois" value={fmt(totalDepenses12)} color="#fb7185" />
             <StatMini
               label="Épargne nette"
-              value={formatMontant(totalRevenus12 - totalDepenses12)}
+              value={fmt(totalRevenus12 - totalDepenses12)}
               color={totalRevenus12 >= totalDepenses12 ? '#818cf8' : '#fb923c'}
             />
           </div>
@@ -431,8 +434,8 @@ export default function Charts() {
       {onglet === 'solde' && (
         <div id="panel-solde" role="tabpanel" aria-labelledby="tab-solde" className="flex flex-col gap-4 animate-fade-in">
           <div className="flex flex-wrap gap-3">
-            <StatMini label="Solde actuel"  value={formatMontant(soldeActuel)} color={soldeActuel >= 0 ? '#818cf8' : '#fb7185'} />
-            <StatMini label="Solde minimum" value={formatMontant(soldeMini)}   color={soldeMini  >= 0 ? '#34d399' : '#fb923c'} />
+            <StatMini label="Solde actuel"  value={fmt(soldeActuel)} color={soldeActuel >= 0 ? '#818cf8' : '#fb7185'} />
+            <StatMini label="Solde minimum" value={fmt(soldeMini)}   color={soldeMini  >= 0 ? '#34d399' : '#fb923c'} />
             <StatMini label="Transactions"  value={`${state.transactions.length}`} color="#94a3b8" />
           </div>
 

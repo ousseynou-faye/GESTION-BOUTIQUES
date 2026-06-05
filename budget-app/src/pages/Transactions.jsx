@@ -9,7 +9,8 @@ import { TransactionForm } from '@/components/transactions/TransactionForm'
 import { TransactionItem } from '@/components/transactions/TransactionItem'
 import CSVActions from '@/components/transactions/CSVActions'
 import { CATEGORIES } from '@/constants/categories'
-import { formatMontant, formatDate } from '@/utils/formatters'
+import { formatDate } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 
 const PAGE_SIZE = 25
 
@@ -31,6 +32,7 @@ const IconSolde = () => (
 
 export default function Transactions() {
   const { state, dispatch } = useBudget()
+  const fmt = useFormatMontant()
   const [addOpen, setAddOpen]         = useState(false)
   const [filtreType, setFiltreType]   = useState('tous')
   const [filtreCateg, setFiltreCateg] = useState('toutes')
@@ -131,21 +133,21 @@ export default function Transactions() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <KPICard
           titre="Total revenus"
-          valeur={formatMontant(totalRevenus)}
+          valeur={fmt(totalRevenus)}
           sousTitre={`${filtered.filter(t => t.type === 'revenu').length} entrée(s)`}
           gradient={['#059669', '#10b981']}
           icon={<IconRevenu />}
         />
         <KPICard
           titre="Total dépenses"
-          valeur={formatMontant(totalDepenses)}
+          valeur={fmt(totalDepenses)}
           sousTitre={`${filtered.filter(t => t.type === 'depense').length} sortie(s)`}
           gradient={['#e11d48', '#f43f5e']}
           icon={<IconDepense />}
         />
         <KPICard
           titre={solde >= 0 ? 'Solde net' : 'Déficit'}
-          valeur={formatMontant(Math.abs(solde))}
+          valeur={fmt(Math.abs(solde))}
           sousTitre={solde >= 0 ? 'Revenus > Dépenses' : 'Dépenses > Revenus'}
           gradient={solde >= 0 ? ['#4f46e5', '#6366f1'] : ['#ea580c', '#f97316']}
           icon={<IconSolde />}

@@ -1,9 +1,10 @@
-import { formatMontant } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 
 const AMOUNTS = [1000, 5000, 10000]
 
 export function QuickDepositCard({ goal, onDeposit }) {
+  const fmt = useFormatMontant()
   const pct = goal.montantCible > 0
     ? Math.round((goal.montantActuel / goal.montantCible) * 100)
     : 0
@@ -29,7 +30,7 @@ export function QuickDepositCard({ goal, onDeposit }) {
           className="text-xs flex-shrink-0 tabular-nums"
           style={{ color: 'rgba(100,116,139,0.7)' }}
         >
-          {formatMontant(goal.montantActuel)} / {formatMontant(goal.montantCible)}
+          {fmt(goal.montantActuel)} / {fmt(goal.montantCible)}
         </span>
       </div>
 
@@ -52,7 +53,7 @@ export function QuickDepositCard({ goal, onDeposit }) {
             onClick={() => onDeposit(goal.id, amount)}
             className="btn-secondary text-xs px-3 py-1"
           >
-            +{formatMontant(amount)}
+            +{fmt(amount)}
           </button>
         ))}
       </div>

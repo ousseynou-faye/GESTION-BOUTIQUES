@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useBudget } from '@/context/BudgetContext'
 import { getSoldeNet, getTauxEpargne } from '@/utils/calculations'
-import { formatMontant } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 
 const navItems = [
   {
@@ -86,6 +86,7 @@ function MoonIcon() {
 
 export function Sidebar() {
   const { state, dispatch } = useBudget()
+  const fmt = useFormatMontant()
   const isDark = state.settings.theme === 'dark'
   const mois   = state.settings.moisCourant
 
@@ -162,7 +163,7 @@ export function Sidebar() {
           </p>
           <p className="font-display font-bold leading-none tabular-nums mb-2"
             style={{ fontSize: '1.5rem', color: soldeColor }}>
-            {soldePositif ? '+' : ''}{formatMontant(solde)}
+            {soldePositif ? '+' : ''}{fmt(solde)}
           </p>
           <div className="flex items-center gap-1.5">
             <span

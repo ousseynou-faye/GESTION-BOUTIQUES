@@ -5,7 +5,8 @@ import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/Modal'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { getObjectifProgression } from '@/utils/calculations'
-import { formatMontant, formatDate } from '@/utils/formatters'
+import { formatDate } from '@/utils/formatters'
+import { useFormatMontant } from '@/utils/useFormatMontant'
 
 const COULEURS = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16']
 
@@ -329,6 +330,7 @@ function GoalForm({ initial, onSubmit, onCancel }) {
 
 // ─── Deposit form ─────────────────────────────────────────────────────────────
 function DepositForm({ goal, onSubmit, onCancel }) {
+  const fmt = useFormatMontant()
   const [montant, setMontant] = useState('')
   const [error, setError]     = useState('')
   const restant = Math.max(0, goal.montantCible - goal.montantActuel)
@@ -379,11 +381,11 @@ function DepositForm({ goal, onSubmit, onCancel }) {
             <p className="font-display text-sm font-bold text-slate-100 truncate">{goal.nom}</p>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-xs" style={{ color: 'rgba(100,116,139,0.7)' }}>
-                {formatMontant(goal.montantActuel)} / {formatMontant(goal.montantCible)}
+                {fmt(goal.montantActuel)} / {fmt(goal.montantCible)}
               </span>
               <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
               <span className="text-xs font-bold" style={{ color: goal.couleur }}>
-                {formatMontant(restant)} restant
+                {fmt(restant)} restant
               </span>
             </div>
           </div>
@@ -481,7 +483,7 @@ function DepositForm({ goal, onSubmit, onCancel }) {
               >
                 <span className="font-display text-[10px] font-bold uppercase tracking-wide" style={{ color: goal.couleur + 'cc' }}>{s.label}</span>
                 <span className="font-display text-xs font-extrabold tabular-nums mt-0.5" style={{ color: goal.couleur }}>
-                  {formatMontant(s.val)}
+                  {fmt(s.val)}
                 </span>
               </button>
             ))}
@@ -523,6 +525,7 @@ function DepositForm({ goal, onSubmit, onCancel }) {
 
 // ─── Goal card ────────────────────────────────────────────────────────────────
 function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
+  const fmt = useFormatMontant()
   const { pct, restant, jours, mensualiteRequise } = getObjectifProgression(goal)
   const atteint = goal.montantActuel >= goal.montantCible
   const urgence = jours !== null && jours <= 30 && !atteint
@@ -692,7 +695,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
               style={{ color: 'rgba(100,116,139,0.55)' }}>Épargné</p>
             <p className="font-display text-xl font-extrabold tabular-nums leading-none"
               style={{ color: 'rgba(226,232,240,0.95)' }}>
-              {formatMontant(goal.montantActuel)}
+              {fmt(goal.montantActuel)}
             </p>
           </div>
           <div className="text-right">
@@ -700,7 +703,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
               style={{ color: 'rgba(100,116,139,0.55)' }}>Objectif</p>
             <p className="font-display text-xl font-extrabold tabular-nums leading-none"
               style={{ color: 'rgba(226,232,240,0.95)' }}>
-              {formatMontant(goal.montantCible)}
+              {fmt(goal.montantCible)}
             </p>
           </div>
         </div>
@@ -711,7 +714,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
             <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
               style={{ color: `${goal.couleur}88` }}>Restant</p>
             <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: goal.couleur }}>
-              {formatMontant(restant)}
+              {fmt(restant)}
             </p>
           </div>
           {jours !== null ? (
@@ -755,7 +758,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
               <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5"
                 style={{ color: `${goal.couleur}88` }}>À épargner / mois</p>
               <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: goal.couleur }}>
-                {formatMontant(mensualiteRequise)}
+                {fmt(mensualiteRequise)}
               </p>
             </div>
           </div>
@@ -810,6 +813,7 @@ function GoalCard({ goal, onEdit, onDelete, onDeposit }) {
 // ─── Page principale ──────────────────────────────────────────────────────────
 export default function Goals() {
   const { state, dispatch } = useBudget()
+  const fmt = useFormatMontant()
   const [addOpen, setAddOpen]             = useState(false)
   const [editTarget, setEditTarget]       = useState(null)
   const [depositTarget, setDepositTarget] = useState(null)
@@ -889,9 +893,9 @@ export default function Goals() {
                   className="font-display font-extrabold leading-none tabular-nums text-white"
                   style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}
                 >
-                  {formatMontant(totalEpargne)}
+                  {fmt(totalEpargne)}
                   <span className="text-slate-500 font-normal ml-2" style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
-                    / {formatMontant(totalCible)}
+                    / {fmt(totalCible)}
                   </span>
                 </p>
 
@@ -926,7 +930,7 @@ export default function Goals() {
                 <div className="w-px h-8" style={{ background: 'rgba(255,255,255,0.08)' }} aria-hidden="true" />
                 <div className="text-center">
                   <p className="font-display text-xl font-extrabold tabular-nums" style={{ color: '#a5b4fc' }}>
-                    {formatMontant(totalEpargne)}
+                    {fmt(totalEpargne)}
                   </p>
                   <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>Épargné</p>
                 </div>
