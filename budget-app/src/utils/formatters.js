@@ -1,14 +1,22 @@
 import { format, parseISO, differenceInDays } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
-const SYMBOLES_DEVISE = { fcfa: 'FCFA', eur: 'EUR', usd: 'USD' }
+const SYMBOLES_DEVISE = { fcfa: 'F CFA', eur: '€', usd: '$' }
+const LABELS_DEVISE   = { fcfa: 'FCFA', eur: 'EUR', usd: 'USD' }
+
+export function getDeviseLabel(devise = 'fcfa') {
+  return LABELS_DEVISE[devise] ?? 'FCFA'
+}
 
 export function formatMontant(montant, devise = 'fcfa') {
-  const symbole = SYMBOLES_DEVISE[devise] ?? 'FCFA'
-  return new Intl.NumberFormat('fr-FR', {
+  const symbole = SYMBOLES_DEVISE[devise] ?? 'F CFA'
+  const num = new Intl.NumberFormat('fr-FR', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(Math.round(montant)) + ' ' + symbole
+  }).format(Math.round(montant))
+  return devise === 'eur' || devise === 'usd'
+    ? symbole + num
+    : num + ' ' + symbole
 }
 
 export function formatDate(dateStr, pattern = 'd MMM yyyy') {
