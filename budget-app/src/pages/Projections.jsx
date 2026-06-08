@@ -95,8 +95,8 @@ export default function Projections() {
   if (rawData.length === 0) {
     return (
       <EmptyState
-        title="Pas encore assez de données"
-        description="Ajoutez des transactions pour générer des projections."
+        titre="Pas encore assez de données"
+        message="Ajoutez des transactions pour générer des projections."
       />
     )
   }
