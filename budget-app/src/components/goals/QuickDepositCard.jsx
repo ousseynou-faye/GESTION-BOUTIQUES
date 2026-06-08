@@ -13,8 +13,8 @@ export function QuickDepositCard({ goal, onDeposit }) {
     <div
       className="rounded-2xl p-4 flex flex-col gap-3"
       style={{
-        background: '#0b0e1c',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-card)',
         boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
       }}
     >
@@ -22,7 +22,7 @@ export function QuickDepositCard({ goal, onDeposit }) {
       <div className="flex items-center justify-between gap-2">
         <p
           className="text-sm font-semibold truncate"
-          style={{ color: 'rgba(226,232,240,0.92)' }}
+          style={{ color: 'var(--text-primary)' }}
         >
           {goal.nom}
         </p>

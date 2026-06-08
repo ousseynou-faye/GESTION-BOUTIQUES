@@ -105,10 +105,10 @@ export default function Transactions() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-display text-2xl font-extrabold" style={{ color: 'rgba(226,232,240,0.95)' }}>
+          <h1 className="font-display text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>
             Transactions
           </h1>
-          <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
+          <p className="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
             {state.transactions.length} transaction{state.transactions.length > 1 ? 's' : ''} au total
             {hasFiltre && (
               <span className="font-semibold" style={{ color: '#818cf8' }}>
@@ -158,15 +158,15 @@ export default function Transactions() {
       <div
         className="rounded-2xl overflow-hidden"
         style={{
-          background: '#0b0e1c',
-          border: '1px solid rgba(255,255,255,0.06)',
-          boxShadow: '0 2px 16px rgba(0,0,0,0.25)',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-card)',
+          boxShadow: 'var(--shadow-card)',
         }}
       >
         {/* Header */}
         <div
           className="px-5 py-3 flex items-center gap-2"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+          style={{ borderBottom: '1px solid var(--border-subtle)' }}
         >
           {/* Prismatic top line */}
           <div
@@ -202,7 +202,7 @@ export default function Transactions() {
           {/* Type toggle */}
           <div
             className="flex gap-1 rounded-xl p-0.5"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+            style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border-card)' }}
             role="group"
             aria-label="Filtrer par type"
           >
@@ -228,7 +228,7 @@ export default function Transactions() {
                     : v === 'depense'
                     ? '0 2px 8px rgba(244,63,94,0.35)'
                     : '0 2px 8px rgba(99,102,241,0.3)',
-                } : { color: 'rgba(100,116,139,0.7)' }}
+                } : { color: 'var(--text-muted)' }}
               >
                 {l}
               </button>
@@ -254,13 +254,13 @@ export default function Transactions() {
             aria-label="Filtrer par mois"
             className="rounded-xl px-3 py-2 text-xs font-medium focus:outline-none transition-all"
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: 'rgba(226,232,240,0.9)',
-              colorScheme: 'dark',
+              background: 'var(--bg-subtle)',
+              border: '1px solid var(--border-input)',
+              color: 'var(--text-primary)',
+              colorScheme: 'var(--color-scheme)',
             }}
             onFocus={e => { e.currentTarget.style.borderColor = 'rgba(129,140,248,0.45)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(129,140,248,0.1)' }}
-            onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'var(--border-input)'; e.currentTarget.style.boxShadow = 'none' }}
           />
 
           {/* Search */}
@@ -279,12 +279,12 @@ export default function Transactions() {
               aria-label="Rechercher par description"
               className="w-full pl-9 pr-3.5 py-2 rounded-xl text-xs font-medium focus:outline-none transition-all"
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(226,232,240,0.9)',
+                background: 'var(--bg-subtle)',
+                border: '1px solid var(--border-input)',
+                color: 'var(--text-primary)',
               }}
               onFocus={e => { e.currentTarget.style.borderColor = 'rgba(129,140,248,0.45)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(129,140,248,0.1)' }}
-              onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+              onBlur={e => { e.currentTarget.style.borderColor = 'var(--border-input)'; e.currentTarget.style.boxShadow = 'none' }}
             />
           </div>
 
@@ -339,9 +339,9 @@ export default function Transactions() {
       <div
         className="rounded-2xl overflow-hidden"
         style={{
-          background: '#0b0e1c',
-          border: '1px solid rgba(255,255,255,0.06)',
-          boxShadow: '0 2px 16px rgba(0,0,0,0.25)',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-card)',
+          boxShadow: 'var(--shadow-card)',
         }}
       >
         {grouped.length === 0 ? (
@@ -358,9 +358,9 @@ export default function Transactions() {
                 <div
                   className="flex items-center gap-3 px-5 py-2.5"
                   style={{
-                    background: 'rgba(255,255,255,0.02)',
-                    borderBottom: '1px solid rgba(255,255,255,0.04)',
-                    borderTop: groupIdx > 0 ? '1px solid rgba(255,255,255,0.04)' : undefined,
+                    background: 'var(--bg-subtle)',
+                    borderBottom: '1px solid var(--border-separator)',
+                    borderTop: groupIdx > 0 ? '1px solid var(--border-separator)' : undefined,
                   }}
                 >
                   <span
@@ -402,13 +402,13 @@ export default function Transactions() {
           <div
             className="flex items-center justify-between px-5 py-3.5"
             style={{
-              borderTop: '1px solid rgba(255,255,255,0.05)',
-              background: 'rgba(255,255,255,0.02)',
+              borderTop: '1px solid var(--border-subtle)',
+              background: 'var(--bg-subtle)',
             }}
           >
-            <span className="text-[11px] font-medium" style={{ color: 'rgba(100,116,139,0.7)' }}>
+            <span className="text-[11px] font-medium" style={{ color: 'var(--text-muted)' }}>
               Page{' '}
-              <span className="font-display font-bold" style={{ color: 'rgba(226,232,240,0.9)' }}>{page + 1}</span>
+              <span className="font-display font-bold" style={{ color: 'var(--text-primary)' }}>{page + 1}</span>
               {' '}sur {totalPages} · {filtered.length} transactions
             </span>
             <div className="flex gap-2">
@@ -417,12 +417,12 @@ export default function Transactions() {
                 onClick={() => setPage(p => p - 1)}
                 className="px-3 py-1.5 text-xs rounded-xl font-semibold flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none"
                 style={{
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'rgba(255,255,255,0.04)',
-                  color: 'rgba(148,163,184,0.8)',
+                  border: '1px solid var(--border-input)',
+                  background: 'var(--bg-subtle)',
+                  color: 'var(--text-secondary)',
                 }}
-                onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+                onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'var(--bg-subtle-hover)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-subtle)' }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
@@ -435,12 +435,12 @@ export default function Transactions() {
                 onClick={() => setPage(p => p + 1)}
                 className="px-3 py-1.5 text-xs rounded-xl font-semibold flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none"
                 style={{
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'rgba(255,255,255,0.04)',
-                  color: 'rgba(148,163,184,0.8)',
+                  border: '1px solid var(--border-input)',
+                  background: 'var(--bg-subtle)',
+                  color: 'var(--text-secondary)',
                 }}
-                onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+                onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.background = 'var(--bg-subtle-hover)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-subtle)' }}
               >
                 Suivant
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"

@@ -11,13 +11,13 @@ function SettingsCard({ titre, children }) {
   return (
     <div
       className="rounded-2xl overflow-hidden"
-      style={{ background: '#0b0e1c', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)' }}
+      style={{ background: 'var(--bg-card)', border: '1px solid var(--border-card)', boxShadow: '0 4px 20px rgba(0,0,0,0.25)' }}
     >
       <div
         className="px-5 py-3.5"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+        style={{ borderBottom: '1px solid var(--border-subtle)' }}
       >
-        <h2 className="font-display text-[13px] font-extrabold tracking-tight" style={{ color: 'rgba(226,232,240,0.92)' }}>
+        <h2 className="font-display text-[13px] font-extrabold tracking-tight" style={{ color: 'var(--text-primary)' }}>
           {titre}
         </h2>
       </div>
@@ -45,10 +45,10 @@ export default function Settings() {
 
       {/* ── Header ── */}
       <div>
-        <h1 className="font-display text-2xl font-extrabold leading-tight" style={{ color: 'rgba(226,232,240,0.95)' }}>
+        <h1 className="font-display text-2xl font-extrabold leading-tight" style={{ color: 'var(--text-primary)' }}>
           Paramètres
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
+        <p className="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
           Personnalisez votre expérience Budget Pro
         </p>
       </div>
@@ -59,7 +59,7 @@ export default function Settings() {
         <SettingsCard titre="Profil">
           <form onSubmit={handleSaveNom} className="flex flex-col gap-3">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: 'rgba(100,116,139,0.7)' }}>
+              <label className="text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: 'var(--text-muted)' }}>
                 Prénom
               </label>
               <input
@@ -111,7 +111,7 @@ export default function Settings() {
                 </button>
               ))}
             </div>
-            <p className="text-[11px]" style={{ color: 'rgba(100,116,139,0.6)' }}>
+            <p className="text-[11px]" style={{ color: 'var(--text-dimmed)' }}>
               Les montants restent stockés en FCFA. Seul le symbole change.
             </p>
           </div>

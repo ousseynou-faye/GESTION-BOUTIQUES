@@ -23,7 +23,7 @@ export function Modal({ isOpen, onClose, titre, children, size = 'md' }) {
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-3 sm:p-6"
-      style={{ background: 'rgba(2,4,18,0.75)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+      style={{ background: 'var(--bg-overlay)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
       onClick={(e) => { if (e.target === overlayRef.current) onClose() }}
       role="dialog"
       aria-modal="true"
@@ -32,9 +32,9 @@ export function Modal({ isOpen, onClose, titre, children, size = 'md' }) {
       <div
         className={['w-full', sizeClass, 'rounded-3xl shadow-2xl overflow-hidden animate-modal-in'].join(' ')}
         style={{
-          background: 'linear-gradient(160deg, #07091c 0%, #0b0e24 60%, #0a0c1f 100%)',
-          border: '1px solid rgba(129,140,248,0.12)',
-          boxShadow: '0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(129,140,248,0.08)',
+          background: 'var(--bg-modal)',
+          border: '1px solid var(--border-modal)',
+          boxShadow: 'var(--shadow-modal)',
         }}
       >
         {/* Prismatic top line */}
@@ -54,7 +54,7 @@ export function Modal({ isOpen, onClose, titre, children, size = 'md' }) {
         {/* Header */}
         <div
           className="relative flex items-center justify-between px-6 py-4"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          style={{ borderBottom: '1px solid var(--border-subtle)' }}
         >
           <div className="flex items-center gap-3">
             <div
@@ -64,7 +64,8 @@ export function Modal({ isOpen, onClose, titre, children, size = 'md' }) {
             />
             <h2
               id="modal-title"
-              className="font-display text-[15px] font-bold text-white tracking-tight leading-snug"
+              className="font-display text-[15px] font-bold tracking-tight leading-snug"
+              style={{ color: 'var(--text-primary)' }}
             >
               {titre}
             </h2>
@@ -73,9 +74,9 @@ export function Modal({ isOpen, onClose, titre, children, size = 'md' }) {
             onClick={onClose}
             aria-label="Fermer la fenêtre"
             className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-150 focus:outline-none"
-            style={{ color: 'rgba(100,116,139,0.8)', background: 'rgba(255,255,255,0.04)' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#e2e8f0' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = 'rgba(100,116,139,0.8)' }}
+            style={{ color: 'var(--text-muted)', background: 'var(--bg-subtle)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-subtle-hover)'; e.currentTarget.style.color = 'var(--text-primary)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-subtle)'; e.currentTarget.style.color = 'var(--text-muted)' }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
@@ -109,7 +110,7 @@ export function ConfirmDialog({ isOpen, onClose, onConfirm, titre = 'Confirmer l
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <p className="text-sm leading-relaxed pt-1.5" style={{ color: 'rgba(148,163,184,0.9)' }}>
+          <p className="text-sm leading-relaxed pt-1.5" style={{ color: 'var(--text-secondary)' }}>
             {message}
           </p>
         </div>
@@ -117,9 +118,9 @@ export function ConfirmDialog({ isOpen, onClose, onConfirm, titre = 'Confirmer l
           <button
             onClick={onClose}
             className="flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none"
-            style={{ border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(148,163,184,0.8)', background: 'rgba(255,255,255,0.04)' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+            style={{ border: '1px solid var(--border-input)', color: 'var(--text-secondary)', background: 'var(--bg-subtle)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-subtle-hover)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-subtle)' }}
           >
             Annuler
           </button>

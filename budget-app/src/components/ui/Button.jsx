@@ -36,8 +36,8 @@ const sizes = {
 
 const variantInlineStyles = {
   secondary: {
-    background: 'rgba(255,255,255,0.05)',
-    borderColor: 'rgba(255,255,255,0.1)',
+    background: 'var(--bg-subtle)',
+    borderColor: 'var(--border-input)',
   },
 }
 
@@ -60,8 +60,8 @@ export function Button({
       aria-label={ariaLabel}
       aria-busy={loading || undefined}
       style={variantInlineStyles[variant]}
-      onMouseEnter={variant === 'secondary' ? e => { e.currentTarget.style.background = 'rgba(255,255,255,0.09)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)' } : undefined}
-      onMouseLeave={variant === 'secondary' ? e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' } : undefined}
+      onMouseEnter={variant === 'secondary' ? e => { e.currentTarget.style.background = 'var(--bg-subtle-hover)'; e.currentTarget.style.borderColor = 'var(--border-input)' } : undefined}
+      onMouseLeave={variant === 'secondary' ? e => { e.currentTarget.style.background = 'var(--bg-subtle)'; e.currentTarget.style.borderColor = 'var(--border-input)' } : undefined}
       className={[
         'inline-flex items-center justify-center rounded-xl font-semibold',
         'transition-all duration-150',

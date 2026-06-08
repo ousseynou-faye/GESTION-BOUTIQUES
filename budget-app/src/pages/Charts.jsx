@@ -65,7 +65,7 @@ function StatMini({ label, value, color }) {
     >
       <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: `${color}aa` }}>{label}</p>
       <p className="font-display text-[15px] font-extrabold tabular-nums leading-tight"
-        style={{ color: 'rgba(226,232,240,0.92)' }}>
+        style={{ color: 'var(--text-primary)' }}>
         {value}
       </p>
     </div>
@@ -112,22 +112,22 @@ function ChartCard({ title, subtitle, legend, children }) {
     <div
       className="rounded-2xl overflow-hidden"
       style={{
-        background: '#0b0e1c',
-        border: '1px solid rgba(255,255,255,0.06)',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-card)',
+        boxShadow: 'var(--shadow-card-lg)',
       }}
     >
       <div
         className="px-5 py-4 flex items-center gap-4"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+        style={{ borderBottom: '1px solid var(--border-subtle)' }}
       >
         <div className="flex-1 min-w-0">
           <h2 className="font-display text-[13px] font-extrabold leading-tight"
-            style={{ color: 'rgba(226,232,240,0.92)' }}>
+            style={{ color: 'var(--text-primary)' }}>
             {title}
           </h2>
           {subtitle && (
-            <p className="text-[11px] mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>{subtitle}</p>
+            <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>{subtitle}</p>
           )}
         </div>
         {legend && (
@@ -175,8 +175,8 @@ export default function Charts() {
 
       {/* ── Header ── */}
       <div>
-        <h1 className="font-display text-2xl font-extrabold" style={{ color: 'rgba(226,232,240,0.95)' }}>Graphiques</h1>
-        <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
+        <h1 className="font-display text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>Graphiques</h1>
+        <p className="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
           Analysez vos données financières visuellement
         </p>
       </div>
@@ -184,7 +184,7 @@ export default function Charts() {
       {/* ── Snapshot global ── */}
       <div
         className="grid grid-cols-2 sm:grid-cols-4 gap-px overflow-hidden rounded-2xl"
-        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ background: 'var(--bg-subtle-md)', border: '1px solid var(--border-card)' }}
       >
         {[
           { label: 'Dépenses ce mois', value: fmt(totalDepensesMois), color: '#fb7185' },
@@ -195,11 +195,11 @@ export default function Charts() {
           <div
             key={label}
             className="flex flex-col gap-1 px-4 py-3"
-            style={{ background: '#0b0e1c' }}
+            style={{ background: 'var(--bg-card)' }}
           >
             <p className="text-[8px] font-bold uppercase tracking-[0.18em]" style={{ color: `${color}99` }}>{label}</p>
             <p className="font-display text-[14px] font-extrabold tabular-nums leading-tight"
-              style={{ color: 'rgba(226,232,240,0.92)' }}>
+              style={{ color: 'var(--text-primary)' }}>
               {value}
             </p>
           </div>
@@ -220,12 +220,12 @@ export default function Charts() {
               onClick={() => setOnglet(o.key)}
               className="relative flex flex-col items-center gap-2 py-4 px-3 rounded-2xl transition-all duration-200 focus:outline-none overflow-hidden"
               style={isActive ? {
-                background: 'linear-gradient(145deg, #050818 0%, #0a0d24 50%, #0d0a2e 100%)',
+                background: 'var(--bg-banner)',
                 boxShadow: `0 8px 24px rgba(5,8,24,0.4), 0 2px 8px ${o.color}22`,
                 border: `1px solid ${o.color}30`,
               } : {
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: 'var(--bg-subtle)',
+                border: '1px solid var(--border-input)',
                 boxShadow: 'none',
               }}
             >
@@ -246,8 +246,8 @@ export default function Charts() {
                   color: o.color,
                   boxShadow: `0 0 14px ${o.color}33`,
                 } : {
-                  color: 'rgba(100,116,139,0.6)',
-                  background: 'rgba(255,255,255,0.05)',
+                  color: 'var(--text-dimmed)',
+                  background: 'var(--border-separator)',
                 }}
               >
                 {o.icon}
@@ -256,7 +256,7 @@ export default function Charts() {
               <div className="text-center">
                 <p
                   className="font-display text-[13px] font-bold leading-tight"
-                  style={{ color: isActive ? '#fff' : '#64748b' }}
+                  style={{ color: isActive ? 'var(--text-on-banner)' : '#64748b' }}
                 >
                   {o.label}
                 </p>
@@ -347,11 +347,11 @@ export default function Charts() {
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-center text-[11px] mb-1.5">
-                              <span className="font-semibold truncate" style={{ color: 'rgba(148,163,184,0.85)' }}>
+                              <span className="font-semibold truncate" style={{ color: 'var(--text-secondary)' }}>
                                 {d.name}
                               </span>
                               <div className="flex items-center gap-3 flex-shrink-0 ml-3">
-                                <span className="tabular-nums" style={{ color: 'rgba(100,116,139,0.7)' }}>
+                                <span className="tabular-nums" style={{ color: 'var(--text-muted)' }}>
                                   {fmt(d.value)}
                                 </span>
                                 <span
@@ -407,11 +407,11 @@ export default function Charts() {
               <>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#34d399', boxShadow: '0 0 6px #34d39988' }} aria-hidden="true" />
-                  <span className="text-[11px] font-medium" style={{ color: 'rgba(100,116,139,0.7)' }}>Revenus</span>
+                  <span className="text-[11px] font-medium" style={{ color: 'var(--text-muted)' }}>Revenus</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#fb7185', boxShadow: '0 0 6px #fb718588' }} aria-hidden="true" />
-                  <span className="text-[11px] font-medium" style={{ color: 'rgba(100,116,139,0.7)' }}>Dépenses</span>
+                  <span className="text-[11px] font-medium" style={{ color: 'var(--text-muted)' }}>Dépenses</span>
                 </div>
               </>
             }

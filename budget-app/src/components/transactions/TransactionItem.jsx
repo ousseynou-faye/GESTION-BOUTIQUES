@@ -48,7 +48,7 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
         {/* ── Info ── */}
         <div className="flex-1 min-w-0">
           <p className="font-display text-[13px] font-semibold truncate leading-snug"
-            style={{ color: 'rgba(226,232,240,0.92)' }}>
+            style={{ color: 'var(--text-primary)' }}>
             {transaction.description}
           </p>
           <div className="flex items-center gap-2 mt-0.5 flex-wrap">
@@ -65,14 +65,14 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
                 Récurrente
               </span>
             )}
-            <span className="text-[10px] font-medium" style={{ color: 'rgba(100,116,139,0.65)' }}>
+            <span className="text-[10px] font-medium" style={{ color: 'var(--text-dimmed)' }}>
               {formatDate(transaction.date, 'd MMM yyyy')}
             </span>
           </div>
           {transaction.note && (
             <p
               className="mt-1 text-[11px] leading-snug line-clamp-2"
-              style={{ color: 'rgba(100,116,139,0.7)' }}
+              style={{ color: 'var(--text-muted)' }}
             >
               ✎ {transaction.note}
             </p>
@@ -121,7 +121,7 @@ export function TransactionItem({ transaction, onEdit, onDelete }) {
       </div>
 
       {/* Divider */}
-      <div className="mx-5 h-px" style={{ background: 'rgba(255,255,255,0.04)' }} aria-hidden="true" />
+      <div className="mx-5 h-px" style={{ background: 'var(--border-separator)' }} aria-hidden="true" />
 
       <Modal isOpen={editOpen} onClose={() => setEditOpen(false)} titre="Modifier la transaction">
         <TransactionForm

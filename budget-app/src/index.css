@@ -74,6 +74,117 @@
   --focus-ring-success:0 0 0 3px rgb(16 185 129 / 0.20);
 }
 
+/* ─── Theme tokens (light default, dark override) ───────────────────── */
+:root {
+  /* Surfaces */
+  --bg-card:          #ffffff;
+  --bg-card-elevated: #f8fafc;
+  --bg-subtle:        rgba(0,0,0,0.03);
+  --bg-subtle-md:     rgba(0,0,0,0.045);
+  --bg-subtle-hover:  rgba(0,0,0,0.06);
+  --bg-input:         rgba(0,0,0,0.04);
+  --bg-banner:        linear-gradient(145deg, #f5f7ff 0%, #eef1ff 45%, #ebe8ff 100%);
+  --bg-sidebar:       linear-gradient(170deg, #f8faff 0%, #f0f4ff 55%, #ede9ff 100%);
+  --bg-topbar:        rgba(248,250,252,0.95);
+  --bg-bottomnav:     rgba(255,255,255,0.97);
+  --bg-modal:         linear-gradient(160deg, #ffffff 0%, #f8fafc 60%, #f5f7ff 100%);
+  --bg-overlay:       rgba(15,23,42,0.5);
+
+  /* Borders */
+  --border-card:       rgba(0,0,0,0.08);
+  --border-subtle:     rgba(0,0,0,0.05);
+  --border-input:      rgba(0,0,0,0.12);
+  --border-separator:  rgba(0,0,0,0.04);
+  --border-topbar:     rgba(226,232,240,0.9);
+  --border-bottomnav:  rgba(99,102,241,0.15);
+  --border-modal:      rgba(99,102,241,0.12);
+
+  /* Text */
+  --text-primary:   #0f172a;
+  --text-secondary: #334155;
+  --text-muted:     #64748b;
+  --text-dimmed:    #94a3b8;
+  --text-sidebar-muted: rgba(100,116,139,0.7);
+
+  /* Shadows */
+  --shadow-card:    0 2px 16px rgba(0,0,0,0.06);
+  --shadow-card-lg: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-card-xl: 0 20px 60px rgba(0,0,0,0.1), 0 4px 16px rgba(99,102,241,0.05);
+  --shadow-modal:   0 32px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(99,102,241,0.08);
+
+  /* Sidebar specifics */
+  --sidebar-bg:       linear-gradient(170deg, #f8faff 0%, #f0f4ff 55%, #ede9ff 100%);
+  --sidebar-nav-text: #475569;
+  --sidebar-user-bg:  rgba(0,0,0,0.03);
+  --sidebar-user-border: rgba(0,0,0,0.08);
+
+  /* Accent text (adapts per theme) */
+  --text-accent-purple:  #6366f1;
+  --text-accent-green:   #059669;
+  --text-on-banner:      #1e1b4b;
+
+  /* Color scheme for native inputs */
+  --color-scheme: light;
+
+  /* Misc */
+  --prismatic-line: linear-gradient(90deg, transparent 0%, rgba(129,140,248,0.3) 30%, rgba(196,181,253,0.6) 50%, rgba(129,140,248,0.3) 70%, transparent 100%);
+}
+
+.dark {
+  /* Surfaces */
+  --bg-card:          #0b0e1c;
+  --bg-card-elevated: #0a0d1e;
+  --bg-subtle:        rgba(255,255,255,0.04);
+  --bg-subtle-md:     rgba(255,255,255,0.04);
+  --bg-subtle-hover:  rgba(255,255,255,0.08);
+  --bg-input:         rgba(255,255,255,0.04);
+  --bg-banner:        linear-gradient(145deg, #050818 0%, #0a0d24 45%, #0d0a2e 100%);
+  --bg-sidebar:       linear-gradient(170deg, #04071a 0%, #060a20 55%, #08092a 100%);
+  --bg-topbar:        rgba(6,11,24,0.94);
+  --bg-bottomnav:     rgba(13,20,36,0.97);
+  --bg-modal:         linear-gradient(160deg, #07091c 0%, #0b0e24 60%, #0a0c1f 100%);
+  --bg-overlay:       rgba(2,4,18,0.75);
+
+  /* Borders */
+  --border-card:       rgba(255,255,255,0.06);
+  --border-subtle:     rgba(255,255,255,0.05);
+  --border-input:      rgba(255,255,255,0.08);
+  --border-separator:  rgba(255,255,255,0.04);
+  --border-topbar:     rgba(30,41,59,0.8);
+  --border-bottomnav:  rgba(99,102,241,0.18);
+  --border-modal:      rgba(129,140,248,0.12);
+
+  /* Text */
+  --text-primary:   rgba(226,232,240,0.95);
+  --text-secondary: rgba(148,163,184,0.9);
+  --text-muted:     rgba(100,116,139,0.7);
+  --text-dimmed:    rgba(100,116,139,0.6);
+  --text-sidebar-muted: rgba(100,116,139,0.7);
+
+  /* Shadows */
+  --shadow-card:    0 2px 16px rgba(0,0,0,0.25);
+  --shadow-card-lg: 0 4px 20px rgba(0,0,0,0.25);
+  --shadow-card-xl: 0 20px 60px rgba(5,8,24,0.5), 0 4px 16px rgba(99,102,241,0.08);
+  --shadow-modal:   0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(129,140,248,0.08);
+
+  /* Sidebar specifics */
+  --sidebar-bg:       linear-gradient(170deg, #04071a 0%, #060a20 55%, #08092a 100%);
+  --sidebar-nav-text: #64748b;
+  --sidebar-user-bg:  rgba(255,255,255,0.03);
+  --sidebar-user-border: rgba(255,255,255,0.06);
+
+  /* Accent text (adapts per theme) */
+  --text-accent-purple:  #a5b4fc;
+  --text-accent-green:   #34d399;
+  --text-on-banner:      rgba(226,232,240,0.95);
+
+  /* Color scheme for native inputs */
+  --color-scheme: dark;
+
+  /* Misc */
+  --prismatic-line: linear-gradient(90deg, transparent 0%, rgba(129,140,248,0.6) 30%, rgba(196,181,253,0.9) 50%, rgba(129,140,248,0.6) 70%, transparent 100%);
+}
+
 /* ─── Reset & base ──────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -99,6 +210,10 @@ body {
 .dark body {
   background-color: #030610;
   color: #f1f5f9;
+}
+
+input[type="date"] {
+  color-scheme: var(--color-scheme);
 }
 
 .font-display {
@@ -310,12 +425,12 @@ input[type="number"] {
     border-radius: 0.75rem;
     font-size: 0.8125rem;
     font-weight: 600;
-    color: rgba(148,163,184,0.9);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-input);
     transition: background 150ms ease;
   }
-  .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+  .btn-secondary:hover { background: var(--bg-subtle-hover); }
 
   .btn-danger {
     display: inline-flex;
@@ -352,16 +467,16 @@ input[type="number"] {
   .badge-over { padding: 2px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; background: rgba(244,63,94,0.12);   color: #f43f5e; border: 1px solid rgba(244,63,94,0.2);  }
   .badge-recur{ padding: 2px 8px;  border-radius: 6px;    font-size: 10px; font-weight: 600; background: rgba(99,102,241,0.15); color: #818cf8; border: 1px solid rgba(99,102,241,0.25); }
 
-  /* ── Dark input base (focus + error handled inline as before) ───────── */
+  /* ── Adaptive input base ───────────────────────────────────────────── */
   .input-dark {
     width: 100%;
     padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
     font-weight: 500;
     border-radius: 0.75rem;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: #e2e8f0;
+    background: var(--bg-input);
+    border: 1px solid var(--border-input);
+    color: var(--text-primary);
     outline: none;
     transition: border-color 150ms ease, box-shadow 150ms ease;
   }

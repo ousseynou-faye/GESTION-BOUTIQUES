@@ -5,7 +5,7 @@ export function Badge({ categorie, className = '' }) {
   if (!cat) return (
     <span
       className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold"
-      style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(148,163,184,0.7)', border: '1px solid rgba(255,255,255,0.08)' }}
+      style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)', border: '1px solid var(--border-input)' }}
     >
       {categorie}
     </span>

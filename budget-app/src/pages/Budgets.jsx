@@ -6,7 +6,7 @@ import { ConfirmDialog } from '@/components/ui/Modal'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { getProgressionBudgets } from '@/utils/calculations'
 import { formatMois } from '@/utils/formatters'
-import { useFormatMontant } from '@/utils/useFormatMontant'
+import { useFormatMontant, useDeviseLabel } from '@/utils/useFormatMontant'
 import { CATEGORIES, CATEGORIES_DEPENSES } from '@/constants/categories'
 
 // ─── SVG Ring progress ────────────────────────────────────────────────────────
@@ -39,6 +39,7 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
   const [categorie, setCategorie] = useState(initial?.categorie || '')
   const [montant, setMontant]     = useState(initial ? String(initial.montantMensuel) : '')
   const [errors, setErrors]       = useState({})
+  const deviseLabel = useDeviseLabel()
 
   const catColor = categorie ? (CATEGORIES[categorie]?.couleur || '#818cf8') : '#818cf8'
 
@@ -57,7 +58,7 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
       {/* Catégorie */}
       <div>
         <p className="font-display text-[10px] font-bold uppercase tracking-[0.15em] mb-2 leading-none"
-          style={{ color: 'rgba(100,116,139,0.7)' }}>
+          style={{ color: 'var(--text-muted)' }}>
           Catégorie de dépense
         </p>
         <div className="flex flex-wrap gap-1.5 max-h-52 overflow-y-auto pr-1">
@@ -77,10 +78,10 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
                   border: '1px solid transparent',
                 } : {
                   background: `${cat.couleur}0d`,
-                  color: 'rgba(148,163,184,0.85)',
+                  color: 'var(--text-secondary)',
                   border: `1px solid ${cat.couleur}25`,
                 }}
-                onMouseEnter={e => { if (!selected) { e.currentTarget.style.background = `${cat.couleur}1a`; e.currentTarget.style.color = '#e2e8f0' } }}
+                onMouseEnter={e => { if (!selected) { e.currentTarget.style.background = `${cat.couleur}1a`; e.currentTarget.style.color = 'var(--text-primary)' } }}
                 onMouseLeave={e => { if (!selected) { e.currentTarget.style.background = `${cat.couleur}0d`; e.currentTarget.style.color = 'rgba(148,163,184,0.85)' } }}
               >
                 <span className="w-2 h-2 rounded-full flex-shrink-0"
@@ -105,12 +106,12 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
         )}
       </div>
 
-      <div className="h-px" style={{ background: 'rgba(255,255,255,0.05)' }} aria-hidden="true" />
+      <div className="h-px" style={{ background: 'var(--border-separator)' }} aria-hidden="true" />
 
       {/* Montant */}
       <div>
         <p className="font-display text-[10px] font-bold uppercase tracking-[0.15em] mb-2.5 leading-none"
-          style={{ color: 'rgba(100,116,139,0.7)' }}>
+          style={{ color: 'var(--text-muted)' }}>
           Budget mensuel
         </p>
         {/* F + input in a flex row */}
@@ -126,7 +127,7 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
             className="pl-5 font-display font-black leading-none select-none flex-shrink-0"
             style={{ color: catColor, fontSize: '1.1rem' }}
             aria-hidden="true"
-          >F CFA</span>
+          >{deviseLabel}</span>
           <input
             type="number" step="1" min="1" placeholder="0"
             value={montant}
@@ -179,9 +180,9 @@ function BudgetForm({ initial, mois, onSubmit, onCancel }) {
       <div className="flex gap-3 pt-1">
         <button type="button" onClick={onCancel}
           className="flex-1 py-3 text-sm font-semibold rounded-2xl transition-all"
-          style={{ border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(148,163,184,0.8)', background: 'rgba(255,255,255,0.04)' }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+          style={{ border: '1px solid var(--border-input)', color: 'var(--text-secondary)', background: 'var(--bg-subtle)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-subtle-hover)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-subtle)' }}
         >Annuler</button>
         <button type="submit"
           className="flex-1 py-3 font-display text-sm font-bold rounded-2xl text-white transition-all hover:opacity-90 active:scale-[0.98]"
@@ -207,8 +208,8 @@ function BudgetCard({ b, onEdit, onDelete }) {
     <div
       className="relative flex overflow-hidden rounded-2xl transition-all duration-200 hover:-translate-y-0.5"
       style={{
-        background: '#0b0e1c',
-        border: `1px solid ${b.depasse ? 'rgba(251,113,133,0.2)' : b.pourcentage >= 80 ? 'rgba(251,146,60,0.16)' : 'rgba(255,255,255,0.06)'}`,
+        background: 'var(--bg-card)',
+        border: `1px solid ${b.depasse ? 'rgba(251,113,133,0.2)' : b.pourcentage >= 80 ? 'rgba(251,146,60,0.16)' : 'var(--border-card)'}`,
         boxShadow: b.depasse
           ? '0 4px 24px rgba(251,113,133,0.1), 0 2px 8px rgba(0,0,0,0.3)'
           : b.pourcentage >= 80
@@ -283,7 +284,7 @@ function BudgetCard({ b, onEdit, onDelete }) {
                 onClick={() => onEdit(b)}
                 aria-label={`Modifier le budget ${b.label}`}
                 className="w-6 h-6 rounded-lg flex items-center justify-center transition-all focus:outline-none"
-                style={{ color: 'rgba(100,116,139,0.6)', background: 'transparent' }}
+                style={{ color: 'var(--text-dimmed)', background: 'transparent' }}
                 onMouseEnter={e => { e.currentTarget.style.color = '#818cf8'; e.currentTarget.style.background = 'rgba(129,140,248,0.12)' }}
                 onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.6)'; e.currentTarget.style.background = 'transparent' }}
               >
@@ -297,7 +298,7 @@ function BudgetCard({ b, onEdit, onDelete }) {
                 onClick={() => onDelete(b)}
                 aria-label={`Supprimer le budget ${b.label}`}
                 className="w-6 h-6 rounded-lg flex items-center justify-center transition-all focus:outline-none"
-                style={{ color: 'rgba(100,116,139,0.6)', background: 'transparent' }}
+                style={{ color: 'var(--text-dimmed)', background: 'transparent' }}
                 onMouseEnter={e => { e.currentTarget.style.color = '#fb7185'; e.currentTarget.style.background = 'rgba(251,113,133,0.12)' }}
                 onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.6)'; e.currentTarget.style.background = 'transparent' }}
               >
@@ -314,13 +315,13 @@ function BudgetCard({ b, onEdit, onDelete }) {
         {/* Progress bar */}
         <div className="mb-3">
           <div className="flex justify-between text-[11px] mb-1.5">
-            <span style={{ color: 'rgba(100,116,139,0.7)' }}>
+            <span style={{ color: 'var(--text-muted)' }}>
               Dépensé :{' '}
-              <span className="font-bold" style={{ color: b.depasse ? '#fb7185' : 'rgba(226,232,240,0.8)' }}>
+              <span className="font-bold" style={{ color: b.depasse ? '#fb7185' : 'var(--text-secondary)' }}>
                 {fmt(b.depense)}
               </span>
             </span>
-            <span className="font-bold tabular-nums" style={{ color: 'rgba(100,116,139,0.6)' }}>
+            <span className="font-bold tabular-nums" style={{ color: 'var(--text-dimmed)' }}>
               {fmt(b.montantMensuel)}
             </span>
           </div>
@@ -345,9 +346,9 @@ function BudgetCard({ b, onEdit, onDelete }) {
 
         {/* Stats row */}
         <div className="grid grid-cols-2 gap-2">
-          <div className="rounded-xl px-3 py-2" style={{ background: 'rgba(255,255,255,0.03)' }}>
-            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: 'rgba(100,116,139,0.55)' }}>Budget</p>
-            <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: 'rgba(226,232,240,0.85)' }}>
+          <div className="rounded-xl px-3 py-2" style={{ background: 'var(--bg-subtle)' }}>
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: 'var(--text-dimmed)' }}>Budget</p>
+            <p className="font-display text-[13px] font-extrabold tabular-nums" style={{ color: 'var(--text-primary)' }}>
               {fmt(b.montantMensuel)}
             </p>
           </div>
@@ -439,8 +440,8 @@ export default function Budgets() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-display text-2xl font-extrabold" style={{ color: 'rgba(226,232,240,0.95)' }}>Budgets</h1>
-          <p className="text-sm mt-0.5" style={{ color: 'rgba(100,116,139,0.8)' }}>
+          <h1 className="font-display text-2xl font-extrabold" style={{ color: 'var(--text-primary)' }}>Budgets</h1>
+          <p className="text-sm mt-0.5" style={{ color: 'var(--text-muted)' }}>
             Planifiez et contrôlez vos dépenses par catégorie
           </p>
         </div>
@@ -450,15 +451,15 @@ export default function Budgets() {
           <div
             className="flex items-center gap-0.5 rounded-xl px-1 py-1"
             style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'var(--bg-subtle)',
+              border: '1px solid var(--border-input)',
             }}
           >
             <button
               onClick={() => goMois(-1)}
               aria-label="Mois précédent"
               className="w-7 h-7 rounded-lg flex items-center justify-center text-lg font-bold leading-none transition-all focus:outline-none"
-              style={{ color: 'rgba(100,116,139,0.7)' }}
+              style={{ color: 'var(--text-muted)' }}
               onMouseEnter={e => { e.currentTarget.style.color = '#818cf8'; e.currentTarget.style.background = 'rgba(129,140,248,0.1)' }}
               onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.7)'; e.currentTarget.style.background = 'transparent' }}
             >
@@ -470,13 +471,13 @@ export default function Budgets() {
               onChange={e => setMois(e.target.value)}
               aria-label="Sélectionner le mois"
               className="bg-transparent border-none outline-none text-[12px] font-bold w-28 text-center cursor-pointer focus:outline-none"
-              style={{ color: 'rgba(226,232,240,0.9)', colorScheme: 'dark' }}
+              style={{ color: 'var(--text-primary)', colorScheme: 'var(--color-scheme)' }}
             />
             <button
               onClick={() => goMois(1)}
               aria-label="Mois suivant"
               className="w-7 h-7 rounded-lg flex items-center justify-center text-lg font-bold leading-none transition-all focus:outline-none"
-              style={{ color: 'rgba(100,116,139,0.7)' }}
+              style={{ color: 'var(--text-muted)' }}
               onMouseEnter={e => { e.currentTarget.style.color = '#818cf8'; e.currentTarget.style.background = 'rgba(129,140,248,0.1)' }}
               onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.7)'; e.currentTarget.style.background = 'transparent' }}
             >
@@ -499,7 +500,7 @@ export default function Budgets() {
         <div
           className="rounded-3xl overflow-hidden"
           style={{
-            background: 'linear-gradient(145deg, #050818 0%, #0a0d24 45%, #0d0a2e 100%)',
+            background: 'var(--bg-banner)',
             boxShadow: '0 20px 60px rgba(5,8,24,0.5), 0 4px 16px rgba(99,102,241,0.08)',
           }}
         >
@@ -530,8 +531,8 @@ export default function Budgets() {
                     {formatMois(mois)} — Vue d'ensemble
                   </p>
                   <p
-                    className="font-display font-extrabold leading-none tabular-nums text-white"
-                    style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}
+                    className="font-display font-extrabold leading-none tabular-nums"
+                    style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', color: 'var(--text-on-banner)' }}
                   >
                     {fmt(totalDepense)}
                     <span className="text-slate-500 font-normal ml-2" style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
@@ -543,24 +544,24 @@ export default function Budgets() {
                 {/* Stats trio */}
                 <div className="flex gap-4 sm:gap-6 items-center">
                   <div className="text-center">
-                    <p className="font-display text-xl font-extrabold text-white tabular-nums">{progression.length}</p>
-                    <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>
+                    <p className="font-display text-xl font-extrabold tabular-nums" style={{ color: 'var(--text-on-banner)' }}>{progression.length}</p>
+                    <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'var(--text-muted)' }}>
                       Budget{progression.length > 1 ? 's' : ''}
                     </p>
                   </div>
-                  <div className="w-px h-8" style={{ background: 'rgba(255,255,255,0.08)' }} aria-hidden="true" />
+                  <div className="w-px h-8" style={{ background: 'var(--border-card)' }} aria-hidden="true" />
                   <div className="text-center">
                     <p className="font-display text-xl font-extrabold tabular-nums" style={{ color: pctColor }}>
                       {Math.round(pctGlobal)}%
                     </p>
-                    <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>Utilisé</p>
+                    <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'var(--text-muted)' }}>Utilisé</p>
                   </div>
-                  <div className="w-px h-8" style={{ background: 'rgba(255,255,255,0.08)' }} aria-hidden="true" />
+                  <div className="w-px h-8" style={{ background: 'var(--border-card)' }} aria-hidden="true" />
                   <div className="text-center">
-                    <p className="font-display text-xl font-extrabold tabular-nums text-emerald-400">
+                    <p className="font-display text-xl font-extrabold tabular-nums" style={{ color: 'var(--text-accent-green)' }}>
                       {fmt(totalRestant)}
                     </p>
-                    <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'rgba(100,116,139,0.7)' }}>Restant</p>
+                    <p className="text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'var(--text-muted)' }}>Restant</p>
                   </div>
                 </div>
               </div>
@@ -568,7 +569,7 @@ export default function Budgets() {
               {/* Global progress bar */}
               <div
                 className="h-2 rounded-full overflow-hidden mb-3"
-                style={{ background: 'rgba(255,255,255,0.06)' }}
+                style={{ background: 'var(--bg-subtle-md)' }}
               >
                 <div
                   className="h-full rounded-full transition-all duration-1000"
@@ -628,7 +629,7 @@ export default function Budgets() {
 
       {/* ── Budget grid ── */}
       {progression.length === 0 ? (
-        <div className="rounded-3xl" style={{ background: '#0b0e1c', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="rounded-3xl" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
           <EmptyState
             titre={`Aucun budget pour ${formatMois(mois)}`}
             message="Définissez des limites mensuelles par catégorie pour mieux contrôler vos dépenses."

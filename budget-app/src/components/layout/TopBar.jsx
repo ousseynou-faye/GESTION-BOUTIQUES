@@ -49,10 +49,10 @@ export function TopBar() {
       <header
         className="flex items-center justify-between px-4 py-3 border-b"
         style={{
-          background: isDark ? 'rgba(6,11,24,0.94)' : 'rgba(241,245,249,0.94)',
+          background: 'var(--bg-topbar)',
           backdropFilter: 'blur(14px)',
           WebkitBackdropFilter: 'blur(14px)',
-          borderColor: isDark ? 'rgba(30,41,59,0.8)' : 'rgba(226,232,240,0.8)',
+          borderColor: 'var(--border-topbar)',
         }}
       >
         {/* Logo + titre de page */}
@@ -77,7 +77,7 @@ export function TopBar() {
               Budget Pro
             </p>
             <p className="font-display text-sm font-bold truncate leading-tight"
-              style={{ color: 'rgba(226,232,240,0.95)' }}>
+              style={{ color: 'var(--text-primary)' }}>
               {pageTitle}
             </p>
           </div>
@@ -88,9 +88,9 @@ export function TopBar() {
           onClick={() => dispatch({ type: 'SET_THEME', payload: { theme: isDark ? 'light' : 'dark' } })}
           aria-label={isDark ? 'Activer le mode clair' : 'Activer le mode sombre'}
           className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors flex-shrink-0 focus:outline-none"
-          style={{ color: 'rgba(100,116,139,0.7)' }}
-          onMouseEnter={e => { e.currentTarget.style.color = 'rgba(226,232,240,0.9)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)' }}
-          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(100,116,139,0.7)'; e.currentTarget.style.background = 'transparent' }}
+          style={{ color: 'var(--text-muted)' }}
+          onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.background = 'var(--bg-subtle)' }}
+          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.background = 'transparent' }}
         >
           {isDark ? <SunIcon /> : <MoonIcon />}
         </button>
@@ -101,24 +101,24 @@ export function TopBar() {
         <div
           className="flex items-center justify-around px-6 py-2 border-b"
           style={{
-            background: isDark ? 'rgba(129,140,248,0.04)' : 'rgba(99,102,241,0.04)',
+            background: 'rgba(99,102,241,0.04)',
             backdropFilter: 'blur(14px)',
             WebkitBackdropFilter: 'blur(14px)',
-            borderColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+            borderColor: 'var(--border-subtle)',
           }}
         >
           <div className="flex flex-col items-center gap-0.5">
             <span className="text-[9px] font-bold uppercase tracking-[0.15em]"
-              style={{ color: 'rgba(100,116,139,0.6)' }}>Solde</span>
+              style={{ color: 'var(--text-dimmed)' }}>Solde</span>
             <span className="font-display text-[13px] font-bold tabular-nums"
               style={{ color: solde >= 0 ? '#34d399' : '#fb7185' }}>
               {fmt(solde)}
             </span>
           </div>
-          <div className="w-px h-6" style={{ background: 'rgba(255,255,255,0.08)' }} aria-hidden="true" />
+          <div className="w-px h-6" style={{ background: 'var(--border-separator)' }} aria-hidden="true" />
           <div className="flex flex-col items-center gap-0.5">
             <span className="text-[9px] font-bold uppercase tracking-[0.15em]"
-              style={{ color: 'rgba(100,116,139,0.6)' }}>Épargne</span>
+              style={{ color: 'var(--text-dimmed)' }}>Épargne</span>
             <span className="font-display text-[13px] font-bold tabular-nums"
               style={{ color: '#818cf8' }}>
               {formatPourcentage(epargne)}

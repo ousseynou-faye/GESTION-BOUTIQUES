@@ -25,7 +25,7 @@ function FieldLabel({ children }) {
 }
 
 function Divider() {
-  return <div className="h-px" style={{ background: 'rgba(255,255,255,0.05)' }} aria-hidden="true" />
+  return <div className="h-px" style={{ background: 'var(--border-separator)' }} aria-hidden="true" />
 }
 
 function StepIndicator({ etape }) {
@@ -43,24 +43,24 @@ function StepIndicator({ etape }) {
         >
           {done ? '✓' : '1'}
         </div>
-        <span className="text-[10px] font-semibold" style={{ color: done ? 'rgba(52,211,153,0.8)' : 'rgba(226,232,240,0.9)' }}>
+        <span className="text-[10px] font-semibold" style={{ color: done ? 'rgba(52,211,153,0.8)' : 'var(--text-primary)' }}>
           Montant
         </span>
       </div>
       {/* Connector */}
-      <div className="flex-1 h-px" style={{ background: done ? 'rgba(52,211,153,0.3)' : 'rgba(255,255,255,0.1)' }} aria-hidden="true" />
+      <div className="flex-1 h-px" style={{ background: done ? 'rgba(52,211,153,0.3)' : 'var(--border-input)' }} aria-hidden="true" />
       {/* Step 2 */}
       <div className="flex items-center gap-1.5">
         <div
           className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold"
           style={done
             ? { background: 'rgba(129,140,248,0.9)', color: '#fff', boxShadow: '0 0 8px rgba(129,140,248,0.5)' }
-            : { background: 'rgba(255,255,255,0.06)', color: 'rgba(100,116,139,0.7)', border: '1px solid rgba(255,255,255,0.1)' }
+            : { background: 'var(--bg-subtle)', color: 'var(--text-muted)', border: '1px solid var(--border-input)' }
           }
         >
           2
         </div>
-        <span className="text-[10px] font-semibold" style={{ color: done ? 'rgba(226,232,240,0.9)' : 'rgba(100,116,139,0.6)' }}>
+        <span className="text-[10px] font-semibold" style={{ color: done ? 'var(--text-primary)' : 'var(--text-muted)' }}>
           Détails
         </span>
       </div>
@@ -133,7 +133,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
         {/* Type toggle */}
         <div
           className="grid grid-cols-2 gap-1.5 p-1.5 rounded-2xl"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+          style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border-card)' }}
         >
           {[
             { val: 'depense', label: 'Dépense', grad: 'linear-gradient(135deg,#e11d48,#fb7185)' },
@@ -223,16 +223,16 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
                   onClick={() => { set('montant', String(amt)); setErrors({}) }}
                   className="py-2.5 rounded-xl text-center transition-all duration-150 focus:outline-none"
                   style={{
-                    background: selected ? `${typeColor}18` : 'rgba(255,255,255,0.04)',
-                    border: `1px solid ${selected ? typeColor + '55' : 'rgba(255,255,255,0.08)'}`,
+                    background: selected ? `${typeColor}18` : 'var(--bg-subtle)',
+                    border: `1px solid ${selected ? typeColor + '55' : 'var(--border-input)'}`,
                     boxShadow: selected ? `0 0 10px ${typeColor}22` : 'none',
                   }}
-                  onMouseEnter={e => { if (!selected) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = typeColor + '30' } }}
-                  onMouseLeave={e => { if (!selected) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
+                  onMouseEnter={e => { if (!selected) { e.currentTarget.style.background = 'var(--bg-subtle-hover)'; e.currentTarget.style.borderColor = typeColor + '30' } }}
+                  onMouseLeave={e => { if (!selected) { e.currentTarget.style.background = 'var(--bg-subtle)'; e.currentTarget.style.borderColor = 'var(--border-input)' } }}
                 >
                   <span
                     className="font-display text-[11px] font-bold tabular-nums block"
-                    style={{ color: selected ? typeColor : 'rgba(148,163,184,0.8)' }}
+                    style={{ color: selected ? typeColor : 'var(--text-secondary)' }}
                   >
                     {new Intl.NumberFormat('fr-FR').format(amt)}
                   </span>
@@ -244,9 +244,9 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
               type="button"
               onClick={() => { set('montant', ''); setErrors({}); setTimeout(() => montantInputRef.current?.focus(), 50) }}
               className="py-2.5 rounded-xl text-center transition-all duration-150 focus:outline-none"
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+              style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border-input)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-subtle-hover)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-subtle)' }}
             >
               <span className="font-display text-[11px] font-bold block" style={{ color: 'rgba(100,116,139,0.7)' }}>
                 Autre
@@ -263,9 +263,9 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
             type="button"
             onClick={onCancel}
             className="py-3 rounded-2xl text-sm font-semibold transition-all focus:outline-none"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(148,163,184,0.8)' }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+            style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border-input)', color: 'var(--text-secondary)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-subtle-hover)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-subtle)' }}
           >
             Annuler
           </button>
@@ -337,9 +337,9 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
                 onClick={() => { set('categorie', key); if (errors.categorie) setErrors(er => ({ ...er, categorie: undefined })) }}
                 className="flex items-center gap-2 px-3 py-2 rounded-xl text-[12px] font-semibold transition-all focus:outline-none"
                 style={{
-                  background: active ? `${cat.couleur}20` : 'rgba(255,255,255,0.04)',
-                  border:     `1px solid ${active ? cat.couleur + '55' : 'rgba(255,255,255,0.08)'}`,
-                  color:      active ? cat.couleur : 'rgba(148,163,184,0.8)',
+                  background: active ? `${cat.couleur}20` : 'var(--bg-subtle)',
+                  border:     `1px solid ${active ? cat.couleur + '55' : 'var(--border-input)'}`,
+                  color:      active ? cat.couleur : 'var(--text-secondary)',
                   boxShadow:  active ? `0 0 10px ${cat.couleur}22` : 'none',
                 }}
               >
@@ -376,12 +376,12 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
             aria-invalid={errors.description ? 'true' : undefined}
             className="w-full px-3 py-2.5 text-sm font-medium rounded-xl focus:outline-none"
             style={{
-              background: errors.description ? 'rgba(251,113,133,0.06)' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${errors.description ? 'rgba(251,113,133,0.5)' : 'rgba(255,255,255,0.08)'}`,
-              color: '#e2e8f0',
+              background: errors.description ? 'rgba(251,113,133,0.06)' : 'var(--bg-subtle)',
+              border: `1px solid ${errors.description ? 'rgba(251,113,133,0.5)' : 'var(--border-input)'}`,
+              color: 'var(--text-primary)',
             }}
             onFocus={e => { if (!errors.description) { e.currentTarget.style.borderColor = 'rgba(129,140,248,0.5)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(129,140,248,0.12)' } }}
-            onBlur={e => { e.currentTarget.style.borderColor = errors.description ? 'rgba(251,113,133,0.5)' : 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+            onBlur={e => { e.currentTarget.style.borderColor = errors.description ? 'rgba(251,113,133,0.5)' : 'var(--border-input)'; e.currentTarget.style.boxShadow = 'none' }}
           />
           {errors.description && (
             <p className="text-[10px] font-medium" style={{ color: '#fb7185' }} role="alert">{errors.description}</p>
@@ -399,13 +399,13 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
             aria-invalid={errors.date ? 'true' : undefined}
             className="w-full px-3 py-2.5 text-sm font-medium rounded-xl focus:outline-none"
             style={{
-              background: errors.date ? 'rgba(251,113,133,0.06)' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${errors.date ? 'rgba(251,113,133,0.5)' : 'rgba(255,255,255,0.08)'}`,
-              color: '#e2e8f0',
-              colorScheme: 'dark',
+              background: errors.date ? 'rgba(251,113,133,0.06)' : 'var(--bg-subtle)',
+              border: `1px solid ${errors.date ? 'rgba(251,113,133,0.5)' : 'var(--border-input)'}`,
+              color: 'var(--text-primary)',
+              colorScheme: 'var(--color-scheme)',
             }}
             onFocus={e => { if (!errors.date) { e.currentTarget.style.borderColor = 'rgba(129,140,248,0.5)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(129,140,248,0.12)' } }}
-            onBlur={e => { e.currentTarget.style.borderColor = errors.date ? 'rgba(251,113,133,0.5)' : 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+            onBlur={e => { e.currentTarget.style.borderColor = errors.date ? 'rgba(251,113,133,0.5)' : 'var(--border-input)'; e.currentTarget.style.boxShadow = 'none' }}
           />
           {errors.date && (
             <p className="text-[10px] font-medium" style={{ color: '#fb7185' }} role="alert">{errors.date}</p>
@@ -424,12 +424,12 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
           rows={2}
           className="w-full px-3 py-2.5 text-sm rounded-xl focus:outline-none resize-none"
           style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            color: '#e2e8f0',
+            background: 'var(--bg-subtle)',
+            border: '1px solid var(--border-input)',
+            color: 'var(--text-primary)',
           }}
           onFocus={e => { e.currentTarget.style.borderColor = 'rgba(129,140,248,0.5)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(129,140,248,0.12)' }}
-          onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none' }}
+          onBlur={e => { e.currentTarget.style.borderColor = 'var(--border-input)'; e.currentTarget.style.boxShadow = 'none' }}
         />
       </div>
 
@@ -439,16 +439,16 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
         onClick={() => set('recurrente', !form.recurrente)}
         className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all focus:outline-none text-left"
         style={{
-          background: form.recurrente ? 'rgba(99,102,241,0.1)' : 'rgba(255,255,255,0.03)',
-          border: `1px solid ${form.recurrente ? 'rgba(129,140,248,0.3)' : 'rgba(255,255,255,0.07)'}`,
+          background: form.recurrente ? 'rgba(99,102,241,0.1)' : 'var(--bg-subtle)',
+          border: `1px solid ${form.recurrente ? 'rgba(129,140,248,0.3)' : 'var(--border-card)'}`,
         }}
         aria-pressed={form.recurrente}
       >
         <div
           className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 transition-all"
           style={{
-            background: form.recurrente ? 'rgba(99,102,241,0.9)' : 'rgba(255,255,255,0.06)',
-            border: `1px solid ${form.recurrente ? 'transparent' : 'rgba(255,255,255,0.12)'}`,
+            background: form.recurrente ? 'rgba(99,102,241,0.9)' : 'var(--border-card)',
+            border: `1px solid ${form.recurrente ? 'transparent' : 'var(--border-input)'}`,
             boxShadow: form.recurrente ? '0 0 8px rgba(99,102,241,0.5)' : 'none',
           }}
           aria-hidden="true"
@@ -461,7 +461,7 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
           )}
         </div>
         <div>
-          <p className="text-[12px] font-semibold" style={{ color: form.recurrente ? '#a5b4fc' : 'rgba(148,163,184,0.8)' }}>
+          <p className="text-[12px] font-semibold" style={{ color: form.recurrente ? '#a5b4fc' : 'var(--text-secondary)' }}>
             Transaction récurrente
           </p>
           <p className="text-[10px] mt-0.5" style={{ color: 'rgba(100,116,139,0.6)' }}>
@@ -478,9 +478,9 @@ export function TransactionForm({ initial, onSubmit, onCancel }) {
           type="button"
           onClick={() => { setEtape(1); setErrors({}) }}
           className="py-3 rounded-2xl text-sm font-semibold flex items-center justify-center gap-2 transition-all focus:outline-none"
-          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(148,163,184,0.8)' }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+          style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border-input)', color: 'var(--text-secondary)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-subtle-hover)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'var(--bg-subtle)' }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24"
             stroke="currentColor" strokeWidth={2.5} aria-hidden="true">

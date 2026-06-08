@@ -13,8 +13,8 @@ export function EmptyState({ titre, message, action, icon }) {
         <div
           className="relative w-[72px] h-[72px] rounded-2xl flex items-center justify-center"
           style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
+            background: 'var(--bg-subtle)',
+            border: '1px solid var(--border-input)',
             boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
           }}
         >
@@ -24,7 +24,7 @@ export function EmptyState({ titre, message, action, icon }) {
 
       <h3
         className="text-sm font-bold tracking-tight mb-2 leading-snug"
-        style={{ color: 'rgba(226,232,240,0.9)' }}
+        style={{ color: 'var(--text-primary)' }}
       >
         {titre}
       </h3>
