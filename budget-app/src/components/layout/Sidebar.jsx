@@ -52,6 +52,16 @@ const navItems = [
     ),
   },
   {
+    to: '/projections',
+    label: 'Projections',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-[17px] h-[17px]" aria-hidden="true">
+        <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+      </svg>
+    ),
+  },
+  {
     to: '/objectifs',
     label: 'Objectifs',
     icon: (
@@ -103,7 +113,7 @@ export function Sidebar() {
   return (
     <aside
       className="hidden md:flex flex-col w-64 min-h-screen flex-shrink-0 relative overflow-hidden"
-      style={{ background: 'linear-gradient(170deg, #04071a 0%, #060a20 55%, #08092a 100%)' }}
+      style={{ background: 'var(--sidebar-bg)' }}
       role="complementary"
       aria-label="Navigation principale"
     >
@@ -184,7 +194,7 @@ export function Sidebar() {
 
       {/* ── Nav label ──────────────────────────────────── */}
       <p className="text-[9px] font-bold uppercase tracking-[0.22em] px-5 mb-1.5"
-        style={{ color: 'rgba(100,116,139,0.7)' }}>
+        style={{ color: 'var(--text-muted)' }}>
         Navigation
       </p>
 
@@ -225,7 +235,7 @@ export function Sidebar() {
                 </span>
 
                 {/* Label */}
-                <span className="leading-tight tracking-tight flex-1 font-medium">{item.label}</span>
+                <span className="leading-tight tracking-tight flex-1 font-medium" style={{ color: isActive ? '#fff' : 'var(--sidebar-nav-text)' }}>{item.label}</span>
 
                 {/* Active glow dot */}
                 {isActive && (
@@ -243,7 +253,7 @@ export function Sidebar() {
 
       {/* ── Divider ────────────────────────────────────── */}
       <div className="mx-4 my-3"
-        style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }}
+        style={{ height: '1px', background: 'var(--border-separator)' }}
         aria-hidden="true" />
 
       {/* ── Theme toggle ───────────────────────────────── */}
@@ -252,18 +262,18 @@ export function Sidebar() {
           onClick={() => dispatch({ type: 'SET_THEME', payload: { theme: isDark ? 'light' : 'dark' } })}
           aria-label={isDark ? 'Activer le mode clair' : 'Activer le mode sombre'}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 group"
-          style={{ border: '1px solid transparent', color: 'rgba(100,116,139,0.8)' }}
+          style={{ border: '1px solid transparent', color: 'var(--text-muted)' }}
           onMouseEnter={e => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
-            e.currentTarget.style.color = '#cbd5e1'
+            e.currentTarget.style.background = 'var(--bg-subtle)'
+            e.currentTarget.style.color = 'var(--text-secondary)'
           }}
           onMouseLeave={e => {
             e.currentTarget.style.background = ''
-            e.currentTarget.style.color = 'rgba(100,116,139,0.8)'
+            e.currentTarget.style.color = 'var(--text-muted)'
           }}
         >
           <span className="flex items-center justify-center w-7 h-7 rounded-lg flex-shrink-0"
-            style={{ background: 'rgba(255,255,255,0.04)', color: 'inherit' }}>
+            style={{ background: 'var(--bg-subtle)', color: 'inherit' }}>
             {isDark ? <SunIcon /> : <MoonIcon />}
           </span>
           <span className="font-medium">{isDark ? 'Mode clair' : 'Mode sombre'}</span>
@@ -275,11 +285,11 @@ export function Sidebar() {
         <div
           className="flex items-center gap-3 rounded-2xl px-3 py-3 cursor-pointer group transition-all duration-200"
           style={{
-            background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: 'var(--sidebar-user-bg)',
+            border: '1px solid var(--sidebar-user-border)',
           }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.055)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-subtle-hover)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--sidebar-user-bg)'}
         >
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
@@ -299,7 +309,7 @@ export function Sidebar() {
             </p>
           </div>
           <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center"
-            style={{ background: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: 'var(--border-card)' }}>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-slate-600" fill="none"
               viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

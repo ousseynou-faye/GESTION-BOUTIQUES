@@ -8,6 +8,7 @@ import Transactions from '@/pages/Transactions'
 import Budgets from '@/pages/Budgets'
 import Charts from '@/pages/Charts'
 import Goals from '@/pages/Goals'
+import Projections from '@/pages/Projections'
 
 function Layout({ children }) {
   return (
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/budgets" element={<Budgets />} />
             <Route path="/graphiques" element={<Charts />} />
+            <Route path="/projections" element={<Projections />} />
             <Route path="/objectifs" element={<Goals />} />
           </Routes>
         </Layout>

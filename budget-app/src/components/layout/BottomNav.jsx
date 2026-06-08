@@ -48,6 +48,16 @@ const navItems = [
     ),
   },
   {
+    to: '/projections',
+    label: 'Projections',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-[22px] h-[22px]" aria-hidden="true">
+        <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+      </svg>
+    ),
+  },
+  {
     to: '/objectifs',
     label: 'Objectifs',
     icon: (
@@ -66,10 +76,10 @@ export function BottomNav() {
     <nav
       className="md:hidden fixed bottom-0 left-0 right-0 z-40"
       style={{
-        background: 'rgba(13,20,36,0.97)',
+        background: 'var(--bg-bottomnav)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        borderTop: '1px solid rgba(99,102,241,0.18)',
+        borderTop: '1px solid var(--border-bottomnav)',
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
       aria-label="Navigation principale"
