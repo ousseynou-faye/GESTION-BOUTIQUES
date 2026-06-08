@@ -1,4 +1,4 @@
-import { parseISO, format, subMonths, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns'
+import { parseISO, format, subMonths, addMonths, startOfMonth, endOfMonth, isWithinInterval } from 'date-fns'
 import { CATEGORIES } from '@/constants/categories'
 
 function makeId(prefix) {
@@ -211,4 +211,63 @@ export function getKpiTendance(transactions, moisCourant) {
       ),
     },
   }
+}
+
+export function getProjectionsMensuelles(transactions, horizonMois = 6) {
+  const today = new Date()
+  const moisCourant = format(today, 'yyyy-MM')
+
+  // Collect completed months (before current, with ≥1 transaction), most recent first
+  const moisComplets = []
+  for (let i = 1; i <= 12; i++) {
+    const mois = format(subMonths(today, i), 'yyyy-MM')
+    if (transactions.some(t => t.date?.startsWith(mois))) {
+      moisComplets.push(mois)
+    }
+  }
+
+  if (moisComplets.length === 0) return []
+
+  const N = Math.min(3, moisComplets.length)
+  const moisPourMoyenne = moisComplets.slice(0, N)
+  const moyenneRevenus  = moisPourMoyenne.reduce((s, m) => s + getTotalRevenus(transactions, m), 0) / N
+  const moyenneDepenses = moisPourMoyenne.reduce((s, m) => s + getTotalDepenses(transactions, m), 0) / N
+
+  // Window: 2 past + 1 current + (max(horizonMois,4) - 3) future
+  const totalBars = Math.max(horizonMois, 4)
+  const nFuture   = totalBars - 3
+
+  const result = []
+
+  // 2 context months (always real data)
+  for (let i = 2; i >= 1; i--) {
+    const mois = format(subMonths(today, i), 'yyyy-MM')
+    result.push({
+      mois,
+      revenus:  getTotalRevenus(transactions, mois),
+      depenses: getTotalDepenses(transactions, mois),
+      estProjection: false,
+    })
+  }
+
+  // Current month (real data)
+  result.push({
+    mois: moisCourant,
+    revenus:  getTotalRevenus(transactions, moisCourant),
+    depenses: getTotalDepenses(transactions, moisCourant),
+    estProjection: false,
+  })
+
+  // Future months (projected average)
+  for (let i = 1; i <= nFuture; i++) {
+    const mois = format(addMonths(today, i), 'yyyy-MM')
+    result.push({
+      mois,
+      revenus:  Math.round(moyenneRevenus),
+      depenses: Math.round(moyenneDepenses),
+      estProjection: true,
+    })
+  }
+
+  return result
 }

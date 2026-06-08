@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest'
-import { getTop5Categories, getBudgetAlerts, getKpiTendance } from './calculations.js'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { getTop5Categories, getBudgetAlerts, getKpiTendance, getProjectionsMensuelles } from './calculations.js'
 
 const txns = [
   { id: '1', type: 'depense', montant: 50000, categorie: 'loyer',        date: '2026-06-01' },
@@ -173,5 +173,118 @@ describe('getKpiTendance', () => {
   it('spark revenus contient des nombres', () => {
     const r = getKpiTendance(txnsKpi, '2026-06')
     expect(r.revenus.spark.every(v => typeof v === 'number')).toBe(true)
+  })
+})
+
+// ── getProjectionsMensuelles ─────────────────────────────────────────────────
+// System time frozen at 2026-06-15 for all tests in this suite.
+
+describe('getProjectionsMensuelles', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-15'))
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  // Fixtures: 3 completed months (mars, avril, mai) + current month (juin)
+  const txns3Mois = [
+    { id: 'm1', type: 'revenu',  montant: 300000, date: '2026-03-01' },
+    { id: 'm2', type: 'depense', montant: 200000, date: '2026-03-10' },
+    { id: 'a1', type: 'revenu',  montant: 320000, date: '2026-04-01' },
+    { id: 'a2', type: 'depense', montant: 220000, date: '2026-04-10' },
+    { id: 'b1', type: 'revenu',  montant: 340000, date: '2026-05-01' },
+    { id: 'b2', type: 'depense', montant: 240000, date: '2026-05-10' },
+    { id: 'c1', type: 'revenu',  montant: 250000, date: '2026-06-01' },
+    { id: 'c2', type: 'depense', montant: 150000, date: '2026-06-05' },
+  ]
+  // moyenneRevenus  = (340000 + 320000 + 300000) / 3 = 320000
+  // moyenneDepenses = (240000 + 220000 + 200000) / 3 = 220000
+
+  it('retourne exactement horizonMois entrées (max(horizon, 4))', () => {
+    expect(getProjectionsMensuelles(txns3Mois, 6)).toHaveLength(6)
+    expect(getProjectionsMensuelles(txns3Mois, 12)).toHaveLength(12)
+    // horizon=3 is clamped to 4 minimum
+    expect(getProjectionsMensuelles(txns3Mois, 3)).toHaveLength(4)
+  })
+
+  it('les 3 premières entrées ont estProjection: false (passé + courant)', () => {
+    const result = getProjectionsMensuelles(txns3Mois, 6)
+    expect(result[0].estProjection).toBe(false)
+    expect(result[1].estProjection).toBe(false)
+    expect(result[2].estProjection).toBe(false)
+  })
+
+  it('les 3 dernières entrées pour horizon=6 ont estProjection: true', () => {
+    const result = getProjectionsMensuelles(txns3Mois, 6)
+    expect(result[3].estProjection).toBe(true)
+    expect(result[4].estProjection).toBe(true)
+    expect(result[5].estProjection).toBe(true)
+  })
+
+  it('les mois sont dans l\'ordre chronologique correct', () => {
+    const result = getProjectionsMensuelles(txns3Mois, 6)
+    expect(result[0].mois).toBe('2026-04')  // 2 mois passés
+    expect(result[1].mois).toBe('2026-05')
+    expect(result[2].mois).toBe('2026-06')  // courant
+    expect(result[3].mois).toBe('2026-07')  // futurs
+    expect(result[4].mois).toBe('2026-08')
+    expect(result[5].mois).toBe('2026-09')
+  })
+
+  it('les données réelles sont utilisées pour les mois passés', () => {
+    const result = getProjectionsMensuelles(txns3Mois, 6)
+    // Mai 2026 → index 1 (1 mois avant courant)
+    expect(result[1].revenus).toBe(340000)
+    expect(result[1].depenses).toBe(240000)
+    // Juin courant → index 2
+    expect(result[2].revenus).toBe(250000)
+    expect(result[2].depenses).toBe(150000)
+  })
+
+  it('les mois futurs utilisent la moyenne des 3 derniers mois complets', () => {
+    const result = getProjectionsMensuelles(txns3Mois, 6)
+    expect(result[3].revenus).toBe(320000)
+    expect(result[3].depenses).toBe(220000)
+    expect(result[5].revenus).toBe(320000)  // même moyenne pour tous les futurs
+  })
+
+  it('retourne [] si aucun mois complété (array vide)', () => {
+    expect(getProjectionsMensuelles([], 6)).toHaveLength(0)
+  })
+
+  it('retourne [] si transactions uniquement dans le mois courant', () => {
+    const juneSeulement = [
+      { id: 'x', type: 'revenu', montant: 100000, date: '2026-06-01' },
+    ]
+    expect(getProjectionsMensuelles(juneSeulement, 6)).toHaveLength(0)
+  })
+
+  it('fonctionne avec 1 seul mois de données disponible', () => {
+    const txns1Mois = [
+      { id: 'b1', type: 'revenu',  montant: 300000, date: '2026-05-01' },
+      { id: 'b2', type: 'depense', montant: 200000, date: '2026-05-10' },
+    ]
+    const result = getProjectionsMensuelles(txns1Mois, 6)
+    expect(result).toHaveLength(6)
+    // Moyenne basée sur 1 mois
+    expect(result[3].revenus).toBe(300000)
+    expect(result[3].depenses).toBe(200000)
+  })
+
+  it('fonctionne avec 2 mois de données disponibles', () => {
+    const txns2Mois = [
+      { id: 'a1', type: 'revenu',  montant: 300000, date: '2026-04-01' },
+      { id: 'a2', type: 'depense', montant: 200000, date: '2026-04-10' },
+      { id: 'b1', type: 'revenu',  montant: 400000, date: '2026-05-01' },
+      { id: 'b2', type: 'depense', montant: 250000, date: '2026-05-10' },
+    ]
+    const result = getProjectionsMensuelles(txns2Mois, 6)
+    expect(result).toHaveLength(6)
+    // Moyenne = (300000 + 400000) / 2 = 350000
+    expect(result[3].revenus).toBe(350000)
+    // Moyenne = (200000 + 250000) / 2 = 225000
+    expect(result[3].depenses).toBe(225000)
   })
 })
