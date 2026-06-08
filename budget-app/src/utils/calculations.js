@@ -213,6 +213,8 @@ export function getKpiTendance(transactions, moisCourant) {
   }
 }
 
+// Looks back up to 12 months to find completed months with data.
+// Data older than 12 months is excluded — callers with very sparse history may get [].
 export function getProjectionsMensuelles(transactions, horizonMois = 6) {
   const today = new Date()
   const moisCourant = format(today, 'yyyy-MM')
