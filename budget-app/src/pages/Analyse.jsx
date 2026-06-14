@@ -18,15 +18,15 @@ function AnalyseTooltip({ active, payload, label }) {
     <div
       className="rounded-2xl px-4 py-3 shadow-2xl text-xs min-w-[160px]"
       style={{
-        background: 'rgba(10,12,28,0.95)',
-        border: '1px solid rgba(129,140,248,0.15)',
+        background: 'var(--bg-card-elevated)',
+        border: '1px solid var(--border-card)',
         backdropFilter: 'blur(12px)',
         boxShadow: '0 16px 40px rgba(0,0,0,0.5)',
       }}
     >
       <p
         className="font-bold text-slate-300 mb-2 pb-1.5"
-        style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+        style={{ borderBottom: '1px solid var(--border-separator)' }}
       >
         {label}
       </p>
@@ -225,8 +225,8 @@ export default function Analyse() {
                   color: '#fff',
                   boxShadow: `0 2px 8px ${c.couleur}40`,
                 } : {
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'var(--bg-subtle)',
+                  border: '1px solid var(--border-card)',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -296,7 +296,7 @@ export default function Analyse() {
           </div>
           <div
             className="rounded-full overflow-hidden"
-            style={{ background: 'rgba(255,255,255,0.07)', height: '6px' }}
+            style={{ background: 'var(--bg-subtle)', height: '6px' }}
           >
             <div
               className="h-full rounded-full transition-all duration-500"
@@ -353,7 +353,7 @@ export default function Analyse() {
                   <stop offset="85%"  stopColor={couleurCateg} stopOpacity={0.03} />
                 </linearGradient>
               </defs>
-              <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.04)" />
+              <CartesianGrid vertical={false} stroke="var(--border-separator)" />
               <XAxis
                 dataKey="label"
                 tick={{ fill: 'var(--text-muted)', fontSize: 11 }}
@@ -369,7 +369,7 @@ export default function Analyse() {
               />
               <Tooltip
                 content={<AnalyseTooltip />}
-                cursor={{ stroke: 'rgba(255,255,255,0.06)', strokeWidth: 1 }}
+                cursor={{ stroke: 'var(--border-card)', strokeWidth: 1 }}
               />
               <ReferenceLine
                 y={Math.round(kpi.moyenne)}
