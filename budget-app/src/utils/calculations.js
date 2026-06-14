@@ -235,13 +235,8 @@ export function getKpiCategorie(transactions, categorie, horizonMois = 6) {
   const total = evolution.reduce((sum, d) => sum + d.montant, 0)
   const moyenne = horizonMois > 0 ? total / horizonMois : 0
 
-  const montantMoisCourant = transactions
-    .filter(t => t.categorie === categorie && t.date?.startsWith(moisCourant))
-    .reduce((sum, t) => sum + t.montant, 0)
-
-  const montantMoisPrecedent = transactions
-    .filter(t => t.categorie === categorie && t.date?.startsWith(moisPrecedent))
-    .reduce((sum, t) => sum + t.montant, 0)
+  const montantMoisCourant   = evolution.find(d => d.mois === moisCourant)?.montant ?? 0
+  const montantMoisPrecedent = evolution.find(d => d.mois === moisPrecedent)?.montant ?? 0
 
   const variationPct = montantMoisPrecedent === 0
     ? null
