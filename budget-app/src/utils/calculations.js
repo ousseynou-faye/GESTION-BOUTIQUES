@@ -213,6 +213,43 @@ export function getKpiTendance(transactions, moisCourant) {
   }
 }
 
+export function getEvolutionCategorie(transactions, categorie, horizonMois = 6) {
+  const today = new Date()
+  const result = []
+  for (let i = horizonMois - 1; i >= 0; i--) {
+    const mois = format(subMonths(today, i), 'yyyy-MM')
+    const montant = transactions
+      .filter(t => t.categorie === categorie && t.date?.startsWith(mois))
+      .reduce((sum, t) => sum + t.montant, 0)
+    result.push({ mois, montant })
+  }
+  return result
+}
+
+export function getKpiCategorie(transactions, categorie, horizonMois = 6) {
+  const today = new Date()
+  const moisCourant   = format(today, 'yyyy-MM')
+  const moisPrecedent = format(subMonths(today, 1), 'yyyy-MM')
+
+  const evolution = getEvolutionCategorie(transactions, categorie, horizonMois)
+  const total = evolution.reduce((sum, d) => sum + d.montant, 0)
+  const moyenne = horizonMois > 0 ? total / horizonMois : 0
+
+  const montantMoisCourant = transactions
+    .filter(t => t.categorie === categorie && t.date?.startsWith(moisCourant))
+    .reduce((sum, t) => sum + t.montant, 0)
+
+  const montantMoisPrecedent = transactions
+    .filter(t => t.categorie === categorie && t.date?.startsWith(moisPrecedent))
+    .reduce((sum, t) => sum + t.montant, 0)
+
+  const variationPct = montantMoisPrecedent === 0
+    ? null
+    : ((montantMoisCourant - montantMoisPrecedent) / montantMoisPrecedent) * 100
+
+  return { total, moyenne, variationPct, montantMoisCourant, montantMoisPrecedent }
+}
+
 // Looks back up to 12 months to find completed months with data.
 // Data older than 12 months is excluded — callers with very sparse history may get [].
 export function getProjectionsMensuelles(transactions, horizonMois = 6) {

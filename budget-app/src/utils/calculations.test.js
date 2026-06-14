@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { getTop5Categories, getBudgetAlerts, getKpiTendance, getProjectionsMensuelles } from './calculations.js'
+import {
+  getTop5Categories, getBudgetAlerts, getKpiTendance,
+  getProjectionsMensuelles, getEvolutionCategorie, getKpiCategorie,
+} from './calculations.js'
 
 const txns = [
   { id: '1', type: 'depense', montant: 50000, categorie: 'loyer',        date: '2026-06-01' },
@@ -286,5 +289,138 @@ describe('getProjectionsMensuelles', () => {
     expect(result[3].revenus).toBe(350000)
     // Moyenne = (200000 + 250000) / 2 = 225000
     expect(result[3].depenses).toBe(225000)
+  })
+})
+
+// ── getEvolutionCategorie ────────────────────────────────────────────────────
+
+describe('getEvolutionCategorie', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-14'))
+  })
+  afterEach(() => vi.useRealTimers())
+
+  const txns = [
+    { id: '1', type: 'depense', montant: 45000, categorie: 'alimentation', date: '2026-06-05' },
+    { id: '2', type: 'depense', montant: 40000, categorie: 'alimentation', date: '2026-05-10' },
+    { id: '3', type: 'depense', montant: 38000, categorie: 'alimentation', date: '2026-04-08' },
+    { id: '4', type: 'depense', montant: 12000, categorie: 'transport',    date: '2026-06-03' },
+    { id: '5', type: 'revenu',  montant: 200000, categorie: 'salaire',     date: '2026-06-01' },
+  ]
+
+  it('retourne exactement N entrées pour un horizon de N mois', () => {
+    expect(getEvolutionCategorie(txns, 'alimentation', 6)).toHaveLength(6)
+    expect(getEvolutionCategorie(txns, 'alimentation', 3)).toHaveLength(3)
+    expect(getEvolutionCategorie(txns, 'alimentation', 12)).toHaveLength(12)
+  })
+
+  it('le dernier élément correspond au mois courant', () => {
+    const result = getEvolutionCategorie(txns, 'alimentation', 6)
+    expect(result[result.length - 1].mois).toBe('2026-06')
+  })
+
+  it('les mois sont triés chronologiquement', () => {
+    const result = getEvolutionCategorie(txns, 'alimentation', 3)
+    expect(result[0].mois).toBe('2026-04')
+    expect(result[1].mois).toBe('2026-05')
+    expect(result[2].mois).toBe('2026-06')
+  })
+
+  it('les montants correspondent aux transactions filtrées par catégorie', () => {
+    const result = getEvolutionCategorie(txns, 'alimentation', 3)
+    expect(result[0].montant).toBe(38000) // avril
+    expect(result[1].montant).toBe(40000) // mai
+    expect(result[2].montant).toBe(45000) // juin
+  })
+
+  it('les mois sans transaction ont montant: 0', () => {
+    const result = getEvolutionCategorie(txns, 'alimentation', 6)
+    // janvier, février, mars n'ont pas de transactions alimentation
+    expect(result[0].montant).toBe(0) // janvier
+    expect(result[1].montant).toBe(0) // février
+    expect(result[2].montant).toBe(0) // mars
+  })
+
+  it('filtre uniquement la catégorie demandée — transport reste séparé', () => {
+    const result = getEvolutionCategorie(txns, 'transport', 1)
+    expect(result[0].montant).toBe(12000)
+  })
+
+  it('retourne des montants à 0 pour une catégorie sans aucune transaction', () => {
+    const result = getEvolutionCategorie(txns, 'loisirs', 3)
+    expect(result.every(d => d.montant === 0)).toBe(true)
+  })
+
+  it('gère un tableau de transactions vide', () => {
+    const result = getEvolutionCategorie([], 'alimentation', 6)
+    expect(result).toHaveLength(6)
+    expect(result.every(d => d.montant === 0)).toBe(true)
+  })
+})
+
+// ── getKpiCategorie ──────────────────────────────────────────────────────────
+
+describe('getKpiCategorie', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-14'))
+  })
+  afterEach(() => vi.useRealTimers())
+
+  const txns = [
+    { id: '1', type: 'depense', montant: 45000, categorie: 'alimentation', date: '2026-06-05' },
+    { id: '2', type: 'depense', montant: 40000, categorie: 'alimentation', date: '2026-05-10' },
+    { id: '3', type: 'depense', montant: 38000, categorie: 'alimentation', date: '2026-04-08' },
+  ]
+
+  it('total = somme de toutes les transactions sur la période', () => {
+    // horizon=3 → avril+mai+juin = 38000+40000+45000 = 123000
+    const result = getKpiCategorie(txns, 'alimentation', 3)
+    expect(result.total).toBe(123000)
+  })
+
+  it('moyenne = total / horizonMois', () => {
+    const result = getKpiCategorie(txns, 'alimentation', 3)
+    expect(result.moyenne).toBeCloseTo(41000)
+  })
+
+  it('montantMoisCourant = somme du mois en cours', () => {
+    const result = getKpiCategorie(txns, 'alimentation', 6)
+    expect(result.montantMoisCourant).toBe(45000)
+  })
+
+  it('montantMoisPrecedent = somme du mois précédent', () => {
+    const result = getKpiCategorie(txns, 'alimentation', 6)
+    expect(result.montantMoisPrecedent).toBe(40000)
+  })
+
+  it('variationPct correct avec données réelles', () => {
+    // (45000 - 40000) / 40000 * 100 = 12.5
+    const result = getKpiCategorie(txns, 'alimentation', 6)
+    expect(result.variationPct).toBeCloseTo(12.5)
+  })
+
+  it('variationPct = null si mois précédent = 0 (évite division par zéro)', () => {
+    const txnsNoMay = [
+      { id: '1', type: 'depense', montant: 45000, categorie: 'alimentation', date: '2026-06-05' },
+    ]
+    const result = getKpiCategorie(txnsNoMay, 'alimentation', 6)
+    expect(result.variationPct).toBeNull()
+  })
+
+  it('catégorie inexistante → tout à 0 et variationPct null', () => {
+    const result = getKpiCategorie(txns, 'voyages', 6)
+    expect(result.total).toBe(0)
+    expect(result.moyenne).toBe(0)
+    expect(result.montantMoisCourant).toBe(0)
+    expect(result.montantMoisPrecedent).toBe(0)
+    expect(result.variationPct).toBeNull()
+  })
+
+  it('gère un tableau de transactions vide', () => {
+    const result = getKpiCategorie([], 'alimentation', 6)
+    expect(result.total).toBe(0)
+    expect(result.variationPct).toBeNull()
   })
 })
