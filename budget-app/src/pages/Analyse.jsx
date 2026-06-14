@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { format, parseISO, subMonths } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { useBudget } from '@/context/BudgetContext'
 import { CATEGORIES } from '@/constants/categories'
